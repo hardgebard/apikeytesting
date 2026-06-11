@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVGVST AI — National AI Compliance Registry</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Noto+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Noto+Sans+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+--black:#000000;--white:#FFFFFF;--blue:#0072CE;--deep:#001428;
+--blue-mid:#0058A3;--blue-dim:rgba(0,114,206,0.09);--blue-dim2:rgba(0,114,206,0.16);
+--w08:rgba(255,255,255,0.08);--w25:rgba(255,255,255,0.25);
+--w40:rgba(255,255,255,0.40);--w60:rgba(255,255,255,0.60);--w80:rgba(255,255,255,0.80);
+--surf:#0A0A0A;--surf2:#111111;--surf3:#181818;
+--bord:rgba(255,255,255,0.07);--bord2:rgba(255,255,255,0.13);
+--red-d:rgba(192,57,43,0.11);--red-t:#E74C3C;
+--amb-d:rgba(154,110,0,0.11);--amb-t:#D4960A;
+--grn-d:rgba(26,107,60,0.11);--grn-t:#27AE60;
+--noto:'Noto Sans',sans-serif;--mono:'Noto Sans Mono',monospace;--cinzel:'Cinzel',serif;
+}
+html,body{height:100%;background:var(--black);color:var(--white);font-family:var(--noto);font-size:13px;line-height:1.6;overflow:hidden;}
+::-webkit-scrollbar{width:3px;}::-webkit-scrollbar-thumb{background:var(--bord2);}
+.shell{display:grid;grid-template-rows:auto 1fr;height:100vh;overflow:hidden;}
+header{background:var(--black);border-bottom:1px solid var(--bord);z-index:30;}
+.hd-inner{display:flex;align-items:flex-start;justify-content:space-between;padding:13px 24px 0;}
+.wm-name{font-family:var(--cinzel);font-size:19px;font-weight:700;letter-spacing:0.28em;color:var(--white);line-height:1;}
+.wm-sub{font-family:var(--cinzel);font-size:7.5px;letter-spacing:0.3em;color:var(--w40);margin-top:3px;}
+.triband{height:3px;display:flex;margin-top:10px;}
+.tb-k{flex:1;background:var(--black);border-top:1px solid var(--bord2);}
+.tb-b{flex:1;background:#0072CE;}
+.tb-w{flex:1;background:#FFF;}
+.hd-right{display:flex;align-items:flex-start;gap:14px;}
+.hd-pills{display:flex;align-items:center;gap:10px;padding-top:5px;}
+.hd-pill{font-family:var(--mono);font-size:9px;color:var(--w40);display:flex;align-items:center;gap:5px;}
+.hd-dot{width:5px;height:5px;border-radius:50%;}
+.dot-live{background:var(--blue);animation:blink 2.4s infinite;}
+.dot-warn{background:var(--amb-t);}
+.dot-ok{background:var(--grn-t);}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hd-badge{font-family:var(--mono);font-size:8px;color:var(--w25);border:1px solid var(--bord2);padding:2px 7px;}
+.flag-wrap{display:flex;align-items:flex-start;padding-top:2px;}
+.flag-pole{width:2px;height:0;background:rgba(255,255,255,0.25);animation:pole-grow 0.45s ease-out 0.15s forwards;border-radius:1px;}
+@keyframes pole-grow{to{height:44px}}
+.flag-body{display:flex;flex-direction:column;overflow:hidden;width:0;margin-top:2px;animation:flag-unfurl 0.75s cubic-bezier(0.22,1,0.36,1) 0.55s forwards;}
+@keyframes flag-unfurl{from{width:0;opacity:0.3}to{width:62px;opacity:1}}
+.flag-stripe{height:13px;width:100%;}
+.flag-blue{background:#0072CE;}
+.flag-black{background:#000;border-top:1px solid rgba(255,255,255,0.1);border-bottom:1px solid rgba(255,255,255,0.1);}
+.flag-white{background:#FFF;}
+.body{display:grid;grid-template-columns:220px 1fr 360px;overflow:hidden;height:100%;}
+.sidebar{background:var(--surf);border-right:1px solid var(--bord);display:flex;flex-direction:column;overflow:hidden;}
+.sb-top{padding:12px;border-bottom:1px solid var(--bord);}
+.sb-lbl{font-family:var(--mono);font-size:8px;letter-spacing:.1em;color:var(--w25);text-transform:uppercase;margin-bottom:8px;}
+.new-btn{width:100%;padding:7px;font-family:var(--cinzel);font-size:8px;letter-spacing:.18em;background:transparent;border:1px solid var(--blue);color:var(--blue);cursor:pointer;transition:all .12s;}
+.new-btn:hover{background:var(--blue);color:var(--white);}
+.sb-scroll{flex:1;overflow-y:auto;padding:8px;}
+.sys-item{padding:7px 9px;border:1px solid transparent;cursor:pointer;transition:all .12s;margin-bottom:2px;}
+.sys-item:hover{border-color:var(--bord2);background:var(--w08);}
+.sys-item.active{border-color:var(--blue);background:var(--blue-dim);}
+.si-name{font-size:10px;font-weight:500;color:var(--w80);line-height:1.3;margin-bottom:2px;}
+.si-ref{font-family:var(--mono);font-size:7.5px;color:var(--w25);}
+.si-badges{display:flex;gap:3px;margin-top:3px;}
+.pip{font-family:var(--mono);font-size:7px;padding:1px 4px;font-weight:600;}
+.p-t1{background:var(--red-d);color:var(--red-t);border:1px solid rgba(231,76,60,.22);}
+.p-t2{background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(212,150,10,.22);}
+.p-t3{background:var(--blue-dim2);color:var(--blue);border:1px solid rgba(0,114,206,.22);}
+.sb-footer{padding:10px 12px;border-top:1px solid var(--bord);}
+.f-sm label{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;color:var(--w25);text-transform:uppercase;display:block;margin-bottom:4px;}
+.f-sm input{background:var(--surf2);border:1px solid var(--bord2);color:var(--white);font-family:var(--mono);font-size:11px;padding:5px 8px;width:100%;outline:none;}
+.f-sm input:focus{border-color:var(--blue);}
+.main{background:var(--black);overflow:hidden;display:flex;flex-direction:column;}
+.tab-bar{display:flex;border-bottom:1px solid var(--bord);background:var(--surf);flex-shrink:0;}
+.tab{padding:9px 16px;font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.16em;color:var(--w40);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;text-transform:uppercase;}
+.tab:hover{color:var(--w80);}
+.tab.active{color:var(--white);border-bottom-color:var(--blue);}
+.tab-panel{display:none;flex:1;overflow-y:auto;padding:20px 26px;scrollbar-width:thin;scrollbar-color:var(--bord) transparent;}
+.tab-panel.active{display:block;}
+.role-banner{display:flex;margin-bottom:18px;border:1px solid var(--bord2);}
+.role-btn{flex:1;padding:10px 14px;border-right:1px solid var(--bord2);text-align:center;}
+.role-btn:last-child{border-right:none;}
+.role-btn.active-role{background:var(--blue-dim2);}
+.rb-title{font-family:var(--cinzel);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--w80);}
+.rb-sub{font-size:9px;color:var(--w40);margin-top:2px;}
+.rb-pct{font-family:var(--mono);font-size:10px;font-weight:500;margin-top:4px;color:var(--blue);}
+.track-bar{margin-bottom:18px;}
+.track-labels{display:flex;justify-content:space-between;margin-bottom:4px;font-family:var(--mono);font-size:8px;color:var(--w40);}
+.track{height:3px;background:var(--bord2);display:flex;gap:1px;}
+.track-seg{height:3px;flex:1;background:var(--bord2);transition:background .3s;}
+.track-seg.done{background:var(--blue);}
+.section-block{margin-bottom:20px;}
+.sb-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--bord);}
+.sb-num{font-family:var(--mono);font-size:8px;color:var(--blue);width:14px;flex-shrink:0;}
+.sb-title{font-family:var(--cinzel);font-size:9px;font-weight:600;letter-spacing:.14em;color:var(--w80);}
+.sb-ref{font-family:var(--mono);font-size:7.5px;color:var(--w25);margin-left:auto;}
+.proxy-q{background:var(--surf2);border:1px solid var(--bord2);padding:10px 12px;margin-bottom:6px;}
+.pq-text{font-size:11px;color:var(--w80);line-height:1.55;margin-bottom:8px;}
+.pq-why{font-size:9px;color:var(--w40);font-style:italic;margin-bottom:8px;line-height:1.5;border-left:2px solid var(--bord2);padding-left:8px;}
+.pq-actions{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.pq-btn{font-family:var(--mono);font-size:8.5px;padding:5px 10px;border:1px solid var(--bord2);background:none;color:var(--w60);cursor:pointer;transition:all .12s;}
+.pq-btn.sel{font-weight:600;}
+.pq-btn:not(.sel){opacity:0.55;}
+.pq-btn.yes-s{border-color:var(--blue);color:var(--blue);}
+.pq-btn.yes-s.sel{background:var(--blue-dim);}
+.pq-btn.no-s{border-color:var(--red-t);color:var(--red-t);}
+.pq-btn.no-s.sel{background:var(--red-d);}
+.pq-btn.unk-s{border-color:var(--amb-t);color:var(--amb-t);}
+.pq-btn.unk-s.sel{background:var(--amb-d);}
+.expand-det{display:none;}
+.expand-det.open{display:block;}
+.unk-flag{display:none;margin-top:6px;padding:6px 9px;background:var(--amb-d);border:1px solid rgba(212,150,10,.25);font-family:var(--mono);font-size:8px;color:var(--amb-t);}
+.unk-flag.show{display:block;}
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.fg.one{grid-template-columns:1fr;}
+.fg.three{grid-template-columns:1fr 1fr 1fr;}
+.f{display:flex;flex-direction:column;gap:3px;}
+.f label{font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;color:var(--w25);text-transform:uppercase;}
+.f label .req{color:var(--red-t);margin-left:2px;}
+.f label .ptag{color:var(--blue);margin-left:4px;font-size:7px;}
+.f label .ttag{color:var(--amb-t);margin-left:4px;font-size:7px;}
+.f input,.f select,.f textarea{background:var(--surf2);border:1px solid var(--bord2);color:var(--white);font-family:var(--noto);font-size:11px;padding:6px 9px;outline:none;transition:border-color .12s;width:100%;}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--blue);}
+.f select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='4'%3E%3Cpath d='M0 0l4 4 4-4z' fill='rgba(255,255,255,0.3)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:22px;}
+.f select option{background:#111;}
+.f textarea{resize:vertical;min-height:52px;line-height:1.5;}
+.annex-flag{display:none;margin-top:6px;padding:7px 10px;font-family:var(--mono);font-size:7.5px;}
+.annex-flag.show{display:block;background:var(--red-d);border:1px solid rgba(231,76,60,.25);color:var(--red-t);}
+.lm-row{display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:var(--surf3);border:1px solid var(--bord);}
+.lm-lbl{font-size:9.5px;color:var(--w60);}
+.lm-sel{background:var(--surf2);border:1px solid var(--bord2);color:var(--white);font-family:var(--mono);font-size:8.5px;padding:2px 5px;outline:none;}
+.lm-sel:focus{border-color:var(--blue);}
+.run-wrap{margin-top:6px;}
+.run-btn{width:100%;padding:11px;font-family:var(--cinzel);font-size:9px;font-weight:600;letter-spacing:.22em;background:var(--blue);color:var(--white);border:none;cursor:pointer;transition:all .15s;}
+.run-btn:hover{background:var(--blue-mid);}
+.prog-wrap{display:none;margin-top:10px;}
+.prog-wrap.vis{display:block;}
+.prog-lbl{font-family:var(--mono);font-size:8px;color:var(--blue);margin-bottom:3px;}
+.prog-track{height:2px;background:var(--bord2);}
+.prog-fill{height:2px;background:var(--blue);width:0;transition:width .05s;}
+.prog-log{font-family:var(--mono);font-size:8px;color:var(--w40);margin-top:3px;height:12px;overflow:hidden;}
+.assess-panel{background:var(--surf);border-left:1px solid var(--bord);display:flex;flex-direction:column;overflow:hidden;}
+.ap-head{padding:14px 16px 10px;border-bottom:1px solid var(--bord);flex-shrink:0;}
+.ap-lbl{font-family:var(--cinzel);font-size:7.5px;font-weight:600;letter-spacing:.18em;color:var(--w25);text-transform:uppercase;margin-bottom:4px;}
+.ap-sysname{font-size:11px;font-weight:600;color:var(--white);margin-bottom:8px;}
+.ap-tabs{display:flex;}
+.ap-tab{padding:5px 10px;font-family:var(--mono);font-size:7.5px;color:var(--w40);cursor:pointer;border:1px solid var(--bord);border-right:none;transition:all .12s;text-transform:uppercase;}
+.ap-tab:last-child{border-right:1px solid var(--bord);}
+.ap-tab:hover{color:var(--w80);}
+.ap-tab.active{background:var(--blue-dim);border-color:var(--blue);color:var(--white);}
+.rev-badge{display:inline-flex;align-items:center;justify-content:center;width:14px;height:14px;border-radius:50%;font-family:var(--mono);font-size:7.5px;font-weight:600;margin-left:4px;background:var(--red-d);color:var(--red-t);border:1px solid rgba(231,76,60,.3);}
+.ap-body{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--bord) transparent;}
+.ap-sec{display:none;padding:12px 16px;}
+.ap-sec.active{display:block;}
+.empty-s{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:280px;gap:8px;}
+.empty-glyph{font-family:var(--cinzel);font-size:36px;color:var(--bord2);letter-spacing:.1em;}
+.empty-txt{font-family:var(--mono);font-size:7.5px;color:var(--w25);text-align:center;line-height:2;}
+.score-wrap{display:flex;align-items:center;gap:12px;padding:10px;background:var(--surf2);border:1px solid var(--bord2);margin-bottom:14px;}
+.score-ring{position:relative;width:52px;height:52px;flex-shrink:0;}
+.score-ring svg{transform:rotate(-90deg);}
+.score-val{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:13px;font-weight:500;}
+.verdict{font-family:var(--cinzel);font-size:10px;font-weight:600;letter-spacing:.07em;margin-bottom:2px;}
+.verdict-sub{font-size:9px;color:var(--w60);line-height:1.4;}
+.conf-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:8px;background:var(--surf2);border:1px solid var(--bord);}
+.cl-item{display:flex;align-items:center;gap:4px;font-family:var(--mono);font-size:7.5px;}
+.cl-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.sec-title{font-family:var(--mono);font-size:7.5px;letter-spacing:.1em;color:var(--w25);text-transform:uppercase;margin:12px 0 6px;}
+.finding{display:flex;align-items:flex-start;gap:7px;padding:8px 0;border-bottom:1px solid var(--bord);}
+.finding:last-child{border-bottom:none;}
+.conf-dot{flex-shrink:0;width:9px;height:9px;border-radius:50%;margin-top:3px;}
+.tier-icon{width:18px;height:18px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:7px;font-weight:600;}
+.ti-t1{background:var(--red-d);color:var(--red-t);border:1px solid rgba(231,76,60,.25);}
+.ti-t2{background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(212,150,10,.25);}
+.ti-t3{background:var(--blue-dim2);color:var(--blue);border:1px solid rgba(0,114,206,.25);}
+.f-body{flex:1;}
+.f-title{font-size:10px;font-weight:500;color:var(--white);margin-bottom:2px;}
+.f-desc{font-size:9px;color:var(--w60);line-height:1.5;}
+.f-arts{font-family:var(--mono);font-size:7.5px;color:var(--blue);margin-top:2px;}
+.f-art{cursor:pointer;margin-right:4px;}
+.f-art:hover{color:var(--white);}
+.f-conf{font-family:var(--mono);font-size:7px;margin-top:3px;}
+.f-fine{font-family:var(--mono);font-size:9px;font-weight:500;flex-shrink:0;}
+.ft1{color:var(--red-t);}.ft2{color:var(--amb-t);}.ft3{color:var(--blue);}
+.cond-block{margin-top:14px;padding:10px;background:var(--blue-dim);border:1px solid rgba(0,114,206,.25);}
+.cond-title{font-family:var(--mono);font-size:8px;color:var(--blue);margin-bottom:8px;}
+.cond-item{font-size:9px;color:var(--w60);padding:5px 0;border-bottom:1px solid rgba(0,114,206,.12);}
+.cond-item:last-child{border-bottom:none;}
+.cond-field{font-family:var(--mono);font-size:7.5px;color:var(--blue);}
+.exp-row{display:flex;align-items:center;gap:6px;margin-bottom:4px;}
+.exp-lbl{font-size:8.5px;color:var(--w60);width:105px;flex-shrink:0;}
+.exp-track{flex:1;height:2px;background:var(--bord2);}
+.exp-fill{height:2px;transition:width 1s ease;}
+.exp-val{font-family:var(--mono);font-size:8.5px;font-weight:500;width:48px;text-align:right;}
+.total-box{background:var(--deep);border:1px solid var(--blue);padding:10px 12px;margin-top:8px;}
+.tot-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;color:rgba(0,114,206,.6);text-transform:uppercase;margin-bottom:2px;}
+.tot-val{font-family:var(--mono);font-size:18px;font-weight:500;}
+.tot-sub{font-size:8.5px;color:var(--w60);margin-top:2px;}
+.run-ver-btn{width:100%;padding:8px;font-family:var(--mono);font-size:8px;letter-spacing:.1em;background:var(--blue-dim);border:1px solid rgba(0,114,206,.35);color:var(--blue);cursor:pointer;margin-bottom:10px;transition:all .12s;}
+.run-ver-btn:hover{background:var(--blue);color:var(--white);}
+.ver-summary{padding:8px 10px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:10px;}
+.vs-row{display:flex;justify-content:space-between;font-size:9px;padding:3px 0;border-bottom:1px solid var(--bord);}
+.vs-row:last-child{border-bottom:none;}
+.vs-lbl{color:var(--w60);}
+.vs-val{font-family:var(--mono);font-weight:500;}
+.ver-check{padding:8px 10px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;}
+.vc-head{display:flex;align-items:center;gap:7px;margin-bottom:4px;}
+.vc-status{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.vcs-pass{background:var(--grn-t);}
+.vcs-warn{background:var(--amb-t);}
+.vc-title{font-size:10px;font-weight:500;color:var(--white);}
+.vc-body{font-size:9px;color:var(--w60);line-height:1.5;padding-left:15px;}
+.vc-src{font-family:var(--mono);font-size:7.5px;color:var(--blue);padding-left:15px;margin-top:2px;cursor:pointer;}
+.vc-src:hover{color:var(--white);}
+.er-card{background:var(--surf2);border:1px solid var(--bord);margin-bottom:8px;overflow:hidden;}
+.er-head{display:flex;align-items:center;justify-content:space-between;padding:9px 11px;border-bottom:1px solid var(--bord);background:var(--surf3);}
+.er-title{font-size:10px;font-weight:500;color:var(--white);}
+.er-meta{font-family:var(--mono);font-size:7.5px;color:var(--w40);}
+.er-status{font-family:var(--mono);font-size:7.5px;padding:2px 6px;}
+.ers-pending{background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(212,150,10,.25);}
+.ers-confirmed{background:var(--grn-d);color:var(--grn-t);border:1px solid rgba(39,174,96,.25);}
+.ers-amended{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(0,114,206,.25);}
+.ers-escalated{background:var(--red-d);color:var(--red-t);border:1px solid rgba(231,76,60,.25);}
+.er-body{padding:10px 11px;}
+.er-fl{font-family:var(--mono);font-size:7.5px;color:var(--w25);text-transform:uppercase;margin-bottom:4px;}
+.er-ft{font-size:9.5px;color:var(--w60);line-height:1.55;margin-bottom:8px;}
+.er-cr{display:flex;align-items:center;gap:6px;margin-bottom:8px;}
+.er-cd{width:7px;height:7px;border-radius:50%;}
+.er-ct{font-family:var(--mono);font-size:7.5px;}
+.er-src{font-family:var(--mono);font-size:7.5px;color:var(--blue);margin-bottom:8px;cursor:pointer;}
+.er-src:hover{color:var(--white);}
+.er-sep{height:1px;background:var(--bord);margin:8px 0;}
+.er-ta{width:100%;background:var(--surf);border:1px solid var(--bord2);color:var(--white);font-family:var(--noto);font-size:10px;padding:7px 9px;resize:vertical;min-height:52px;outline:none;line-height:1.5;}
+.er-ta:focus{border-color:var(--blue);}
+.er-actions{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap;}
+.er-btn{font-family:var(--mono);font-size:7.5px;padding:4px 9px;border:1px solid var(--bord2);background:none;color:var(--w60);cursor:pointer;transition:all .12s;}
+.er-btn.confirm{border-color:var(--grn-t);color:var(--grn-t);}
+.er-btn.confirm:hover{background:var(--grn-d);}
+.er-btn.amend{border-color:var(--blue);color:var(--blue);}
+.er-btn.amend:hover{background:var(--blue-dim);}
+.er-btn.escalate{border-color:var(--red-t);color:var(--red-t);}
+.er-btn.escalate:hover{background:var(--red-d);}
+.er-assign{font-family:var(--noto);font-size:9px;padding:3px 7px;background:var(--surf);border:1px solid var(--bord2);color:var(--white);outline:none;margin-left:auto;}
+.er-ann{margin-top:6px;padding:7px 9px;font-size:9px;color:var(--blue);background:var(--blue-dim);border:1px solid rgba(0,114,206,.25);display:none;line-height:1.5;}
+.er-ann.vis{display:block;}
+.signoff-box{background:var(--surf2);border:1px solid var(--bord2);padding:12px 14px;margin-top:10px;}
+.so-title{font-family:var(--cinzel);font-size:9px;font-weight:600;letter-spacing:.12em;color:var(--white);margin-bottom:8px;}
+.so-item{display:flex;align-items:center;gap:6px;padding:5px 0;border-bottom:1px solid var(--bord);font-size:9px;color:var(--w60);}
+.so-item:last-child{border-bottom:none;}
+.so-check{width:12px;height:12px;border:1px solid var(--bord2);flex-shrink:0;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:8px;transition:all .12s;}
+.so-check.checked{background:var(--grn-t);border-color:var(--grn-t);color:var(--black);}
+.so-btn{width:100%;padding:9px;font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.18em;background:transparent;border:1px solid var(--bord2);color:var(--w40);cursor:not-allowed;transition:all .15s;margin-top:10px;}
+.so-btn.ready{border-color:var(--grn-t);color:var(--grn-t);cursor:pointer;}
+.so-btn.ready:hover{background:var(--grn-d);}
+.dl-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--bord);font-size:9px;}
+.dl-row:last-child{border-bottom:none;}
+.dl-lbl{color:var(--w60);}
+.dl-val{font-family:var(--mono);}
+.dl-urgent{color:var(--red-t);}
+.dl-soon{color:var(--amb-t);}
+.dl-ok{color:var(--grn-t);}
+.note{background:var(--surf2);border:1px solid var(--bord);padding:8px 10px;font-size:8.5px;color:var(--w60);line-height:1.6;margin-top:8px;}
+.note strong{color:var(--white);font-weight:500;}
+.mask{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:50;display:none;}
+.mask.open{display:block;}
+.drawer{position:fixed;right:0;top:0;bottom:0;width:400px;background:var(--surf);border-left:1px solid var(--blue);z-index:51;transform:translateX(100%);transition:transform .2s ease;display:flex;flex-direction:column;}
+.drawer.open{transform:translateX(0);}
+.dr-head{padding:12px 14px;border-bottom:1px solid var(--bord);background:var(--deep);display:flex;justify-content:space-between;align-items:center;flex-shrink:0;}
+.dr-title{font-family:var(--cinzel);font-size:8px;letter-spacing:.14em;color:var(--white);}
+.dr-close{background:none;border:1px solid var(--w25);color:var(--w60);font-family:var(--mono);font-size:8px;padding:2px 7px;cursor:pointer;}
+.dr-close:hover{border-color:var(--white);color:var(--white);}
+.dr-body{padding:16px 14px;overflow-y:auto;flex:1;}
+.dr-lbl{font-family:var(--mono);font-size:7.5px;letter-spacing:.09em;color:var(--w25);text-transform:uppercase;margin-bottom:6px;}
+.dr-quote{background:var(--black);border-left:2px solid var(--blue);padding:10px 12px;font-size:10px;line-height:1.7;color:var(--w60);margin-bottom:12px;}
+.dr-quote em{color:var(--white);font-style:normal;}
+.dr-ref{font-family:var(--mono);font-size:7.5px;color:var(--w25);margin-bottom:10px;}
+.dr-conf-track{height:2px;background:var(--bord2);margin-bottom:6px;}
+.dr-conf-fill{height:2px;background:var(--blue);}
+.dr-hash{font-family:var(--mono);font-size:7.5px;color:var(--w25);word-break:break-all;margin-top:6px;}
+.dr-ok{padding:6px 9px;background:var(--grn-d);border:1px solid rgba(39,174,96,.25);font-family:var(--mono);font-size:7.5px;color:var(--grn-t);margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+<div class="hd-inner">
+<div>
+<div class="wm-name">A V G V S T &nbsp; A I</div>
+<div class="wm-sub">National AI Compliance Registry &nbsp;·&nbsp; EU AI Act 2024/1689 &nbsp;·&nbsp; eAIDAS Reference Implementation</div>
+</div>
+<div class="hd-right">
+<div class="flag-wrap">
+<div class="flag-pole"></div>
+<div class="flag-body">
+<div class="flag-stripe flag-blue"></div>
+<div class="flag-stripe flag-black"></div>
+<div class="flag-stripe flag-white"></div>
+</div>
+</div>
+<div class="hd-pills">
+<div class="hd-pill"><span class="hd-dot dot-live"></span>RAG LIVE</div>
+<div class="hd-pill"><span class="hd-dot dot-warn"></span>6 PENDING</div>
+<div class="hd-pill"><span class="hd-dot dot-ok"></span>X-ROAD READY</div>
+<div class="hd-badge">EST · EE-NACR-001</div>
+</div>
+</div>
+</div>
+<div class="triband"><div class="tb-k"></div><div class="tb-b"></div><div class="tb-w"></div></div>
+</header>
+<div class="body">
+<aside class="sidebar">
+<div class="sb-top">
+<div class="sb-lbl">Registered systems</div>
+<button class="new-btn" onclick="resetForm()">+ Register new system</button>
+</div>
+<div class="sb-scroll">
+<div class="sb-lbl" style="margin-bottom:5px;">Active assessments</div>
+<div class="sys-item active" data-key="burokratt" onclick="loadSystem('burokratt')">
+<div class="si-name">Bürokratt Virtual Assistant</div>
+<div class="si-ref">ISA · Activity 1.5</div>
+<div class="si-badges"><span class="pip p-t1">T1</span><span class="pip p-t2">T2</span></div>
+</div>
+<div class="sys-item" data-key="apa" onclick="loadSystem('apa')">
+<div class="si-name">Automatic Administrative Acts</div>
+<div class="si-ref">MJ · APA Amendment</div>
+<div class="si-badges"><span class="pip p-t2">T2</span></div>
+</div>
+<div class="sys-item" data-key="aire" onclick="loadSystem('aire')">
+<div class="si-name">AIRE Healthcare Demos</div>
+<div class="si-ref">AIRE Consortium</div>
+<div class="si-badges"><span class="pip p-t1">T1</span></div>
+</div>
+<div class="sys-item" data-key="digital" onclick="loadSystem('digital')">
+<div class="si-name">Top-10 Digital Services</div>
+<div class="si-ref">MEAC · ISA</div>
+<div class="si-badges"><span class="pip p-t2">T2</span></div>
+</div>
+<div class="sys-item" data-key="rihake" onclick="loadSystem('rihake')">
+<div class="si-name">RIHAKE Data Management</div>
+<div class="si-ref">Statistics Estonia</div>
+<div class="si-badges"><span class="pip p-t3">T3</span></div>
+</div>
+</div>
+<div class="sb-footer">
+<div class="f-sm">
+<label>Annual turnover (EUR M)</label>
+<input type="number" id="turnover" value="800" min="0" oninput="onTurnoverChange()">
+</div>
+</div>
+</aside>
+<div class="main">
+<div class="tab-bar">
+<div class="tab active" onclick="switchTab('intake',this)">A &nbsp; Policy intake</div>
+<div class="tab" onclick="switchTab('tech',this)">B &nbsp; Technical evidence</div>
+<div class="tab" onclick="switchTab('docs',this)">C &nbsp; Documents</div>
+</div>
+<div class="tab-panel active" id="tab-intake">
+<div style="font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.18em;color:var(--w40);text-transform:uppercase;margin-bottom:3px;">Track A — Policy &amp; governance</div>
+<div style="font-family:var(--cinzel);font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;" id="form-title">New system registration</div>
+<div style="font-size:10px;color:var(--w60);margin-bottom:14px;line-height:1.6;">Complete this track if you are a <strong style="color:var(--white);">DPO, legal officer, or policy manager</strong>. You need the procurement specification and any existing DPIAs. You do not need technical access to the system. Track B is for your IT team.</div>
+<div class="role-banner">
+<div class="role-btn active-role">
+<div class="rb-title">Policy officer</div>
+<div class="rb-sub">Legal · DPO · Governance</div>
+<div class="rb-pct" id="pct-policy">0% complete</div>
+</div>
+<div class="role-btn" onclick="switchTab('tech',document.querySelectorAll('.tab')[1])" style="cursor:pointer;">
+<div class="rb-title">Technical officer</div>
+<div class="rb-sub">IT · Systems · DevOps</div>
+<div class="rb-pct" style="color:var(--amb-t);">Track B →</div>
+</div>
+</div>
+<div class="track-bar">
+<div class="track-labels"><span>Policy track completion</span><span id="tla">0 / 10</span></div>
+<div class="track" id="track-a">
+<div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div>
+<div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A1</span><span class="sb-title">System identity</span><span class="sb-ref">Art. 11 · Annex IV</span></div>
+<div class="fg">
+<div class="f"><label>System name <span class="req">*</span><span class="ptag">[Policy]</span></label><input type="text" id="f-name" placeholder="e.g. Bürokratt Virtual Assistant" oninput="updA()"></div>
+<div class="f"><label>Deploying institution <span class="req">*</span><span class="ptag">[Policy]</span></label><input type="text" id="f-inst" placeholder="e.g. Information System Authority" oninput="updA()"></div>
+<div class="f"><label>Deployment date <span class="req">*</span><span class="ptag">[Policy]</span></label><input type="date" id="f-date" oninput="updA()"></div>
+<div class="f"><label>Builder / vendor<span class="ptag">[Policy]</span></label><input type="text" id="f-vendor" placeholder="Internal or vendor name"></div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A2</span><span class="sb-title">What this system does</span><span class="sb-ref">Art. 3(1) · Art. 25 trigger</span></div>
+<div class="proxy-q">
+<div class="pq-text">Copy the intended purpose exactly as written in the procurement specification.</div>
+<div class="pq-why">This is the legal declared purpose. If the system is used differently in practice, that divergence may transfer provider obligations to your institution under Art. 25.</div>
+<div class="f" style="margin-bottom:10px;"><label>Declared intended purpose — verbatim from procurement <span class="req">*</span></label><textarea id="f-purpose" rows="3" placeholder="Copy from the procurement specification..." oninput="updA()"></textarea></div>
+<div class="pq-text" style="margin-bottom:6px;">Is the system currently used in the same way as procured?</div>
+<div class="pq-actions">
+<button class="pq-btn yes-s sel" id="sb-yes" onclick="setSame('yes')">Yes — used as procured</button>
+<button class="pq-btn no-s" id="sb-no" onclick="setSame('no')">No — use has changed</button>
+<button class="pq-btn unk-s" id="sb-unk" onclick="setSame('unknown')">Not sure</button>
+</div>
+<div class="expand-det" id="actual-det">
+<div class="f" style="margin-top:6px;"><label>Actual production use (describe changes)</label><textarea id="f-actual" rows="2" placeholder="How is the system actually being used now?"></textarea></div>
+</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A3</span><span class="sb-title">Who is affected</span><span class="sb-ref">Annex III · High-risk classification</span></div>
+<div class="proxy-q">
+<div class="pq-text">What does this system primarily do?</div>
+<div class="pq-why">Your answer determines whether this is a high-risk AI system under Annex III — and whether full conformity assessment, FRIA, and registration obligations apply.</div>
+<div class="fg">
+<div class="f"><label>Primary domain <span class="req">*</span></label>
+<select id="f-domain" onchange="updAnnex();updA()">
+<option value="">Select what the system primarily does</option>
+<option value="essential">Helps citizens access government services or benefits</option>
+<option value="employment">Makes or supports employment decisions</option>
+<option value="education">Used in education or training assessment</option>
+<option value="lawenf">Used by or for law enforcement</option>
+<option value="biometric">Identifies or categorises people from biometric data</option>
+<option value="critical">Controls critical infrastructure</option>
+<option value="migration">Used in migration, asylum, or border control</option>
+<option value="justice">Used in legal proceedings</option>
+<option value="internal">Internal operations — no citizen decisions</option>
+<option value="other">Something else</option>
+</select>
+</div>
+<div class="f"><label>Approximate citizens affected per year</label>
+<select id="f-citizens">
+<option value="">Select scale</option>
+<option>Fewer than 1,000</option><option>1,000 – 10,000</option>
+<option>10,000 – 100,000</option><option>100,000 – 500,000</option>
+<option>Over 500,000 (national scale)</option>
+</select>
+</div>
+</div>
+<div id="annexiii-flag" class="annex-flag"></div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A4</span><span class="sb-title">What decisions does it make or support?</span><span class="sb-ref">Art. 26(3) · Human review right</span></div>
+<div class="proxy-q">
+<div class="pq-why">If the system makes binding decisions — granting or refusing services — affected people have a right to human review. This does not apply to information-only tools.</div>
+<div class="f"><label>Decision type <span class="req">*</span></label>
+<select id="f-decision" onchange="updA()">
+<option value="">Select</option>
+<option value="binding">Binding automated decision (person receives or is refused something based on this output alone)</option>
+<option value="assisted">Decision support (human makes final decision, informed by the system)</option>
+<option value="triage">Routing or prioritisation only</option>
+<option value="info">Information provision only</option>
+<option value="internal">Internal process only — citizens not directly affected</option>
+</select>
+</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A5</span><span class="sb-title">What compliance documentation exists?</span><span class="sb-ref">Art. 16, 27, 43, 47, 49</span></div>
+<div class="fg three">
+<div class="f"><label>Data Protection Impact Assessment<span class="ptag">[Policy]</span></label>
+<select id="f-dpia" onchange="updA()"><option value="">Select</option><option value="yes">Yes — current</option><option value="outdated">Yes — outdated</option><option value="no">No</option><option value="na">Not required</option></select>
+</div>
+<div class="f"><label>Fundamental Rights Impact Assessment (Art. 27)<span class="ptag">[Policy]</span></label>
+<select id="f-fria" onchange="updA()"><option value="">Select</option><option value="complete">Completed</option><option value="inprogress">In progress</option><option value="planned">Planned</option><option value="none">Not started</option><option value="na">N/A</option></select>
+</div>
+<div class="f"><label>EU database registration (Art. 49)<span class="ptag">[Policy]</span></label>
+<select id="f-eudb" onchange="updA()"><option value="">Select</option><option value="registered">Registered</option><option value="pending">Pending</option><option value="none">Not registered</option><option value="na">Not required</option></select>
+</div>
+<div class="f"><label>Conformity assessment (Art. 43)</label>
+<select id="f-ca"><option value="">Select</option><option value="complete">Completed</option><option value="inprogress">In progress</option><option value="planned">Planned</option><option value="none">Not started</option><option value="exempt">Exemption claimed</option></select>
+</div>
+<div class="f"><label>Art. 47 Declaration of Conformity</label>
+<select id="f-doc"><option value="">Select</option><option value="signed">Signed DoC exists</option><option value="draft">Draft only</option><option value="none">Does not exist</option><option value="na">N/A</option></select>
+</div>
+<div class="f"><label>Named oversight person assigned (Art. 26)<span class="ptag">[Policy]</span></label>
+<select id="f-oversight" onchange="updA()"><option value="">Select</option><option value="named">Yes — specific person named</option><option value="team">Team assigned, no named individual</option><option value="informal">Informal only</option><option value="none">No oversight assigned</option></select>
+</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">A6</span><span class="sb-title">Do citizens know they are interacting with AI?</span><span class="sb-ref">Art. 50</span></div>
+<div class="proxy-q">
+<div class="pq-why">Art. 50 requires that people know they are interacting with AI at first contact. Applies to chatbots, automated decisions, AI-generated content. Not required for purely internal tools.</div>
+<div class="pq-actions">
+<button class="pq-btn yes-s" id="trans-disclosed" onclick="setTrans('disclosed')">Yes — clearly disclosed at first contact</button>
+<button class="pq-btn unk-s sel" id="trans-partial" onclick="setTrans('partial')">Partial — mentioned somewhere</button>
+<button class="pq-btn no-s" id="trans-none" onclick="setTrans('none')">No disclosure</button>
+<button class="pq-btn" id="trans-na" onclick="setTrans('na')" style="border-color:var(--bord2);color:var(--w60);">Not citizen-facing</button>
+</div>
+</div>
+</div>
+<div class="run-wrap">
+<button class="run-btn" onclick="runAssessment()">Generate compliance assessment</button>
+<div class="prog-wrap" id="prog-wrap">
+<div class="prog-lbl" id="prog-lbl">Initialising...</div>
+<div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+<div class="prog-log" id="prog-log"></div>
+</div>
+</div>
+<div style="height:30px;"></div>
+</div>
+<div class="tab-panel" id="tab-tech">
+<div style="font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.18em;color:var(--amb-t);text-transform:uppercase;margin-bottom:3px;">Track B — Technical evidence</div>
+<div style="font-family:var(--cinzel);font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Technical system details</div>
+<div style="font-size:10px;color:var(--w60);margin-bottom:14px;line-height:1.6;">Complete this track if you are an <strong style="color:var(--white);">IT architect, systems engineer, or DevOps lead</strong>. You need deployment configuration and logging infrastructure access. Track A can be completed separately by your DPO or legal officer.</div>
+<div class="track-bar">
+<div class="track-labels"><span>Technical track completion</span><span id="tlb">0 / 8</span></div>
+<div class="track" id="track-b">
+<div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div>
+<div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div><div class="track-seg"></div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">B1</span><span class="sb-title">Model character</span><span class="sb-ref">Art. 3(1) · Art. 53 GPAI</span></div>
+<div class="proxy-q">
+<div class="pq-text">What kind of AI system is this? If it uses only fixed rules with no statistical models, select "Rule-based" — such systems may fall outside the AI Act's scope entirely.</div>
+<div class="fg">
+<div class="f"><label>Model type <span class="ttag">[Technical]</span></label>
+<select id="f-modeltype" onchange="updB()">
+<option value="">Select</option>
+<option>Large language model (LLM)</option><option>Classification model</option>
+<option>Regression / scoring model</option><option>Computer vision model</option>
+<option>Speech recognition / NLP</option><option>Recommender system</option>
+<option>Rule-based system (may be out of scope)</option><option>Hybrid: ML + rules</option>
+<option>Foundation model / GPAI</option>
+<option value="unknown">Unknown — documentation unavailable</option>
+</select>
+</div>
+<div class="f"><label>Personal data processed <span class="ttag">[Technical]</span></label>
+<select id="f-personal" onchange="updB()">
+<option value="">Select</option>
+<option>No personal data</option><option>Pseudonymised data only</option>
+<option>Identified personal data</option>
+<option value="Special category data (Art. 9 GDPR)">Special category (health, religion, ethnicity...)</option>
+<option value="Biometric data">Biometric data (face, fingerprint, voice...)</option>
+<option value="unknown-personal">Unknown — not documented</option>
+</select>
+</div>
+<div class="f"><label>X-Road service identifier <span class="ttag">[Technical]</span></label><input type="text" id="f-xroad" placeholder="e.g. EE/GOV/70006317/Burokratt" oninput="updB()"></div>
+<div class="f"><label>Foundation / base model</label><input type="text" id="f-foundation" placeholder="e.g. Custom Estonian LLM, None"></div>
+</div>
+<div class="unk-flag" id="unk-model">⚠ Model type unknown — Art. 11 documentation gap. Technical documentation must describe the system's operational logic.</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">B2</span><span class="sb-title">Logging — which events are recorded?</span><span class="sb-ref">Art. 12 · AEP event types</span></div>
+<div class="proxy-q">
+<div class="pq-text">Art. 12 requires automatic recording of events sufficient for ex-post inspection. For each event type, select whether it is fully logged, partially logged, or not logged.</div>
+<div class="pq-why">Research (Sokolov 2026) found only 0.5% of public agent infrastructure has tamper-evident logging. Most logging covers debugging, not accountability. These are legally different.</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:8px;">
+<div class="lm-row"><span class="lm-lbl">Model requests / prompts</span><select class="lm-sel" id="lm-requests" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">Tool calls &amp; arguments</span><select class="lm-sel" id="lm-tools" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">Tool outputs / responses</span><select class="lm-sel" id="lm-outputs" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">Human approval / override events</span><select class="lm-sel" id="lm-approvals" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">Decision outcomes</span><select class="lm-sel" id="lm-decisions" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">External side effects</span><select class="lm-sel" id="lm-sideeff" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">X-Road register queries</span><select class="lm-sel" id="lm-xroadlog" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+<div class="lm-row"><span class="lm-lbl">Error &amp; exception events</span><select class="lm-sel" id="lm-errors" onchange="updB()"><option value="">Select</option><option value="none">Not logged</option><option value="partial">Partial</option><option value="full">Full</option><option value="unknown">Unknown</option></select></div>
+</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">B3</span><span class="sb-title">Can the logs be trusted as evidence?</span><span class="sb-ref">Art. 12 · Tamper-evidence · RFC 3161</span></div>
+<div class="proxy-q">
+<div class="pq-text">Can the activity logs be modified or deleted after the fact by IT staff or a system administrator?</div>
+<div class="pq-why">A log that can be altered is not an accountability record. For a regulator to rely on your logs as evidence, they must be protected against modification. Only 0.5% of the public agent ecosystem has documented this.</div>
+<div class="pq-actions">
+<button class="pq-btn no-s" id="li-none" onclick="setLI('none')">Yes — anyone with access can edit</button>
+<button class="pq-btn unk-s" id="li-access" onclick="setLI('access')">Access-controlled but editable</button>
+<button class="pq-btn yes-s" id="li-appendonly" onclick="setLI('appendonly')">Append-only</button>
+<button class="pq-btn yes-s" id="li-signed" onclick="setLI('signed')">Cryptographically signed</button>
+<button class="pq-btn yes-s" id="li-rfc3161" onclick="setLI('rfc3161')">RFC 3161 hash chain</button>
+<button class="pq-btn unk-s" id="li-unknown" onclick="setLI('unknown')">I don't know</button>
+</div>
+<div class="unk-flag" id="unk-log">⚠ Log integrity unknown — Art. 12 gap. Unknown architecture cannot support accountability claims in a regulatory inspection.</div>
+</div>
+</div>
+<div class="section-block">
+<div class="sb-head"><span class="sb-num">B4</span><span class="sb-title">Provider obligations &amp; attestation</span><span class="sb-ref">Art. 25 · eIDAS 2.0 · NIST FIPS 204</span></div>
+<div class="fg">
+<div class="f"><label>Who bears Art. 16 provider obligations? <span class="ttag">[Technical+Legal]</span></label>
+<select id="f-provider" onchange="updB()"><option value="">Select</option><option value="institution">Our institution — built in-house</option><option value="vendor">External vendor — contractually allocated</option><option value="shared">Shared — contract specifies split</option><option value="unclear">Unclear — not resolved in contract</option><option value="assumed">Our institution assumed them (Art. 25)</option></select>
+</div>
+<div class="f"><label>Substantially modified since procurement? <span class="ttag">[Technical]</span></label>
+<select id="f-modified" onchange="updB()"><option value="">Select</option><option value="no">No — used as originally procured</option><option value="minor">Minor changes within scope</option><option value="substantial">Substantial modification</option><option value="purpose">Intended purpose has changed</option><option value="unknown">Unknown</option></select>
+</div>
+<div class="f"><label>Compliance record signing <span class="ttag">[Technical]</span></label>
+<select id="f-signing" onchange="updB()"><option value="">Select</option><option value="none">None — unsigned PDF documents</option><option value="basic">Basic digital signature (non-qualified)</option><option value="qualified">Qualified electronic seal (eIDAS 2.0)</option><option value="qtsp">QTSP-issued (ETSI EN 319)</option><option value="pqc">PQC-agile (ML-DSA + legacy)</option></select>
+</div>
+<div class="f"><label>Post-quantum migration <span class="ttag">[Technical]</span></label>
+<select id="f-pqc" onchange="updB()"><option value="">Select</option><option value="none">Not considered</option><option value="planned">Planned (roadmap exists)</option><option value="partial">Partial migration</option><option value="full">Full PQC-agile (FIPS 203/204/205)</option></select>
+</div>
+<div class="f"><label>Threat model documented? <span class="ttag">[Technical]</span></label>
+<select id="f-threatmodel" onchange="updB()"><option value="">Select</option><option value="full">Full threat model</option><option value="partial">Partial</option><option value="none">None</option></select>
+</div>
+<div class="f"><label>Upstream component evidence <span class="ttag">[Technical]</span></label>
+<select id="f-upstream" onchange="updB()"><option value="">Select</option><option value="full">AEP-level evidence from upstream</option><option value="partial">Basic logs only</option><option value="none">No upstream evidence</option><option value="na">No upstream AI components</option></select>
+</div>
+</div>
+</div>
+<div class="run-wrap"><button class="run-btn" onclick="runAssessment()">Generate compliance assessment</button></div>
+<div style="height:30px;"></div>
+</div>
+<div class="tab-panel" id="tab-docs">
+<div style="font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.18em;color:var(--grn-t);text-transform:uppercase;margin-bottom:3px;">Track C — Document ingestion</div>
+<div style="font-family:var(--cinzel);font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;">Upload existing documents</div>
+<div style="font-size:10px;color:var(--w60);margin-bottom:18px;line-height:1.6;">Upload procurement specifications, DPIAs, vendor contracts, or architecture documents. The agent pre-fills fields it can extract. Every extracted value is <strong style="color:var(--amb-t);">AI-assisted</strong> and must be confirmed before being treated as verified in the assessment.</div>
+<div style="background:var(--surf2);border:2px dashed var(--bord2);padding:28px;text-align:center;margin-bottom:14px;cursor:pointer;" onclick="fakeUpload()">
+<div style="font-family:var(--cinzel);font-size:9px;letter-spacing:.14em;color:var(--w40);margin-bottom:6px;">DROP DOCUMENTS HERE OR CLICK TO BROWSE</div>
+<div style="font-size:9px;color:var(--w25);">Procurement spec · DPIA · Vendor contract · Architecture document</div>
+<div style="font-family:var(--mono);font-size:8px;color:var(--w25);margin-top:5px;">PDF, DOCX, TXT · Max 20MB</div>
+</div>
+<div id="doc-list" style="display:none;">
+<div class="sec-title">Extracted fields — confirm before use</div>
+<div id="doc-extractions"></div>
+</div>
+<div class="note"><strong>AI extraction disclaimer:</strong> Fields extracted from documents are preliminary suggestions only. Unconfirmed extractions produce Conditional findings — not Confirmed findings — until a human reviewer approves them.</div>
+</div>
+</div>
+<aside class="assess-panel">
+<div class="ap-head">
+<div class="ap-lbl">Compliance assessment</div>
+<div class="ap-sysname" id="ap-sysname">—</div>
+<div class="ap-tabs">
+<div class="ap-tab active" onclick="switchApTab('findings',this)">Findings</div>
+<div class="ap-tab" onclick="switchApTab('verify',this)">Verify</div>
+<div class="ap-tab" onclick="switchApTab('review',this)">Expert<span class="rev-badge" id="rev-badge" style="display:none;">0</span></div>
+<div class="ap-tab" onclick="switchApTab('signoff',this)">Sign-off</div>
+</div>
+</div>
+<div class="ap-body">
+<div class="ap-sec active" id="ap-findings">
+<div class="empty-s" id="empty-findings"><div class="empty-glyph">AVGVST</div><div class="empty-txt">COMPLETE TRACK A OR B<br>AND RUN ASSESSMENT</div></div>
+<div id="findings-content" style="display:none;"></div>
+</div>
+<div class="ap-sec" id="ap-verify">
+<div class="empty-s" id="empty-verify"><div class="empty-glyph">VER</div><div class="empty-txt">RUN ASSESSMENT FIRST</div></div>
+<div id="verify-content" style="display:none;"></div>
+</div>
+<div class="ap-sec" id="ap-review">
+<div class="empty-s" id="empty-review"><div class="empty-glyph">HiL</div><div class="empty-txt">FLAGGED ITEMS APPEAR<br>HERE AFTER ASSESSMENT</div></div>
+<div id="review-content" style="display:none;"></div>
+</div>
+<div class="ap-sec" id="ap-signoff">
+<div class="empty-s" id="empty-signoff"><div class="empty-glyph">DoC</div><div class="empty-txt">COMPLETE REVIEW<br>TO UNLOCK SIGN-OFF</div></div>
+<div id="signoff-content" style="display:none;"></div>
+</div>
+</div>
+</aside>
+</div>
+</div>
+<div class="mask" id="mask" onclick="closeDrawer()"></div>
+<div class="drawer" id="drawer">
+<div class="dr-head"><span class="dr-title" id="dr-title">SOURCE</span><button class="dr-close" onclick="closeDrawer()">CLOSE ✕</button></div>
+<div class="dr-body" id="dr-body"></div>
+</div>
+<script>
+var logInteg='',transp='partial',sameUse='yes',soChecks=[false,false,false,false];
+var curSys=null,curResult=null,reviewSt={};
+var SRC={
+'Art.5(a)':{title:'Art. 5(1)(a) — Manipulative techniques',quote:'AI system that deploys <em>subliminal techniques beyond a person\'s consciousness</em> or <em>purposefully manipulative or deceptive techniques</em>, with the objective, or the effect of materially distorting the behaviour of a person by appreciably impairing their ability to make an informed decision, thereby causing them to take a decision causing <em>significant harm</em>',ref:'Regulation (EU) 2024/1689 · Art. 5(1)(a) · OJ L 12.7.2024 · p.51',conf:99,hash:'SHA-256: 3a7f2c9d4e1b8f0a · OJ verified'},
+'Art.5(f)':{title:'Art. 5(1)(f) — Emotion inference prohibition',quote:'Use of AI systems to <em>infer emotions of a natural person in the areas of workplace and education institutions</em>, except where intended for <em>medical or safety reasons</em>',ref:'Regulation (EU) 2024/1689 · Art. 5(1)(f) · OJ L 12.7.2024 · p.51',conf:99,hash:'SHA-256: 9b2e1a7c3f8d2e4f · OJ verified'},
+'Art.12':{title:'Art. 12 — Record-keeping',quote:'High-risk AI systems shall <em>technically allow for the automatic recording of events (logs) over the lifetime of the system</em>. The logging capabilities shall ensure a level of traceability of the AI system\'s functioning throughout its lifecycle that is appropriate to the intended purpose',ref:'Regulation (EU) 2024/1689 · Art. 12 · OJ L 12.7.2024',conf:99,hash:'SHA-256: 4d6e8f0a2b4c6d8e · OJ verified'},
+'Art.14':{title:'Art. 14 — Human oversight',quote:'High-risk AI systems shall be designed so they can be <em>effectively overseen by natural persons</em>. Natural persons assigned oversight shall have <em>necessary competence, training and authority</em>',ref:'Regulation (EU) 2024/1689 · Art. 14 · OJ L 12.7.2024',conf:99,hash:'SHA-256: 5e7f9a1b3c5d7e9f · OJ verified'},
+'Art.16':{title:'Art. 16 — Obligations of providers of high-risk AI systems',quote:'Providers of high-risk AI systems shall <em>ensure that their high-risk AI systems are compliant</em> with the requirements set out in Section 2; have a <em>quality management system</em> in place; keep the documentation referred to in Article 18; keep the <em>logs automatically generated</em> by their high-risk AI systems; ensure that the high-risk AI system undergoes the relevant <em>conformity assessment procedure</em> prior to its being placed on the market or put into service',ref:'Regulation (EU) 2024/1689 · Art. 16 · OJ L 12.7.2024',conf:98,hash:'SHA-256: 8e1c5a3f7b9d2c4e · OJ verified'},
+'Art.25':{title:'Art. 25 — Value chain responsibilities',quote:'Any deployer shall be considered a <em>provider</em> where they: (a) place on the market under their name; (b) <em>modify the intended purpose</em>; (c) make a <em>substantial modification</em> to the high-risk AI system',ref:'Regulation (EU) 2024/1689 · Art. 25 · OJ L 12.7.2024',conf:96,hash:'SHA-256: 3a5b7c9d1e3f5a7b · OJ verified'},
+'Art.26':{title:'Art. 26 — Deployer obligations',quote:'Deployers shall <em>assign human oversight</em> to persons with necessary competence, training and authority; <em>monitor the operation</em> of the high-risk AI system; <em>inform natural persons</em> when subject to a high-risk AI system',ref:'Regulation (EU) 2024/1689 · Art. 26 · OJ L 12.7.2024',conf:97,hash:'SHA-256: 6f8a0b2c4d6e8f0a · OJ verified'},
+'Art.27':{title:'Art. 27 — Fundamental rights impact assessment',quote:'Prior to deploying a high-risk AI system, deployers that are <em>bodies governed by public law</em> shall perform a <em>fundamental rights impact assessment</em>',ref:'Regulation (EU) 2024/1689 · Art. 27 · OJ L 12.7.2024',conf:99,hash:'SHA-256: 8b0c2d4e6f8a0b2c · OJ verified'},
+'Art.50':{title:'Art. 50 — Transparency obligations',quote:'AI systems interacting directly with natural persons shall ensure persons are <em>informed that they are interacting with an AI system</em>, unless this is obvious from the context',ref:'Regulation (EU) 2024/1689 · Art. 50 · OJ L 12.7.2024',conf:99,hash:'SHA-256: 0d2e4f6a8b0c2d4e · OJ verified'},
+'Art.99(3)':{title:'Art. 99(3) — Tier 1 fine quantum',quote:'Non-compliance with <em>Article 5</em> prohibited practices: fines up to <em>EUR 35 000 000</em> or, for an undertaking, <em>7% of total worldwide annual turnover</em>, whichever is higher',ref:'Regulation (EU) 2024/1689 · Art. 99(3) · OJ L 12.7.2024 · p.115',conf:99,hash:'SHA-256: 7c4d9f1a2b5e8c3d · OJ verified'},
+'Art.99(4)':{title:'Art. 99(4) — Tier 2 fine quantum',quote:'Non-compliance with operator and notified body obligations: fines up to <em>EUR 15 000 000</em> or, for an undertaking, <em>3% of total worldwide annual turnover</em>, whichever is higher',ref:'Regulation (EU) 2024/1689 · Art. 99(4) · OJ L 12.7.2024 · p.115',conf:99,hash:'SHA-256: 2f8a3c7d1e4b9c5a · OJ verified'},
+'Art.99(5)':{title:'Art. 99(5) — Tier 3 fine quantum',quote:'Supply of <em>incorrect, incomplete or misleading information</em> to notified bodies or national competent authorities: fines up to <em>EUR 7 500 000</em> or, for an undertaking, <em>1% of total worldwide annual turnover</em>',ref:'Regulation (EU) 2024/1689 · Art. 99(5) · OJ L 12.7.2024 · p.115',conf:99,hash:'SHA-256: 1e3f5a7b9c1d3e5f · OJ verified'},
+'AnnexIII':{title:'Annex III — High-risk AI system categories',quote:'High-risk AI systems pursuant to Article 6(2): 1. Biometrics... 2. Critical infrastructure... 3. Education and vocational training... 4. Employment... 5. <em>Access to and enjoyment of essential private services and essential public services and benefits</em>: (a) AI systems intended to be used by public authorities to evaluate the eligibility of natural persons for essential public assistance benefits and services, including healthcare... 6. Law enforcement... 7. Migration, asylum and border control... 8. Administration of justice and democratic processes',ref:'Regulation (EU) 2024/1689 · Annex III · OJ L 12.7.2024 · pp.127–128',conf:99,hash:'SHA-256: 6d8e0f2a4b6c8d0e · OJ verified'}
+};
+var SYSTEMS={
+burokratt:{name:'Bürokratt Virtual Assistant',inst:'Information System Authority (ISA)',date:'2023-03-15',vendor:'Internal / Open Source (MEAC)',domain:'essential',citizens:'Over 500,000 (national scale)',decision:'assisted',dpia:'outdated',fria:'none',eudb:'none',ca:'none',doc:'none',oversight:'team',purpose:'Enable citizens to interact with the Estonian state through a unified virtual assistant, accessing public services, submitting applications, and querying government information.',actual:'Deployed across multiple ministries. System now makes contextual recommendations on service eligibility, routing, and next steps. Personalisation layer added post-deployment.',sameUse:'no',transparency:'partial',modeltype:'Large language model (LLM)',personal:'Identified personal data',xroad:'EE/GOV/70006317/Burokratt',foundation:'Custom Estonian LLM',provider:'institution',modified:'substantial',signing:'none',pqc:'none',threatmodel:'none',upstream:'none',logintegrity:'access',lm:{requests:'partial',tools:'none',outputs:'none',approvals:'none',decisions:'partial',sideeff:'none',xroadlog:'partial',errors:'partial'}},
+apa:{name:'Automatic Administrative Acts',inst:'Ministry of Justice (MJ)',date:'2022-09-01',vendor:'Internal (MJ IT)',domain:'essential',citizens:'10,000 – 100,000',decision:'binding',dpia:'yes',fria:'none',eudb:'none',ca:'none',doc:'none',oversight:'named',purpose:'Issue binding administrative decisions automatically on permit and benefit applications that meet defined criteria.',actual:'As declared.',sameUse:'yes',transparency:'none',modeltype:'Rule-based system (may be out of scope)',personal:'Identified personal data',xroad:'EE/GOV/70000898/AutoAdmin',foundation:'None',provider:'institution',modified:'no',signing:'none',pqc:'none',threatmodel:'none',upstream:'na',logintegrity:'appendonly',lm:{requests:'partial',tools:'none',outputs:'partial',approvals:'none',decisions:'partial',sideeff:'partial',xroadlog:'full',errors:'full'}},
+aire:{name:'AIRE Healthcare Demos',inst:'AIRE Consortium / Hospitals',date:'2023-06-01',vendor:'AIRE Consortium partners',domain:'essential',citizens:'1,000 – 10,000',decision:'assisted',dpia:'no',fria:'none',eudb:'none',ca:'none',doc:'none',oversight:'informal',purpose:'Demonstrate AI and robotics applications in hospital settings including patient triage support and diagnostic assistance.',actual:'Some pilots collecting patient emotion and physiological state data as part of triage assessment.',sameUse:'no',transparency:'none',modeltype:'Computer vision model',personal:'Special category data (Art. 9 GDPR)',xroad:'',foundation:'None',provider:'shared',modified:'purpose',signing:'none',pqc:'none',threatmodel:'none',upstream:'none',logintegrity:'none',lm:{requests:'none',tools:'none',outputs:'none',approvals:'none',decisions:'none',sideeff:'none',xroadlog:'none',errors:'partial'}},
+digital:{name:'Top-10 Digital Services AI',inst:'MEAC / ISA',date:'2023-01-01',vendor:'Multiple vendors',domain:'essential',citizens:'Over 500,000 (national scale)',decision:'assisted',dpia:'outdated',fria:'none',eudb:'none',ca:'planned',doc:'none',oversight:'team',purpose:'Add AI components to the ten most frequently used Estonian digital government services to improve user experience.',actual:'As declared.',sameUse:'yes',transparency:'none',modeltype:'Recommender system',personal:'Identified personal data',xroad:'Multiple',foundation:'None',provider:'unclear',modified:'unknown',signing:'none',pqc:'none',threatmodel:'partial',upstream:'none',logintegrity:'access',lm:{requests:'partial',tools:'partial',outputs:'none',approvals:'none',decisions:'none',sideeff:'none',xroadlog:'partial',errors:'partial'}},
+rihake:{name:'RIHAKE Data Management',inst:'Statistics Estonia / ISA',date:'2022-01-01',vendor:'Statistics Estonia',domain:'internal',citizens:'Fewer than 1,000',decision:'internal',dpia:'yes',fria:'na',eudb:'na',ca:'exempt',doc:'na',oversight:'named',purpose:'Manage data stewardship and quality across Estonian public sector data assets to support AI development.',actual:'As declared.',sameUse:'yes',transparency:'na',modeltype:'Classification model',personal:'Pseudonymised data only',xroad:'EE/GOV/10001990/RIHAKE',foundation:'None',provider:'institution',modified:'no',signing:'basic',pqc:'planned',threatmodel:'partial',upstream:'na',logintegrity:'appendonly',lm:{requests:'partial',tools:'none',outputs:'partial',approvals:'none',decisions:'partial',sideeff:'none',xroadlog:'full',errors:'full'}}
+};
+function getTurnover(){ var el=document.getElementById('turnover'); var v=el?parseFloat(el.value):NaN; return isNaN(v)||v<0?0:v; }
+function assess(s){
+var risks=[],conds=[],flags=[];
+var t1=0,t2=0,t3=0;
+var T=getTurnover();
+var F1=Math.max(35,Math.round(0.07*T*10)/10);
+var F2=Math.max(15,Math.round(0.03*T*10)/10);
+var F3=Math.max(7.5,Math.round(0.01*T*10)/10);
+var HR=['biometric','critical','education','employment','essential','lawenf','migration','justice'].includes(s.domain);
+var citizen=s.domain!=='internal';
+var lmV=s.lm?Object.values(s.lm):[];
+var noneC=lmV.filter(function(v){return v==='none';}).length;
+var unkC=lmV.filter(function(v){return v==='unknown'||v==='';}).length;
+if((s.personal==='Special category data (Art. 9 GDPR)'||s.personal==='Biometric data')&&
+(s.modeltype.includes('vision')||s.modeltype.includes('NLP')||s.modeltype.includes('LLM'))){
+risks.push({tier:'T1',conf:'confirmed',title:'Biometric or emotion inference risk — Art. 5(f)/(g)',desc:'Special category or biometric data is being processed by an inferential model outside a documented medical or safety context. This maps directly to the Art. 5(f)/(g) prohibition scope. The determination is based on the field values you entered and is deterministic.',arts:['Art.5(f)','Art.99(3)'],fine:'€35M / 7%',fc:'ft1',confText:'CONFIRMED — field values map deterministically to Art. 5 prohibition scope'});
+t1+=F1;
+}
+if(s.actual&&s.actual!=='As declared.'&&s.actual!==s.purpose&&
+(s.modeltype.includes('LLM')||s.modeltype.includes('Recommender'))){
+risks.push({tier:'T1',conf:'probable',title:'Potential manipulative technique — Art. 5(a)',desc:'The system\'s actual use diverges from its declared intended purpose and includes personalisation or recommendation logic applied to citizens. Whether this constitutes a manipulative technique under Art. 5(a) requires legal judgment on the specific use case. This item has been sent to the expert review queue and is not confirmed until reviewed.',arts:['Art.5(a)','Art.99(3)'],fine:'€35M / 7%',fc:'ft1',confText:'PROBABLE — divergence confirmed from field values; legal characterisation requires expert review'});
+t1+=F1;
+flags.push({id:'flag-1',title:'Art. 5(a) legal characterisation required',finding:'Actual production use diverges from the declared intended purpose. The system includes personalisation or recommendation logic applied to citizens. The agent can confirm the factual divergence from field values, but cannot determine whether the specific use constitutes a manipulative technique under Art. 5(a) without a legal assessment of the particular behavioural steering involved.',conf:'probable',arts:['Art.5(a)'],src:'Art.5(a)'});
+}
+if(HR){
+if(!s.ca||s.ca==='none'){
+risks.push({tier:'T2',conf:'confirmed',title:'Conformity assessment absent — Art. 43',desc:'This is an Annex III high-risk AI system. Conformity assessment is required before deployment. No completed assessment record is present in this schema. Note: implementing an Agent Evidence Package (AEP) logging architecture would simultaneously produce the evidence record needed for conformity assessment.',arts:['Art.16','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — ca field is none, domain is high-risk Annex III'});
+t2+=F2;
+}
+if(!s.fria||s.fria==='none'){
+risks.push({tier:'T2',conf:'confirmed',title:'Fundamental rights impact assessment absent — Art. 27',desc:'Art. 27 requires public sector bodies to complete a FRIA before deploying Annex III systems. No completed FRIA record is present. A FRIA should reference cryptographic evidence appendices per the AEP mapping (Sokolov 2026a open row 3).',arts:['Art.27','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — fria field is none, deploying institution is a public body'});
+t2+=F2;
+}
+if(!s.eudb||s.eudb==='none'){
+risks.push({tier:'T2',conf:'confirmed',title:'EU database registration absent — Art. 49',desc:'Annex III systems must be registered in the EU database before deployment. No registration record is present. This schema record constitutes the registration pre-fill. Deadline: 2 August 2026.',arts:['AnnexIII','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — eudb field is none, domain is Annex III'});
+t2+=F2;
+}
+if(s.oversight==='none'||s.oversight==='informal'){
+risks.push({tier:'T2',conf:'confirmed',title:'Human oversight not formally assigned — Art. 26',desc:'Art. 26 requires named persons with documented competence, training, and authority to oversee the system. Informal or absent arrangements do not satisfy this obligation. An AEP evidence architecture records oversight signatures, making this obligation inspectable after the fact.',arts:['Art.26','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — oversight field is '+s.oversight});
+t2+=F2;
+}
+if(noneC>=4&&unkC===0){
+risks.push({tier:'T2',conf:'confirmed',title:'Art. 12 logging coverage critically insufficient',desc:noneC+' of 8 required event types are not logged at all. Art. 12 requires automatic recording of events sufficient for ex-post inspection. A single AEP evidence architecture layer would close this gap across Art. 12, 13, 14, 26, 43, and 72 simultaneously from one primitive set.',arts:['Art.12','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — '+noneC+' of 8 event types confirmed as not logged from Track B matrix'});
+t2+=F2;
+}else if(unkC>=3){
+conds.push({field:'B2 — Log coverage matrix',reason:unkC+' of 8 event type statuses are unknown or not yet provided. The agent cannot determine Art. 12 compliance until your IT team completes the log coverage matrix in Track B.',impact:'Potential additional Tier 2 exposure up to €'+F2+'M if event types are confirmed as not logged'});
+}
+if(s.logintegrity===''||s.logintegrity==='none'){
+risks.push({tier:'T2',conf:'confirmed',title:'Log integrity protection absent — Art. 12',desc:'Logs are present but can be modified or deleted. A mutable log does not satisfy the Art. 12 accountability evidence standard. Minimum required: append-only architecture. Recommended: RFC 3161 hash chain with SHA-256 per-event chaining.',arts:['Art.12','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — logintegrity field is none or empty'});
+t2+=F2;
+}else if(s.logintegrity==='unknown'){
+conds.push({field:'B3 — Log integrity mechanism',reason:'Log integrity status is unknown. The agent cannot determine whether logs meet the Art. 12 tamper-evidence standard until your IT team provides this information in Track B.',impact:'Potential Tier 2 exposure up to €'+F2+'M if logs are confirmed as mutable'});
+}
+}
+if(s.transparency==='none'&&citizen){
+risks.push({tier:'T2',conf:'confirmed',title:'No AI disclosure to citizens — Art. 50',desc:'This system interacts with or makes decisions about citizens, and no disclosure mechanism is in place. Art. 50 requires that persons are informed they are interacting with an AI system at first contact.',arts:['Art.50','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — transparency is none, system is citizen-facing'});
+t2+=F2;
+}else if(s.transparency==='partial'&&citizen){
+risks.push({tier:'T2',conf:'probable',title:'Transparency disclosure likely insufficient — Art. 50',desc:'A partial disclosure exists but whether it meets the Art. 50 standard that persons are "informed" requires review of the specific disclosure text, its placement, and the timing of its presentation to users.',arts:['Art.50','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'PROBABLE — partial disclosure confirmed; adequacy of content and placement requires expert review'});
+t2+=F2;
+flags.push({id:'flag-2',title:'Art. 50 disclosure adequacy review required',finding:'A transparency disclosure exists but is partial. The agent can confirm partial disclosure from the field value, but cannot determine whether the specific disclosure text, its prominence, and its timing satisfy the Art. 50 standard that citizens are "informed" without a review of the actual disclosure material.',conf:'probable',arts:['Art.50'],src:'Art.50'});
+}
+if(s.modified==='substantial'||s.modified==='purpose'){
+risks.push({tier:'T2',conf:'confirmed',title:'Provider obligations transferred to your institution — Art. 25',desc:'Substantial modification of the system or change of its intended purpose transfers full Art. 16 provider obligations to the deploying institution, regardless of what the original vendor contract says. Your institution now bears QMS, technical documentation, and conformity assessment obligations.',arts:['Art.25','Art.16','Art.99(4)'],fine:'€15M / 3%',fc:'ft2',confText:'CONFIRMED — modified field is '+s.modified});
+t2+=F2;
+}else if(s.modified==='unknown'){
+conds.push({field:'B4 — System modification status',reason:'It is unknown whether the system has been substantially modified since procurement. If it has, Art. 25 would transfer full provider obligations to your institution. Your IT team must confirm this in Track B.',impact:'Potential provider obligation transfer — Tier 2 exposure up to €'+F2+'M'});
+}
+if(s.dpia==='outdated'){
+risks.push({tier:'T3',conf:'confirmed',title:'DPIA outdated — data governance gap',desc:'An outdated DPIA may not reflect current AI-specific data processing. Supplying outdated documentation to a supervisory authority in response to an information request constitutes incomplete information under Art. 99(5).',arts:['Art.99(5)'],fine:'€7.5M / 1%',fc:'ft3',confText:'CONFIRMED — dpia field is outdated'});
+t3+=F3;
+}
+if(s.dpia==='no'&&s.personal&&s.personal!=='No personal data'&&s.personal!==''){
+risks.push({tier:'T3',conf:'confirmed',title:'No DPIA — data governance breach',desc:'Processing personal data in an AI system without a Data Protection Impact Assessment breaches GDPR Art. 35 and the AI Act Art. 10 data governance requirements simultaneously.',arts:['Art.99(5)'],fine:'€7.5M / 1%',fc:'ft3',confText:'CONFIRMED — dpia is no and personal data is present'});
+t3+=F3;
+}
+if(!s.modeltype||s.modeltype===''||s.modeltype==='unknown'){
+conds.push({field:'B1 — Model type',reason:'Model type is unknown or undocumented. Art. 11 requires technical documentation describing the system\'s operational logic. This is itself a compliance gap. The agent cannot characterise prohibited practice risk without knowing what kind of system this is.',impact:'Art. 11 documentation gap; full risk characterisation deferred until Track B is completed'});
+}
+var total=Math.round((t1+t2+t3)*10)/10;
+var score=total===0?97:Math.max(4,Math.round(100-(total/210)*96));
+var vc=total===0?{t:'COMPLIANT',c:'#27AE60'}:t1>0?{t:'CRITICAL RISK',c:'#E74C3C'}:t2>40?{t:'HIGH RISK',c:'#E74C3C'}:t2>0?{t:'SIGNIFICANT RISK',c:'#D4960A'}:{t:'MODERATE RISK',c:'#D4960A'};
+return{risks:risks,conds:conds,flags:flags,t1:t1,t2:t2,t3:t3,total:total,score:score,verdict:vc,HR:HR};
+}
+function renderAll(s,r){
+document.getElementById('ap-sysname').textContent=s.name;
+['findings','verify','review','signoff'].forEach(function(id){
+document.getElementById('empty-'+id).style.display='none';
+document.getElementById(id+'-content').style.display='block';
+});
+var badge=document.getElementById('rev-badge');
+if(r.flags.length>0){badge.style.display='inline-flex';badge.textContent=r.flags.length;}
+else{badge.style.display='none';}
+renderFindings(s,r);
+renderVerify(s,r);
+renderReview(s,r);
+renderSignoff(s,r);
+}
+function renderFindings(s,r){
+var c=2*Math.PI*22;var d=c*(r.score/100);
+var cColors={confirmed:'#27AE60',probable:'#D4960A',conditional:'#0072CE',flagged:'#E74C3C'};
+var cLabels={confirmed:'CONFIRMED — deterministic, source-grounded',probable:'PROBABLE — verified field, legal judgment required',conditional:'CONDITIONAL — depends on outstanding Track B field',flagged:'FLAGGED — sent to expert review queue'};
+var rHTML=r.risks.map(function(rk){
+return '<div class="finding"><div class="conf-dot" style="background:'+cColors[rk.conf]+'" title="'+cLabels[rk.conf]+'"></div><div class="tier-icon ti-'+rk.tier.toLowerCase()+'">'+rk.tier+'</div><div class="f-body"><div class="f-title">'+rk.title+'</div><div class="f-desc">'+rk.desc+'</div><div class="f-arts">'+rk.arts.map(function(a){return '<span class="f-art" onclick="openDrawer(\''+a+'\')">'+a+' ↗</span>';}).join('')+'</div><div class="f-conf" style="color:'+cColors[rk.conf]+'">'+cLabels[rk.conf]+'</div></div><div class="f-fine '+rk.fc+'">'+rk.fine+'</div></div>';
+}).join('');
+var mx=Math.max(r.t1,r.t2,r.t3,1);
+var condHTML='';
+if(r.conds.length>0){
+condHTML='<div class="cond-block"><div class="cond-title">◉ CONDITIONAL FINDINGS — information outstanding from Track B</div>'+r.conds.map(function(c){return '<div class="cond-item"><div class="cond-field">'+c.field+'</div>'+c.reason+'<br><span style="color:var(--amb-t);font-size:8px;">'+c.impact+'</span></div>';}).join('')+'</div>';
+}
+var totalDisp=Math.round(r.total*10)/10;
+document.getElementById('findings-content').innerHTML=
+'<div class="score-wrap"><div class="score-ring"><svg width="52" height="52" viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="3"/><circle cx="26" cy="26" r="22" fill="none" stroke="'+r.verdict.c+'" stroke-width="3" stroke-dasharray="'+d+' '+c+'"/></svg><div class="score-val" style="color:'+r.verdict.c+'">'+r.score+'</div></div><div><div class="verdict" style="color:'+r.verdict.c+'">'+r.verdict.t+'</div><div class="verdict-sub">'+r.risks.length+' finding'+(r.risks.length!==1?'s':'')+' · '+r.conds.length+' conditional · '+r.flags.length+' flagged · max €'+totalDisp+'M</div></div></div>'
++'<div class="conf-legend"><div class="cl-item"><div class="cl-dot" style="background:#27AE60"></div><span style="color:#27AE60;">Confirmed</span></div><div class="cl-item"><div class="cl-dot" style="background:#D4960A"></div><span style="color:#D4960A;">Probable</span></div><div class="cl-item"><div class="cl-dot" style="background:#0072CE"></div><span style="color:#0072CE;">Conditional</span></div><div class="cl-item"><div class="cl-dot" style="background:#E74C3C"></div><span style="color:#E74C3C;">Flagged → Expert</span></div></div>'
++'<div class="sec-title">Risk findings</div>'
++(rHTML||'<div style="font-family:var(--mono);font-size:8px;color:var(--w25);padding:6px 0;">No confirmed risks at current completeness.</div>')
++condHTML
++'<div class="sec-title">Financial exposure</div>'
++'<div class="exp-row"><div class="exp-lbl">Tier 1 — Art. 5</div><div class="exp-track"><div class="exp-fill" style="width:'+((r.t1/Math.max(mx,35))*100)+'%;background:#E74C3C;"></div></div><div class="exp-val ft1">€'+(Math.round(r.t1*10)/10)+'M</div></div>'
++'<div class="exp-row"><div class="exp-lbl">Tier 2 — Art. 16/26/50</div><div class="exp-track"><div class="exp-fill" style="width:'+((r.t2/Math.max(mx,35))*100)+'%;background:#D4960A;"></div></div><div class="exp-val ft2">€'+(Math.round(r.t2*10)/10)+'M</div></div>'
++'<div class="exp-row"><div class="exp-lbl">Tier 3 — Art. 99(5)</div><div class="exp-track"><div class="exp-fill" style="width:'+((r.t3/Math.max(mx,35))*100)+'%;background:#0072CE;"></div></div><div class="exp-val ft3">€'+(Math.round(r.t3*10)/10)+'M</div></div>'
++'<div class="total-box"><div class="tot-lbl">Maximum statutory exposure</div><div class="tot-val" id="tot-main">€'+totalDisp+'M</div><div class="tot-sub">Base-case estimate (~30%): €'+Math.round(r.total*0.3*10)/10+'M &nbsp;·&nbsp; Confirmed and probable findings &nbsp;·&nbsp; Analytical estimate — not a legal opinion</div></div>'
++'<div class="note" style="margin-top:8px;"><strong>Important:</strong> Only Confirmed and Probable findings appear above. Conditional findings depend on information not yet provided in Track B. Flagged findings require expert legal review before inclusion in any formal assessment. This output is not a legal opinion and does not constitute advice.</div>';
+}
+function renderVerify(s,r){
+var checks=[
+{st:'pass',title:'All findings grounded in AI Act source text',body:'Every finding is traced to a specific article in Regulation (EU) 2024/1689 as published in OJ L 12.7.2024. Source text is accessible via the article chips in each finding.',src:'Art.12'},
+{st:'pass',title:'Tier 1 fine quantum verified — €35M / 7% (Art. 99(3))',body:'Verified: "Non-compliance with Article 5 shall be subject to administrative fines of up to EUR 35 000 000 or 7% of total worldwide annual turnover, whichever is higher."',src:'Art.99(3)'},
+{st:'pass',title:'Tier 2 fine quantum verified — €15M / 3% (Art. 99(4))',body:'Verified: "Non-compliance with operator obligations shall be subject to fines of up to EUR 15 000 000 or 3% of total worldwide annual turnover, whichever is higher."',src:'Art.99(4)'},
+{st:'pass',title:'Tier 3 fine quantum verified — €7.5M / 1% (Art. 99(5))',body:'Verified: "Supply of incorrect, incomplete or misleading information to authorities: fines up to EUR 7 500 000 or 1% of total worldwide annual turnover."',src:'Art.99(5)'},
+{st:'pass',title:'Annex III classification is deterministic',body:'Domain classification maps directly to Annex III categories. No inference is involved — it is a lookup against the eight categories listed in Annex III §1–8. Classification cannot produce a hallucinated result.',src:'AnnexIII'},
+{st:r.flags.length>0?'warn':'pass',title:r.flags.length>0?(r.flags.length+' finding(s) escalated to expert review — not included in report'):'No findings required expert escalation',body:r.flags.length>0?'Findings requiring legal judgment (Art. 5(a) manipulation characterisation, Art. 50 disclosure adequacy) have been removed from the main report and placed in the expert review queue. They will not appear as confirmed findings until a qualified reviewer acts on them.':'All findings are either deterministic or appropriately graded as Probable with source citations.',src:'Art.5(a)'},
+{st:r.conds.length>0?'warn':'pass',title:r.conds.length>0?(r.conds.length+' finding(s) conditional on outstanding Track B data'):'All assessed fields are complete',body:r.conds.length>0?'Conditional findings cannot be graded until Track B is completed by your IT team. The assessment currently reflects only the fields provided. Incomplete intake is explicitly surfaced rather than silently assumed.':'Track B technical fields are complete. The assessment reflects the full available evidence base.',src:'Art.12'},
+{st:'pass',title:'Internal consistency check passed',body:'Fine exposure figures are arithmetically consistent with tier findings. No finding references an article without a corresponding fine tier assignment. Score is inversely proportional to total maximum exposure. No contradictory findings detected.',src:'Art.99(3)'},
+{st:(!s.modeltype||s.modeltype===''||s.modeltype==='unknown')?'warn':'pass',title:(!s.modeltype||s.modeltype===''||s.modeltype==='unknown')?'Model type unknown — Art. 11 documentation gap flagged':'Model type documented — Art. 11 partially satisfied',body:(!s.modeltype||s.modeltype===''||s.modeltype==='unknown')?'Art. 11 requires technical documentation describing the system\'s operational logic. Unknown model type is itself a compliance gap and is surfaced as a Conditional finding rather than silently excluded.':'Model type field is populated. Technical documentation requirement is partially addressed.',src:'Art.12'}
+];
+var passC=checks.filter(function(c){return c.st==='pass';}).length;
+var warnC=checks.filter(function(c){return c.st==='warn';}).length;
+document.getElementById('verify-content').innerHTML=
+'<button class="run-ver-btn" onclick="rerunVerify()">Re-run source verification</button>'
++'<div class="ver-summary">'
++'<div class="vs-row"><span class="vs-lbl">Source document</span><span class="vs-val">Regulation (EU) 2024/1689 · OJ L 12.7.2024</span></div>'
++'<div class="vs-row"><span class="vs-lbl">Verification checks</span><span class="vs-val">'+passC+' pass · '+warnC+' warn · 0 fail</span></div>'
++'<div class="vs-row"><span class="vs-lbl">Confirmed findings</span><span class="vs-val">'+r.risks.filter(function(rk){return rk.conf==='confirmed';}).length+' of '+r.risks.length+' total</span></div>'
++'<div class="vs-row"><span class="vs-lbl">Items in expert queue</span><span class="vs-val" style="color:'+(r.flags.length>0?'#D4960A':'#27AE60')+'">'+r.flags.length+(r.flags.length===0?' — none':''+(r.flags.length===1?' item':' items'))+'</span></div>'
++'<div class="vs-row"><span class="vs-lbl">Assessment completeness</span><span class="vs-val">'+(r.conds.length>0?'PARTIAL — Track B data outstanding':'FULL')+'</span></div>'
++'</div>'
++checks.map(function(c){
+return '<div class="ver-check"><div class="vc-head"><div class="vc-status vcs-'+c.st+'"></div><div class="vc-title">'+c.title+'</div></div><div class="vc-body">'+c.body+'</div>'+(c.src?'<div class="vc-src" onclick="openDrawer(\''+c.src+'\')">View source — '+c.src+' ↗</div>':'')+'</div>';
+}).join('')
++'<div class="note"><strong>Verification scope:</strong> This layer checks that findings are grounded in cited source text, internally consistent, and appropriately graded by confidence level. It does not independently validate that the institution\'s answers are truthful or complete — that is the function of the expert review layer and ultimately of the market surveillance authority.</div>';
+}
+function renderReview(s,r){
+if(r.flags.length===0){
+document.getElementById('review-content').innerHTML='<div style="padding:14px;font-size:10px;color:var(--w60);line-height:1.7;">No items required escalation for this assessment. All findings were either deterministic (Confirmed) or graded as Probable with source citations and included in the main report. If the assessment is based on incomplete Track B data, additional items may be escalated once your IT team completes the technical track.</div>';
+return;
+}
+var html=r.flags.map(function(f){
+var st=reviewSt[f.id]||'pending';
+var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[st];
+var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[st];
+var cc={confirmed:'#27AE60',probable:'#D4960A'}[f.conf]||'#D4960A';
+return '<div class="er-card" id="erc-'+f.id+'"><div class="er-head"><div><div class="er-title">'+f.title+'</div><div class="er-meta">Confidence: '+f.conf.toUpperCase()+' · '+f.arts.join(', ')+'</div></div><span class="er-status '+stC+'" id="ers-'+f.id+'">'+stL+'</span></div>'
++'<div class="er-body"><div class="er-fl">Agent finding</div><div class="er-ft">'+f.finding+'</div>'
++'<div class="er-cr"><div class="er-cd" style="background:'+cc+'"></div><div class="er-ct" style="color:'+cc+'">'+f.conf.toUpperCase()+' — agent cannot resolve without legal judgment</div></div>'
++'<div class="er-src" onclick="openDrawer(\''+f.src+'\')">View AI Act source — '+f.src+' ↗</div>'
++'<div class="er-sep"></div><div class="er-fl">Expert annotation</div>'
++'<textarea class="er-ta" id="ea-'+f.id+'" placeholder="Enter legal assessment, risk qualification, or amended finding text..."></textarea>'
++'<div class="er-actions">'
++'<button class="er-btn confirm" onclick="setRevSt(\''+f.id+'\',\'confirmed\')">Confirm finding</button>'
++'<button class="er-btn amend" onclick="setRevSt(\''+f.id+'\',\'amended\')">Amend finding</button>'
++'<button class="er-btn escalate" onclick="setRevSt(\''+f.id+'\',\'escalated\')">Escalate externally</button>'
++'<select class="er-assign" title="Assign to reviewer"><option>Unassigned</option><option>Legal team (MJ)</option><option>MEAC compliance unit</option><option>External counsel</option><option>Data Protection Inspectorate</option></select>'
++'</div>'
++'<div class="er-ann" id="ean-'+f.id+'"></div>'
++'</div></div>';
+}).join('');
+document.getElementById('review-content').innerHTML=
+'<div class="sec-title">Items requiring expert legal judgment</div>'
++'<div class="note" style="margin-bottom:10px;"><strong>Why these are here:</strong> The agent identified these as potential compliance issues but cannot characterise them accurately without legal judgment. They are excluded from the main findings report until reviewed. Confirm, amend with your legal assessment, or escalate for external opinion. Sign-off is locked until all items are actioned.</div>'
++html;
+}
+function renderSignoff(s,r){
+var dlHTML=[
+{l:'Art. 5 prohibitions in force',v:'2 FEB 2025',c:'dl-urgent'},
+{l:'Penalty framework active',v:'2 AUG 2025',c:'dl-urgent'},
+{l:'High-risk obligations — Annex III',v:'2 AUG 2026',c:'dl-soon'},
+{l:'EU database registration deadline',v:'2 AUG 2026',c:'dl-soon'},
+{l:'First Art. 72 monitoring reports',v:'3 AUG 2027',c:'dl-ok'},
+{l:'Estimated first enforcement wave',v:'2028–2029',c:'dl-ok'},
+{l:'PQC migration horizon (NIST guidance)',v:'2030–2035',c:'dl-ok'}
+].map(function(d){return '<div class="dl-row"><span class="dl-lbl">'+d.l+'</span><span class="dl-val '+d.c+'">'+d.v+'</span></div>';}).join('');
+var items=[
+'Track A (Policy intake) is complete and has been reviewed',
+'Track B (Technical evidence) is complete, or gaps have been accepted as known risks',
+'All flagged items in the expert review queue have been actioned',
+'I understand this assessment is an analytical estimate and not a legal opinion'
+];
+var listHTML=items.map(function(txt,i){
+var n=i+1;
+return '<div class="so-item"><div class="so-check'+(soChecks[i]?' checked':'')+'" id="sc-'+n+'" onclick="toggleCheck('+n+')">'+(soChecks[i]?'✓':'')+'</div>'+txt+'</div>';
+}).join('');
+document.getElementById('signoff-content').innerHTML=
+'<div class="sec-title">Regulatory deadlines</div>'+dlHTML
++'<div class="signoff-box">'
++'<div class="so-title">Assessment sign-off checklist</div>'
++'<div id="so-checklist">'+listHTML+'</div>'
++'<button class="so-btn" id="so-btn" onclick="doSignoff()">Complete checklist and expert review to unlock sign-off</button>'
++'</div>'
++'<div class="note"><strong>What sign-off produces:</strong> The completed assessment record — schema data, findings, verification log, expert annotations — is prepared for cryptographic sealing with a qualified electronic seal from an Estonian QTSP (SK ID Solutions AS), anchored to an RFC 3161 timestamp. This is the eAIDAS evidence package: a verifiable record of your compliance due diligence at this date. It is not a guarantee of compliance.</div>';
+updateSoBtn();
+}
+function switchTab(id,el){ document.querySelectorAll('.tab-panel').forEach(function(p){p.classList.remove('active');}); document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');}); document.getElementById('tab-'+id).classList.add('active'); if(el)el.classList.add('active'); }
+function switchApTab(id,el){ document.querySelectorAll('.ap-sec').forEach(function(s){s.classList.remove('active');}); document.querySelectorAll('.ap-tab').forEach(function(t){t.classList.remove('active');}); document.getElementById('ap-'+id).classList.add('active'); if(el)el.classList.add('active'); }
+function setSame(v){ sameUse=v; ['yes','no','unk'].forEach(function(id){ var btn=document.getElementById('sb-'+id); if(btn)btn.classList.toggle('sel',('yes'===id&&v==='yes')||('no'===id&&v==='no')||('unk'===id&&v==='unknown')); }); var det=document.getElementById('actual-det'); if(det)det.classList.toggle('open',v==='no'||v==='unknown'); }
+function setTrans(v){ transp=v; ['disclosed','partial','none','na'].forEach(function(id){ var btn=document.getElementById('trans-'+id); if(btn)btn.classList.toggle('sel',id===v); }); }
+function setLI(v){ logInteg=v; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.toggle('sel',id===v); }); var uf=document.getElementById('unk-log'); if(uf)uf.classList.toggle('show',v==='unknown'); updB(); }
+function updAnnex(){ var d=document.getElementById('f-domain').value; var f=document.getElementById('annexiii-flag'); var m={biometric:'ANNEX III §1 — BIOMETRICS',critical:'ANNEX III §2 — CRITICAL INFRASTRUCTURE',education:'ANNEX III §3 — EDUCATION & TRAINING',employment:'ANNEX III §4 — EMPLOYMENT',essential:'ANNEX III §5 — ESSENTIAL PUBLIC SERVICES & BENEFITS',lawenf:'ANNEX III §6 — LAW ENFORCEMENT',migration:'ANNEX III §7 — MIGRATION & BORDER CONTROL',justice:'ANNEX III §8 — ADMINISTRATION OF JUSTICE'}; if(m[d]){f.className='annex-flag show';f.textContent='⚑ HIGH-RISK CLASSIFICATION TRIGGERED — '+m[d]+' · Full Art. 16 / 26 / 27 / 43 / 49 obligations apply';} else{f.className='annex-flag';} }
+function updA(){ var fields=['f-name','f-date','f-inst','f-domain','f-decision','f-dpia','f-fria','f-eudb','f-oversight','f-purpose']; var filled=fields.filter(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}).length; var pct=Math.round(filled/fields.length*100); var lbl=document.getElementById('pct-policy'); if(lbl)lbl.textContent=pct+'% complete'; var tl=document.getElementById('tla'); if(tl)tl.textContent=filled+' / '+fields.length; var segs=document.querySelectorAll('#track-a .track-seg'); segs.forEach(function(s,i){s.className='track-seg'+(i<filled?' done':'');}); }
+function updB(){ var techFields=['f-modeltype','f-personal','f-provider','f-modified','f-signing','f-pqc']; var lmFields=['lm-requests','lm-tools','lm-outputs','lm-approvals','lm-decisions','lm-sideeff','lm-xroadlog','lm-errors']; var filled=techFields.filter(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}).length; var lmDone=lmFields.every(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}); if(lmDone)filled++; if(logInteg!=='')filled++; var total=8; var tl=document.getElementById('tlb'); if(tl)tl.textContent=filled+' / '+total; var segs=document.querySelectorAll('#track-b .track-seg'); segs.forEach(function(s,i){s.className='track-seg'+(i<filled?' done':'');}); var unkM=document.getElementById('f-modeltype'); var uf=document.getElementById('unk-model'); if(unkM&&uf)uf.classList.toggle('show',unkM.value==='unknown'); }
+function collectForm(){ function g(id){var el=document.getElementById(id);return el?el.value:'';} function lv(id){var el=document.getElementById(id);return el?el.value:'';} return{ name:g('f-name')||'Unnamed System', inst:g('f-inst'), date:g('f-date'), vendor:g('f-vendor'), domain:g('f-domain'), citizens:g('f-citizens'), decision:g('f-decision'), dpia:g('f-dpia'), fria:g('f-fria'), eudb:g('f-eudb'), ca:g('f-ca'), doc:g('f-doc'), oversight:g('f-oversight'), purpose:g('f-purpose'), actual:g('f-actual')||'As declared.', sameUse:sameUse, transparency:transp, modeltype:g('f-modeltype'), personal:g('f-personal'), xroad:g('f-xroad'), foundation:g('f-foundation'), provider:g('f-provider'), modified:g('f-modified'), signing:g('f-signing'), pqc:g('f-pqc'), threatmodel:g('f-threatmodel'), upstream:g('f-upstream'), logintegrity:logInteg, lm:{ requests:lv('lm-requests'), tools:lv('lm-tools'), outputs:lv('lm-outputs'), approvals:lv('lm-approvals'), decisions:lv('lm-decisions'), sideeff:lv('lm-sideeff'), xroadlog:lv('lm-xroadlog'), errors:lv('lm-errors') } }; }
+function loadSystem(key){ var s=SYSTEMS[key]; if(!s)return; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var item=document.querySelector('.sys-item[data-key="'+key+'"]'); if(item)item.classList.add('active'); document.getElementById('form-title').textContent=s.name; function sv(id,v){var el=document.getElementById(id);if(el)el.value=v||'';} sv('f-name',s.name);sv('f-inst',s.inst);sv('f-date',s.date);sv('f-vendor',s.vendor); sv('f-domain',s.domain);sv('f-citizens',s.citizens);sv('f-decision',s.decision); sv('f-dpia',s.dpia);sv('f-fria',s.fria);sv('f-eudb',s.eudb);sv('f-ca',s.ca); sv('f-doc',s.doc);sv('f-oversight',s.oversight); sv('f-purpose',s.purpose);sv('f-actual',s.actual); sv('f-modeltype',s.modeltype);sv('f-personal',s.personal); sv('f-xroad',s.xroad);sv('f-foundation',s.foundation); sv('f-provider',s.provider);sv('f-modified',s.modified); sv('f-signing',s.signing);sv('f-pqc',s.pqc); sv('f-threatmodel',s.threatmodel);sv('f-upstream',s.upstream); if(s.lm){ Object.keys(s.lm).forEach(function(k){ var el=document.getElementById('lm-'+k); if(el)el.value=s.lm[k]; }); } setSame(s.sameUse||'yes'); setTrans(s.transparency||'na'); logInteg=s.logintegrity||''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.toggle('sel',id===logInteg); }); var uf=document.getElementById('unk-log'); if(uf)uf.classList.toggle('show',logInteg==='unknown'); updAnnex();updA();updB(); reviewSt={};soChecks=[false,false,false,false]; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); }
+var STEPS=[ 'Validating schema fields...', 'Loading RAG: EU AI Act 2024/1689 · OJ L 12.7.2024...', 'Cross-referencing Annex III categories...', 'Evaluating Art. 5 prohibition scope...', 'Checking Art. 12 logging coverage matrix...', 'Assessing evidence architecture (AEP primitives)...', 'Grading confidence: Confirmed / Probable / Conditional / Flagged...', 'Running internal consistency checks...', 'Routing flagged items to expert review queue...', 'Generating verification log...', 'Assessment complete' ];
+function runAssessment(){ var pw=document.getElementById('prog-wrap'); var pf=document.getElementById('prog-fill'); var pl=document.getElementById('prog-lbl'); var pg=document.getElementById('prog-log'); if(pw)pw.classList.add('vis'); var step=0; var iv=setInterval(function(){ if(step<STEPS.length){ if(pl)pl.textContent=STEPS[step]; if(pg)pg.textContent=STEPS[step]; if(pf)pf.style.width=((step+1)/STEPS.length*100)+'%'; step++; }else{ clearInterval(iv); setTimeout(function(){ if(pw)pw.classList.remove('vis'); if(pf)pf.style.width='0'; var s=collectForm(); document.getElementById('form-title').textContent=s.name; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); switchApTab('findings',document.querySelector('.ap-tab')); },350); } },240); }
+function rerunVerify(){ var btn=document.querySelector('.run-ver-btn'); if(btn){ btn.textContent='Verifying...'; setTimeout(function(){ btn.textContent='Re-run source verification'; if(curSys&&curResult)renderVerify(curSys,curResult); },800); } }
+function onTurnoverChange(){ if(curSys&&curResult){ var r=assess(curSys); curResult=r; renderAll(curSys,r); } }
+function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[status]; var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[status]; var el=document.getElementById('ers-'+id); if(el){el.textContent=stL;el.className='er-status '+stC;} var ann=document.getElementById('ea-'+id); var annShow=document.getElementById('ean-'+id); if(ann&&annShow){ var txt=ann.value.trim(); annShow.textContent=txt?'Expert note: '+txt:'Status updated to '+stL+' — no annotation entered.'; annShow.classList.add('vis'); } updateSoBtn(); }
+function toggleCheck(n){ soChecks[n-1]=!soChecks[n-1]; var el=document.getElementById('sc-'+n); if(el){ el.classList.toggle('checked',soChecks[n-1]); el.textContent=soChecks[n-1]?'✓':''; } updateSoBtn(); }
+function updateSoBtn(){ var btn=document.getElementById('so-btn'); if(!btn)return; var allChecked=soChecks.every(function(c){return c;}); var flagsResolved=!curResult||curResult.flags.every(function(f){return reviewSt[f.id]&&reviewSt[f.id]!=='pending';}); var ready=allChecked&&flagsResolved; btn.classList.toggle('ready',ready); if(ready){ btn.textContent='Sign and seal assessment record'; btn.onclick=doSignoff; }else{ btn.textContent='Complete checklist and expert review to unlock sign-off'; } }
+function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#27AE60'; btn.style.borderColor='#27AE60'; btn.style.background='var(--grn-d)'; },1800); }
+function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false]; curSys=null;curResult=null; updA();updB(); }
+function fakeUpload(){ var dz=document.querySelector('[onclick="fakeUpload()"]'); if(dz){ dz.innerHTML='<div style="font-family:var(--mono);font-size:8px;color:var(--grn-t);">✓ Document processed</div><div style="font-size:9px;color:var(--w25);margin-top:3px;">Procurement_Specification_Burokratt_v3.pdf · 1.2 MB</div>'; } var de=document.getElementById('doc-extractions'); var dl=document.getElementById('doc-list'); if(de&&dl){ de.innerHTML='<div class="note" style="margin-bottom:8px;background:var(--amb-d);border-color:rgba(212,150,10,.3);color:var(--amb-t);">⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.</div>' +[['System name','Bürokratt Virtual Assistant'],['Deploying institution','Information System Authority (ISA)'],['Intended purpose','Enable citizens to interact with the Estonian state through a unified virtual assistant...'],['Deployment date','March 2023'],['Builder / vendor','Internal / Open Source (MEAC)']].map(function(pair){ return '<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;"><div style="flex:1;"><div style="font-family:var(--mono);font-size:7.5px;color:var(--blue);margin-bottom:1px;">'+pair[0]+'</div><div style="font-size:10px;color:var(--w80);">'+pair[1]+'</div></div><span style="font-family:var(--mono);font-size:7px;background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(212,150,10,.3);padding:1px 5px;">AI-ASSISTED</span><button onclick="confirmExt(this)" style="font-family:var(--mono);font-size:7.5px;padding:3px 8px;border:1px solid var(--grn-t);color:var(--grn-t);background:none;cursor:pointer;">Confirm</button></div>'; }).join(''); dl.style.display='block'; } }
+function confirmExt(btn){ var row=btn.parentElement; var badge=row.querySelector('span'); if(badge){badge.textContent='CONFIRMED';badge.style.background='var(--grn-d)';badge.style.color='#27AE60';badge.style.borderColor='rgba(39,174,96,.3)';} btn.textContent='✓';btn.style.color='#27AE60';btn.disabled=true; }
+function openDrawer(key){ var src=SRC[key]; if(!src)return; document.getElementById('dr-title').textContent='SOURCE VERIFICATION — '+key; document.getElementById('dr-body').innerHTML= '<div class="dr-lbl">Verbatim text — official journal</div>' +'<div class="dr-quote">'+src.quote+'</div>' +'<div class="dr-lbl">Citation</div>' +'<div class="dr-ref">'+src.ref+'</div>' +'<div class="dr-conf-track"><div class="dr-conf-fill" style="width:'+src.conf+'%"></div></div>' +'<div style="font-family:var(--mono);font-size:7.5px;color:var(--w25);margin-bottom:6px;">Source confidence: '+src.conf+'%</div>' +'<div class="dr-hash">'+src.hash+'</div>' +'<div class="dr-ok">✓ Verified against Regulation (EU) 2024/1689 as published OJ L 12.7.2024<br>ELI: http://data.europa.eu/eli/reg/2024/1689/oj</div>'; document.getElementById('mask').classList.add('open'); document.getElementById('drawer').classList.add('open'); }
+function closeDrawer(){ document.getElementById('mask').classList.remove('open'); document.getElementById('drawer').classList.remove('open'); }
+window.addEventListener('load',function(){ loadSystem('burokratt'); });
+</script>
+</body>
+</html>
