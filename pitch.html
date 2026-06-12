@@ -63,6 +63,11 @@ h2.sm{font-size:clamp(19px,2.3vw,29px)}
 h2 em,.gold{color:var(--gold2);font-style:normal}
 h2.center{text-align:center}
 .lede{font-size:clamp(15.5px,1.32vw,18.5px);color:var(--dim);max-width:68ch}
+.lede b{color:var(--ivory);font-weight:500}
+.kbul{list-style:none;margin-top:8px;border-top:1px solid var(--hair);padding-top:12px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--dim)}
+.kbul li{padding-left:18px;position:relative}
+.kbul li::before{content:"◆";position:absolute;left:0;top:5px;font-size:8px;color:var(--gold)}
+.kbul b{color:var(--ivory);font-weight:500}
 .colhead{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
 .foot-note{margin-top:14px;font-size:13px;color:var(--faint);font-style:italic}
 
@@ -370,7 +375,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
     <h1>AVGVST&nbsp;AI</h1>
     <p class="motto">EVIDENTIA · NON · ASSERTIO</p>
     <p class="tagline">Proof, not promises.</p>
-    <p class="subline">The evidence layer for EU AI Act compliance in the public sector — sealed records an authority can verify <em class="gold">without trusting the institution that produced them</em>.</p>
+    <p class="subline">The evidence layer for EU AI Act compliance in the public sector — records an authority can verify <em class="gold">without trusting whoever produced them</em>.</p>
     <div class="title-chips">
       <span class="chip measured">Seed · €2.5M</span>
       <span class="chip">Tallinn · MMXXVI</span>
@@ -384,16 +389,16 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
   <div class="inner">
     <p class="kicker">II · The Problem</p>
     <h2>The obligation is in force. <em>The evidence layer does not exist.</em></h2>
-    <p class="lede">Every EU public institution running a high-risk AI system must produce compliance evidence an outside authority can verify: conformity assessments, fundamental-rights impact assessments, tamper-evident logs, a signed Declaration of Conformity. There is no standard way to produce it — and the gap is measured, not asserted.</p>
+    <p class="lede">Every EU public institution running high-risk AI owes an outside authority verifiable evidence — conformity assessments, fundamental-rights impact assessments, tamper-evident logs, a signed Declaration of Conformity. <b>There is no standard way to produce it.</b></p>
     <div class="stats">
       <div class="stat"><div class="num"><span data-count="69.5" data-dec="1" data-suf="%">0%</span></div><p class="lbl">of public AI-agent infrastructure makes <b>no attestation claim of any kind</b></p><span class="chip measured">Measured</span></div>
-      <div class="stat"><div class="num"><span data-count="0.5" data-dec="1" data-suf="%">0%</span></div><p class="lbl">documents <b>tamper-evident logging</b> — the only form of record that counts as evidence afterward</p><span class="chip measured">Measured</span></div>
+      <div class="stat"><div class="num"><span data-count="0.5" data-dec="1" data-suf="%">0%</span></div><p class="lbl">documents <b>tamper-evident logging</b> — the only record that counts afterward</p><span class="chip measured">Measured</span></div>
       <div class="stat"><div class="num">€<span data-count="35" data-suf="M">0</span><span class="num-sm"> / 7%</span></div><p class="lbl">maximum penalty under <b>Article 99</b> — €35M or 7% of worldwide turnover, whichever is higher</p><span class="chip statute">Statute</span></div>
     </div>
     <div class="ee">
       <div class="ee-num"><b data-count="80" data-suf="+">0</b><span>live AI deployments</span></div>
       <div class="ee-num"><b data-count="40" data-suf="+">0</b><span>public institutions</span></div>
-      <p>In Estonia alone: benefits systems, automatic administrative decisions, a national virtual assistant, hospital pilots — dozens of live systems that cannot today produce the evidence the law will demand, built by teams with no shared way to even describe what they have. <i>Connectivity is everywhere. Accountability is almost nowhere.</i></p>
+      <p>Estonia alone: benefits systems, automatic administrative decisions, a national virtual assistant, hospital pilots — live systems that cannot produce the evidence the law will demand. <i>Connectivity is everywhere. Accountability is almost nowhere.</i></p>
     </div>
     <div class="ribbon"><span>The high-risk regime applies 2 August 2026 —</span><b><span data-cd="d">—</span>d&ensp;<span data-cd="h">—</span>h&ensp;<span data-cd="m">—</span>m&ensp;<span data-cd="s">—</span>s</b></div>
     <p class="prov-note">This deck grades its own claims the way the engine grades findings:&nbsp;<span class="chip measured">Measured</span><span class="chip statute">Statute</span><span class="chip estimate">Estimate</span><span class="chip placeholder">Placeholder</span></p>
@@ -405,7 +410,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
   <div class="inner">
     <p class="kicker">III · The Solution</p>
     <h2>One unbroken <em>chain of custody</em> — from a human answer to a machine-verifiable seal.</h2>
-    <p class="lede">AVGVST AI is the intake-and-evidence layer that closes the gap between “we have an AI system running” and “we have a compliance record an authority will accept.” Click a link in the chain.</p>
+    <p class="lede">AVGVST AI closes the gap between “we run an AI system” and “we hold a record an authority will accept.” <b>Click each link.</b></p>
     <div class="chain" role="group" aria-label="Chain of custody">
       <button class="cnode"><span class="n">I · INTAKE</span><span class="t">A question a policy officer can answer</span></button>
       <button class="cnode"><span class="n">II · ENGINE</span><span class="t">Every finding graded by how it was reached</span></button>
@@ -423,7 +428,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
   <div class="inner">
     <p class="kicker">IV · Why Now</p>
     <h2><em>Evidence cannot be back-dated.</em></h2>
-    <p class="lede">A conformity-assessment dossier under Article 43 cannot absorb evidence produced below the required standard — it must be re-executed from scratch. Every month a high-risk system runs uninstrumented is a month of record that is legally worthless and must be rebuilt later, under deadline pressure, at higher cost. Drag the slider.</p>
+    <p class="lede">An Article 43 dossier cannot absorb substandard evidence — it must be re-executed from scratch. Every uninstrumented month is record you will pay to rebuild under deadline pressure. <b>Drag the slider.</b></p>
     <div class="ww">
       <div class="ww-head">If instrumentation begins in&ensp;<b id="wwDate">Aug 2027</b></div>
       <input type="range" id="wwSlider" min="0" max="24" value="12" step="1" aria-label="Month in which evidence instrumentation begins">
@@ -450,7 +455,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
   <div class="inner">
     <p class="kicker">V · The Safety Claim</p>
     <h2>Built to <em>refuse</em> what it cannot decide.</h2>
-    <p class="lede">Anchor an AI’s judgment into a sealed legal record and you have not removed hallucination risk — you have notarised it. The engine is partitioned so that failure cannot occur. Its honesty about its own limits is not a disclaimer; it is the architecture.</p>
+    <p class="lede">Seal an AI’s judgment into a legal record and you have not removed hallucination risk — <b>you have notarised it</b>. The engine is partitioned so that failure cannot occur.</p>
     <div class="route-wrap" id="routeWrap">
       <ul id="stack" aria-label="Findings produced by intake">
         <li class="finding" data-lane="m"><span>Does the system fall under Annex III?</span><span class="badge chip built">Sealed · source-grounded</span></li>
@@ -462,11 +467,11 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
       </ul>
       <div class="route-controls"><button class="btn" id="routeBtn">Route the findings</button></div>
       <div class="lanes">
-        <div class="lane machine"><h4>Machine-decidable</h4><p class="sub">No judgment, no hallucination surface — sealed as machine output, source-grounded to the regulation.</p><ul id="laneM"></ul></div>
-        <div class="lane judgment"><h4>Judgment</h4><p class="sub">Never sealed as machine output — forced into a human expert queue until a named reviewer signs.</p><ul id="laneJ"></ul></div>
+        <div class="lane machine"><h4>Machine-decidable</h4><p class="sub">Sealed as machine output — source-grounded, no hallucination surface.</p><ul id="laneM"></ul></div>
+        <div class="lane judgment"><h4>Judgment</h4><p class="sub">Never machine-sealed — held until a named reviewer signs.</p><ul id="laneJ"></ul></div>
       </div>
     </div>
-    <p class="pull sm">“The seal does not certify the AI was correct. It certifies that <span class="gold">this institution, on this date, with this evidence, reached these findings</span> — and the boundary between machine and human is itself the sealed, inspectable artifact.”</p>
+    <p class="pull sm">“The seal does not certify the AI was correct. It certifies <span class="gold">who found what, on what date, on what evidence</span> — and the machine / human boundary is itself sealed and inspectable.”</p>
   </div>
 </section>
 
@@ -488,10 +493,14 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
         </svg>
       </div>
       <div class="mrows">
-        <div class="mrow" data-k="som"><h4><span>SOM — Estonia, the reference</span><b>€1.5M ARR</b></h4><p>80+ deployments across 40+ institutions. The most instrumentable compliance environment in the Union: 25 years of qualified trust services, X-Road already signing and timestamping at every boundary. <span class="chip estimate">Estimate</span></p></div>
-        <div class="mrow" data-k="sam"><h4><span>SAM — the dozen smaller member states</span><b>≈ €120M / yr</b></h4><p>Facing the same 2 August 2026 deadline with neither X-Road nor a mature AI programme. They cannot build this from first principles — a working Estonian reference makes the sale credible rather than theoretical. <span class="chip estimate">Estimate</span></p></div>
+        <div class="mrow" data-k="som"><h4><span>SOM — Estonia, the reference</span><b>€1.5M ARR</b></h4><p>80+ deployments · 40+ institutions · X-Road and 25 years of qualified trust services already in place. <span class="chip estimate">Estimate</span></p></div>
+        <div class="mrow" data-k="sam"><h4><span>SAM — the dozen smaller member states</span><b>≈ €120M / yr</b></h4><p>Same deadline, no X-Road, no mature AI programme. The working Estonian reference is what makes the sale credible. <span class="chip estimate">Estimate</span></p></div>
         <div class="mrow" data-k="tam"><h4><span>TAM — EU-27 public-sector evidence layer</span><b>≈ €1.4B / yr</b></h4><p>By 2030, every member state must register, evidence and audit its high-risk systems under the same articles. <span class="chip estimate">Estimate</span></p></div>
-        <p class="travel">Why it travels: the AI Act is a <b>directly applicable Regulation</b> — Articles 9–15, the Annex III categories and the Article 99 tiers are identical in every member state by operation of law, not transposed. Only competent-authority wiring and sandbox sponsorship are local, and that thin layer is exactly what the schema parameterises. The deep engine — obligation mapping, confidence grading, evidence sealing — travels unchanged.</p>
+        <ul class="kbul">
+          <li><b>Directly applicable Regulation</b> — Articles 9–15, Annex III, the Article 99 tiers: identical in all 27 states, by operation of law.</li>
+          <li><b>Only the authority wiring is local</b> — exactly the layer the schema parameterises.</li>
+          <li><b>The deep engine travels unchanged</b> — obligation mapping, confidence grading, sealing.</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -504,14 +513,14 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
     <h2>Recurring by the <em>nature of evidence</em>.</h2>
     <p class="lede">Evidence accrues monthly or it does not exist — the revenue model mirrors the compliance model. <span class="chip estimate">Pricing illustrative</span></p>
     <div class="streams">
-      <div class="stream"><span class="no">STREAM 01</span><h4>Platform subscription</h4><div class="price">€18k <small>/ institution / yr</small></div><p>Intake, obligation mapping, registry view, audit workspace — the shared overview of state AI systems the national strategy says is missing.</p></div>
-      <div class="stream"><span class="no">STREAM 02</span><h4>Evidence sealing</h4><div class="price">€6k <small>/ system / yr</small></div><p>Continuous sealing of logs and findings: qualified trust anchor, RFC 3161 timestamps, a verification API for authorities. Scales with the estate.</p></div>
-      <div class="stream"><span class="no">STREAM 03</span><h4>Jurisdiction licence</h4><div class="price">€250k–1M <small>/ state / yr</small></div><p>The reference implementation, parameterised: competent-authority wiring, language, sandbox flow. Sold to governments, not institutions.</p></div>
+      <div class="stream"><span class="no">STREAM 01</span><h4>Platform subscription</h4><div class="price">€18k <small>/ institution / yr</small></div><p>Intake, obligation map, registry, audit workspace — the shared overview the strategy says is missing.</p></div>
+      <div class="stream"><span class="no">STREAM 02</span><h4>Evidence sealing</h4><div class="price">€6k <small>/ system / yr</small></div><p>Continuous sealing: qualified anchor, RFC 3161 timestamps, verification API. Scales with the estate.</p></div>
+      <div class="stream"><span class="no">STREAM 03</span><h4>Jurisdiction licence</h4><div class="price">€250k–1M <small>/ state / yr</small></div><p>The reference implementation, parameterised per state — sold to governments, not institutions.</p></div>
     </div>
-    <p class="bm-foot">Plus a 15% take on the named-expert review network that signs judgment findings into the record.</p>
+    <p class="bm-foot">Plus 15% of the named-expert network that signs judgment findings.</p>
     <div class="bm-notes">
-      <div class="bm-card"><h5>Acquisition</h5><p>Land through the regulatory sandbox; expand system by system. If the schema becomes the registration channel, acquisition cost approaches zero — systems arrive because <em>that is how you register</em>. A typical institution with five systems pays ≈ €48k/yr.</p></div>
-      <div class="bm-card"><h5>Retention</h5><p>Leaving means abandoning your own sealed record and re-executing it elsewhere — evidence cannot be back-dated, so the switching cost <em>is</em> the compliance record itself, and it compounds every month.</p></div>
+      <div class="bm-card"><h5>Acquisition</h5><p>Land via the sandbox; expand per system. If the schema becomes the registration channel, acquisition cost nears zero — <em>that is how you register</em>. Five-system institution ≈ €48k/yr.</p></div>
+      <div class="bm-card"><h5>Retention</h5><p>Leaving means abandoning your sealed record and re-executing it elsewhere. <em>The switching cost is the record itself</em> — and it compounds monthly.</p></div>
     </div>
   </div>
 </section>
@@ -520,7 +529,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
 <section class="slide" id="s8" data-numeral="VIII" data-title="Competitive Advantage" aria-label="Slide 8 of 13 — Competitive Advantage">
   <div class="inner">
     <p class="kicker">VIII · Competitive Advantage</p>
-    <h2 class="sm">A vendor can sell you a questionnaire. <em>A vendor cannot make its questionnaire the way you register a high-risk system with the state.</em></h2>
+    <h2 class="sm">A vendor can sell you a questionnaire. <em>It cannot make that questionnaire the way you register with the state.</em></h2>
     <div class="tablewrap">
       <table class="moat">
         <thead><tr><th>Capability</th><th>GRC platform</th><th>Consultancy dossier</th><th>In-house build</th><th class="av">AVGVST AI</th></tr></thead>
@@ -536,9 +545,9 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
     </div>
     <p class="legend">✓ native&ensp;·&ensp;◐ partial&ensp;·&ensp;✗ absent</p>
     <div class="moat-bullets">
-      <div class="bm-card"><h5>Infrastructure</h5><p>25 years of qualified Estonian trust services underneath — the EU’s regulatory architecture for trust exists precisely because self-certification is not evidence.</p></div>
-      <div class="bm-card"><h5>Standard</h5><p>The reference implementation other jurisdictions point to rather than rebuild — the schema, published openly, makes adopting cheaper than rebuilding.</p></div>
-      <div class="bm-card"><h5>Trust</h5><p>The partitioned engine is the only architecture safe enough to anchor a legal record — refusing to decide what it cannot decide is the moat no GRC vendor can retrofit.</p></div>
+      <div class="bm-card"><h5>Infrastructure</h5><p>25 years of qualified Estonian trust services underneath. EU trust law exists because <em>self-certification is not evidence</em>.</p></div>
+      <div class="bm-card"><h5>Standard</h5><p>The reference others point to rather than rebuild — an open schema makes adopting cheaper than building.</p></div>
+      <div class="bm-card"><h5>Trust</h5><p>An engine that refuses to decide what it cannot decide — the one property no GRC vendor can retrofit.</p></div>
     </div>
   </div>
 </section>
@@ -555,11 +564,11 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
           <li><span>End-to-end sealing pipeline against a qualified Estonian trust service, RFC 3161</span><span class="chip built">Built</span></li>
           <li><span>Obligation map of Articles 9–15 with confidence grading on every finding</span><span class="chip built">Built</span></li>
           <li><span>Intake instrument written in policy-officer language, not engineering language</span><span class="chip built">Built</span></li>
-          <li><span>The national AI strategy names the exact gap we close — no shared overview of state systems</span><span class="chip measured">Source-grounded</span></li>
+          <li><span>The national AI strategy itself names the gap — no shared overview of state systems</span><span class="chip measured">Source-grounded</span></li>
           <li><span>Design-partner pilots with three Estonian institutions</span><span class="chip placeholder">Placeholder</span></li>
           <li><span>ISA regulatory-sandbox application</span><span class="chip progress">In progress</span></li>
         </ul>
-        <p class="foot-note">Items marked placeholder are illustrative — replace with live facts before presenting. The deck refuses to seal what it cannot ground.</p>
+        <p class="foot-note">Placeholders are marked — swap in live facts before presenting.</p>
       </div>
       <div>
         <h5 class="colhead">Milestones</h5>
@@ -586,10 +595,10 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
         <p class="chart-cap"><span id="chartCap">Annual recurring revenue — €M</span><span class="chip estimate">Estimate</span></p>
       </div>
       <ul class="fin-notes">
-        <li><b>MMXXVI–VII</b> — density in Estonia: land institutions before the deadline, expand system by system.</li>
-        <li><b>MMXXVIII</b> — first jurisdiction licences; sealing volume from export pilots.</li>
-        <li><b>MMXXIX</b> — breakeven; gross margin ≈ 80% on platform and sealing.</li>
-        <li><b>Named assumption</b> — the plan assumes the registration-channel bet pays in two jurisdictions by 2028. Downside case — pure SaaS evidence layer: ≈ €7M by 2030.</li>
+        <li><b>MMXXVI–VII</b> — Estonian density: land before the deadline, expand per system.</li>
+        <li><b>MMXXVIII</b> — first jurisdiction licences; export-pilot sealing volume.</li>
+        <li><b>MMXXIX</b> — breakeven; gross margin ≈ 80%.</li>
+        <li><b>Named assumption</b> — the channel bet pays in two states by 2028. Downside, pure SaaS: ≈ €7M by 2030.</li>
       </ul>
     </div>
   </div>
@@ -600,7 +609,7 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
   <div class="inner">
     <p class="kicker">XI · The Team</p>
     <h2>Built where <em>digital trust</em> was built.</h2>
-    <p class="lede">Tallinn — 25 years of qualified trust services, X-Road, and a state that runs on verifiable records. <span class="chip placeholder">Profiles are placeholders — the deck refuses to invent people</span></p>
+    <p class="lede">Tallinn — 25 years of qualified trust services, X-Road, and a state that runs on verifiable records. <span class="chip placeholder">Placeholders — replace with the real team</span></p>
     <div class="team">
       <div class="tc"><div class="ava">I</div><h4>[Founder · CEO]</h4><p class="role">Regulatory technologist</p><p>X-Road ecosystem; led public-sector digital services from pilot to national mandate.</p></div>
       <div class="tc"><div class="ava">II</div><h4>[Founder · CTO]</h4><p class="role">Applied cryptographer</p><p>Qualified trust services under eIDAS; evidence-grade logging, sealing and timestamping.</p></div>
@@ -617,13 +626,13 @@ h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);l
     <p class="kicker center">XII · The Risk We Name</p>
     <h2 class="center">The bet <em>we are naming</em>.</h2>
     <div class="bet">
-      <p class="bet-main">One assumption carries weight that no argument fully discharges: whether the reference implementation becomes the <span class="gold">actual registration channel</span> — whether the ISA, or its equivalent elsewhere, adopts the schema as the path through which high-risk systems are registered, rather than building its own intake.</p>
-      <p class="bet-sub">Every other risk in this case was either survivable or converted into a strength. That one is a genuine bet.</p>
+      <p class="bet-main">One assumption no argument fully discharges: <span class="gold">does the reference implementation become the actual registration channel?</span> Does the ISA — or its equivalent abroad — register systems through our schema, rather than build its own intake?</p>
+      <p class="bet-sub">Every other risk was survivable or became a strength. This one is a genuine bet.</p>
       <div class="bet-grid">
-        <div class="bm-card"><h5>Why we name it</h5><p>We sell verifiable honesty about what can and cannot be established. A compliance-evidence company that concealed its own central risk would be contradicting the only thing it sells.</p></div>
-        <div class="bm-card"><h5>Why we take it anyway</h5><p>The evidence obligation exists with or without channel status — the floor is a durable SaaS evidence layer. Sandbox sponsorship is the adoption path, and an openly published schema makes saying yes cheaper than building.</p></div>
+        <div class="bm-card"><h5>Why we name it</h5><p>We sell verifiable honesty. Concealing our own central risk would contradict the only thing we sell.</p></div>
+        <div class="bm-card"><h5>Why we take it anyway</h5><p>The evidence duty exists either way — the floor is a durable SaaS layer. Sandboxes are the adoption path; an open schema makes “yes” cheap.</p></div>
       </div>
-      <p class="pull">“The discipline that makes the product safe — refusing to assert what it cannot ground — is the discipline of this pitch. <span class="gold">For this product, of all products, that is the proof of concept.</span>”</p>
+      <p class="pull">“The discipline that makes the product safe — refusing to assert what it cannot ground — is the discipline of this pitch. <span class="gold">That is the proof of concept.</span>”</p>
     </div>
   </div>
 </section>
@@ -761,15 +770,15 @@ setInterval(tick,1000);tick();
 /* ---------- chain of custody (slide III) ---------- */
 var CHAIN=[
  {h:'I · Intake — a question a policy officer can answer',
-  d:'Not “what is your log integrity mechanism” — but “can your IT team confirm the system’s activity records cannot be edited after the fact?” Intake meets institutions in the language they actually have, so every system can enter the record, not only the ones with mature engineering teams.'},
+  d:'Not “what is your log integrity mechanism” — but “can IT confirm the records cannot be edited after the fact?” Institutions answer in the language they actually have.'},
  {h:'II · Engine — every finding graded by how it was reached',
-  d:'Each answer is mapped to the obligations of Articles 9–15 and graded by provenance: source-grounded to the regulation, derived, or dependent on human judgment. Confidence is not a disclaimer at the bottom of a report — it is a field on every finding.'},
+  d:'Each answer maps to Articles 9–15 and carries a provenance grade. Confidence is a field on every finding, not a footnote.'},
  {h:'III · Partition — machines decide the decidable; humans sign the rest',
-  d:'Machine-decidable findings — Annex III classification, fine tiers, document existence — carry no judgment and no hallucination surface. Judgment findings are forced into a human expert queue and cannot enter the record until a named reviewer signs them.'},
+  d:'Annex III class, fine tier, document existence: machine-sealed. Anything needing judgment waits for a named reviewer’s signature.'},
  {h:'IV · Seal — a qualified seal and an RFC 3161 timestamp',
-  d:'The result is sealed into a cryptographically verifiable evidence package anchored to a qualified Estonian trust service. From this moment the record cannot be silently edited — not by us, not by the institution, not by anyone.'},
+  d:'Sealed and timestamped against a qualified Estonian trust service. From that moment no one can silently edit the record — including us.'},
  {h:'V · Verify — checkable without trusting the producer',
-  d:'An authority verifies the package against the trust anchor, not against the institution’s word. That is the difference between a compliance claim and compliance evidence — and it is the entire product.'}
+  d:'Authorities check the package against the trust anchor, not the institution’s word. That is evidence, not a claim.'}
 ];
 var cnodes=$$('.cnode'),cdetail=$('#chainDetail');
 function showChain(i,sel){
@@ -801,9 +810,9 @@ function wwUpdate(){
   $('#wwValidN').textContent=valid+(valid===1?' month':' months');
   $('#wwLostN').textContent=d+(d===1?' month':' months');
   $('#wwNote').textContent=
-    d===0?'Start now, and by the August 2028 review every month of operation is admissible record.':
-    d<12?'Months forfeited are re-executed from scratch — under deadline pressure, at a premium. Waiting bought nothing.':
-    'The institution that waits until '+(2026+Math.floor((7+d)/12))+' does not save the time. It forfeits '+d+' months of record and pays to regenerate them. The rational actor buys early because the deadline is late.';
+    d===0?'Start now: every month of operation becomes admissible record.':
+    d<12?'Forfeited months are re-executed under deadline pressure, at a premium. Waiting bought nothing.':
+    'Waiting until '+(2026+Math.floor((7+d)/12))+' saves nothing: '+d+' months forfeited, then bought back at a premium. The rational actor buys early because the deadline is late.';
 }
 ww.addEventListener('input',wwUpdate);
 wwUpdate();
