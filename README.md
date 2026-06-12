@@ -29,6 +29,12 @@ green) come from the state's open-source
 [CVI / Veera design system](https://github.com/e-gov/cvi). Only the AVGVST
 wordmark keeps its Cinzel spaced-caps lettering.
 
+The **EST | ENG** switch in the header is functional: it toggles the interface
+(labels, buttons, dropdown options, tabs, panel headings, statuses) between
+Estonian and English and remembers the choice in the browser. Generated
+analytical content — finding descriptions and statute quotations — stays in
+English.
+
 ## Pitch deck
 
 `pitch.html` is a self-contained interactive investor deck for AVGVST AI — 13 slides
