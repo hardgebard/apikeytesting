@@ -16,6 +16,9 @@ entirely in the browser, and nothing is uploaded or persisted.
   fine-tier exposure (Art. 99(3)–(5), scaled against the turnover input using the
   "whichever is higher" rule), a source-verification log with article drawers, an
   expert review queue, and a gated sign-off checklist.
+- **AI Memo (optional, powered by Mistral)**: sends the current form data and
+  rule-engine findings to Mistral's API and renders a plain-language memo
+  (bottom line, biggest risks, what to do next). Requires your own API key.
 
 Five example systems (Bürokratt, Automatic Administrative Acts, AIRE, Top-10 Digital
 Services, RIHAKE) are pre-loaded in the sidebar.
@@ -48,6 +51,24 @@ This repo ships with a Pages deployment workflow
    **Actions** tab via *Run workflow*).
 
 The site will be published at `https://<owner>.github.io/<repo>/`.
+
+## Optional: live AI analysis with Mistral
+
+The rule engine is deterministic JavaScript; the **AI Memo** tab adds a real LLM on
+top of it, using Mistral.
+
+1. Create a (free-tier) account at https://console.mistral.ai and generate an
+   **API key** under *API Keys*.
+2. Open the app, paste the key into **"Mistral API key"** in the sidebar (bottom
+   left) and pick a model. The key is stored only in your browser's localStorage —
+   it is never written into the site or the repository.
+3. Load or fill in a system, run **Generate compliance assessment**, then open the
+   **AI Memo** tab and click **Generate AI memo with Mistral**.
+
+The browser calls `https://api.mistral.ai/v1/chat/completions` directly with your
+key. That is fine for personal use of a demo, but do not hardcode a key into the
+page or share a key-loaded browser: anyone with the key can spend your quota. A
+production setup would route the call through a small server-side proxy instead.
 
 ## Repository layout
 
