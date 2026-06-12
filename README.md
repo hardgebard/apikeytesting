@@ -29,6 +29,18 @@ green) come from the state's open-source
 [CVI / Veera design system](https://github.com/e-gov/cvi). Only the AVGVST
 wordmark keeps its Cinzel spaced-caps lettering.
 
+## Pitch deck
+
+`pitch.html` is a self-contained interactive investor deck for AVGVST AI — 13 slides
+following the standard structure (problem, solution, why now, market, business model,
+moat, traction, financials, team, named risk, ask). Navigate with ← / →, swipe, or the
+diamond dots; it includes a live countdown to the 2 August 2026 high-risk deadline, a
+cost-of-waiting slider, a finding-routing demo of the hallucination partition, and
+animated market/financial charts. Open it the same way as `index.html` (it is served
+at `/pitch.html` on GitHub Pages). Figures are provenance-tagged in-slide as
+Measured / Statute / Estimate / Placeholder — replace the placeholder items (team,
+pilots, contact) before presenting.
+
 > **Disclaimer:** This is a UI demo. The findings, fine figures, citations, and hashes
 > are illustrative only and do not constitute legal advice.
 
