@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AVGVST AI — Investor Pitch · Seed MMXXVI</title>
+<meta name="description" content="AVGVST AI — the evidence layer for EU AI Act compliance in the public sector. Interactive investor pitch deck.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='none' stroke='%23c9a24b' stroke-width='6'/%3E%3Ctext x='50' y='69' font-family='serif' font-size='54' text-anchor='middle' fill='%23c9a24b'%3EA%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Noto+Sans:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0c0b09;--panel:rgba(236,228,210,.035);--panel2:rgba(236,228,210,.065);
+  --line:rgba(201,162,75,.28);--hair:rgba(236,228,210,.12);
+  --gold:#c9a24b;--gold2:#e9cd8a;--gold-deep:#8a6c28;
+  --ivory:#ece4d2;--dim:#aaa088;--faint:#6f6753;
+  --blue:#5b9bd0;--tyrian:#a45070;--green:#7fa05f;--red:#b65c44;
+  --cinzel:'Cinzel',serif;--gar:'EB Garamond',Georgia,serif;--sans:'Noto Sans',system-ui,sans-serif;
+}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ivory);font-family:var(--gar);font-size:16px;line-height:1.55;overflow:hidden;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(1100px 760px at 50% -12%,rgba(201,162,75,.085),transparent 62%),
+             radial-gradient(900px 650px at 88% 112%,rgba(164,80,112,.06),transparent 60%),
+             radial-gradient(800px 600px at 4% 108%,rgba(91,155,208,.045),transparent 60%)}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.5;
+  background-image:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 3px),
+                   repeating-linear-gradient(90deg,rgba(0,0,0,.022) 0 1px,transparent 1px 3px)}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--hair)}
+
+.progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:60;background:rgba(236,228,210,.06)}
+#pbar{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-deep),var(--gold2));transition:width .6s ease}
+
+#hd{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:14px 26px;pointer-events:none}
+#hd .brand{display:flex;gap:11px;align-items:center;font-family:var(--cinzel);font-weight:700;letter-spacing:.32em;font-size:13px;color:var(--ivory)}
+#hd .brand svg{width:27px;height:27px;color:var(--gold)}
+#hd .hd-right{display:flex;gap:12px;align-items:center}
+#counter{font-family:var(--cinzel);font-size:11px;letter-spacing:.2em;color:var(--dim)}
+
+.chip{display:inline-flex;align-items:center;gap:5px;font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;padding:4px 9px;border:1px solid var(--hair);border-radius:2px;color:var(--dim);background:rgba(0,0,0,.28);white-space:nowrap;vertical-align:middle}
+.chip b{font-weight:600;color:inherit}
+.chip.measured{color:var(--gold2);border-color:rgba(201,162,75,.5)}
+.chip.statute{color:#d493ad;border-color:rgba(164,80,112,.55)}
+.chip.estimate{color:var(--dim);border-color:var(--hair)}
+.chip.built{color:#b3cf93;border-color:rgba(127,160,95,.5)}
+.chip.progress{color:#dcbd70;border-color:rgba(201,162,75,.4);border-style:dashed}
+.chip.placeholder{color:var(--faint);border-style:dashed}
+
+#deck{height:100%;overflow:hidden;position:relative;z-index:1}
+#track{display:flex;height:100%;transition:transform .75s cubic-bezier(.77,0,.18,1);will-change:transform}
+.slide{flex:0 0 100%;height:100%;overflow-y:auto;overflow-x:hidden;position:relative;display:flex;padding:84px 5vw 74px}
+.slide::before{content:attr(data-numeral);position:absolute;right:-1vw;bottom:-7vh;font-family:var(--cinzel);font-weight:900;font-size:36vh;line-height:1;color:rgba(201,162,75,.05);pointer-events:none;user-select:none}
+.inner{width:min(1180px,100%);margin:auto;opacity:0;transform:translateY(18px);transition:opacity .7s ease .15s,transform .7s ease .15s}
+.slide.active .inner{opacity:1;transform:none}
+
+.kicker{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.kicker::after{content:"";height:1px;flex:0 0 64px;background:linear-gradient(90deg,var(--line),transparent)}
+.kicker.center{justify-content:center}.kicker.center::after{display:none}
+h2{font-family:var(--cinzel);font-weight:700;font-size:clamp(24px,3.1vw,40px);line-height:1.18;letter-spacing:.015em;margin-bottom:16px}
+h2.sm{font-size:clamp(19px,2.3vw,29px)}
+h2 em,.gold{color:var(--gold2);font-style:normal}
+h2.center{text-align:center}
+.lede{font-size:clamp(15.5px,1.32vw,18.5px);color:var(--dim);max-width:68ch}
+.colhead{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
+.foot-note{margin-top:14px;font-size:13px;color:var(--faint);font-style:italic}
+
+.pull{margin:26px auto 0;text-align:center;font-style:italic;font-size:clamp(17px,1.8vw,23px);line-height:1.5;max-width:36em}
+.pull.sm{font-size:clamp(15.5px,1.45vw,19px)}
+.pull.left{text-align:left;margin-left:0}
+
+.btn{font-family:var(--cinzel);font-size:12px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;padding:11px 24px;border:1px solid var(--gold);color:var(--gold2);background:transparent;cursor:pointer;transition:.25s}
+.btn:hover{background:rgba(201,162,75,.13)}
+
+/* — Title — */
+.title-inner{text-align:center}
+.seal-lg{width:clamp(112px,17vh,172px);height:auto;color:var(--gold);margin:0 auto 20px;display:block;filter:drop-shadow(0 0 26px rgba(201,162,75,.22))}
+h1{font-family:var(--cinzel);font-weight:900;font-size:clamp(52px,8.6vw,112px);line-height:1.02;letter-spacing:.07em;
+   background:linear-gradient(180deg,#f4e0a6 8%,var(--gold) 58%,#7e6123 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.motto{font-family:var(--cinzel);letter-spacing:.52em;font-size:clamp(10px,1.15vw,14px);color:var(--gold);margin:12px 0 30px;text-indent:.52em}
+.tagline{font-style:italic;font-size:clamp(23px,2.9vw,36px);color:var(--ivory)}
+.subline{color:var(--dim);max-width:62ch;margin:14px auto 30px;font-size:clamp(14.5px,1.25vw,17px)}
+.title-chips{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* — Problem — */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:28px 0 4px}
+.stat{border:1px solid var(--hair);border-top:2px solid var(--gold);background:var(--panel);padding:20px 20px 16px;display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.stat .num{font-family:var(--cinzel);font-weight:700;font-size:clamp(32px,4.3vw,52px);line-height:1;color:var(--gold2)}
+.stat .num-sm{font-size:.55em;color:var(--dim)}
+.stat .lbl{color:var(--dim);font-size:14.5px;line-height:1.45;flex:1}
+.stat .lbl b{color:var(--ivory);font-weight:500}
+.ee{display:flex;gap:26px;align-items:center;margin-top:20px;border:1px solid var(--hair);background:var(--panel);padding:16px 22px;flex-wrap:wrap}
+.ee-num{text-align:center}
+.ee-num b{display:block;font-family:var(--cinzel);font-weight:700;font-size:34px;color:var(--ivory);line-height:1}
+.ee-num span{font-family:var(--sans);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);display:block;margin-top:6px}
+.ee p{flex:1;min-width:260px;font-size:14.5px;color:var(--dim)}
+.ribbon{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:20px;padding:11px 18px;border:1px solid rgba(182,92,68,.45);background:rgba(182,92,68,.08);font-family:var(--sans);letter-spacing:.16em;font-size:10.5px;text-transform:uppercase;color:#d9a08e;flex-wrap:wrap}
+.ribbon b{font-family:var(--cinzel);letter-spacing:.1em;color:#e8b9a8;font-size:13px}
+.prov-note{margin-top:16px;font-size:12.5px;color:var(--faint);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* — Solution / chain — */
+.chain{display:flex;align-items:stretch;margin:28px 0 18px}
+.cnode{flex:1;position:relative;border:1px solid var(--hair);background:var(--panel);padding:15px 14px;cursor:pointer;transition:.3s;text-align:left;color:var(--ivory);font-family:inherit}
+.cnode+.cnode{margin-left:34px}
+.cnode+.cnode::before{content:"";position:absolute;left:-35px;top:50%;width:34px;height:1px;background:var(--hair);transition:background .4s}
+.cnode .n{display:block;font-family:var(--sans);font-size:9px;font-weight:600;letter-spacing:.26em;color:var(--faint);transition:color .3s}
+.cnode .t{display:block;font-family:var(--cinzel);font-weight:600;font-size:14.5px;line-height:1.35;margin-top:8px}
+.cnode.lit{border-color:var(--line);background:var(--panel2)}
+.cnode.lit .n{color:var(--gold)}
+.cnode.lit+.cnode.lit::before,.cnode.lit+.cnode.sel::before{background:var(--gold)}
+.cnode.sel{border-color:var(--gold);box-shadow:0 0 0 1px rgba(201,162,75,.3),0 14px 34px -20px rgba(201,162,75,.5)}
+#chainDetail{border-left:2px solid var(--gold);background:var(--panel);padding:16px 20px;min-height:108px}
+#chainDetail h5{font-family:var(--cinzel);font-size:16px;letter-spacing:.04em;color:var(--gold2);margin-bottom:6px}
+#chainDetail p{color:var(--dim);font-size:15px;max-width:100ch}
+
+/* — Why now — */
+.ww{border:1px solid var(--hair);background:var(--panel);padding:20px 24px;margin-top:24px}
+.ww-head{font-size:16px;color:var(--dim);margin-bottom:12px}
+.ww-head b{font-family:var(--cinzel);font-size:19px;color:var(--gold2);letter-spacing:.04em}
+.ww input[type=range]{width:100%;accent-color:var(--gold);cursor:pointer}
+.ww-scale{display:flex;justify-content:space-between;font-family:var(--sans);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-top:4px}
+.ww-bar{display:flex;height:18px;margin:16px 0 12px;border:1px solid var(--hair);background:rgba(0,0,0,.32);overflow:hidden}
+#wwValid{background:linear-gradient(90deg,#55703f,#7fa05f);transition:width .35s ease}
+#wwLost{background:repeating-linear-gradient(135deg,rgba(182,92,68,.8) 0 8px,rgba(182,92,68,.45) 8px 16px);transition:width .35s ease}
+.ww-read{display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:14.5px;color:var(--dim)}
+.ww-read .ok{color:#a9c98a;font-family:var(--cinzel);font-size:17px}
+.ww-read .bad{color:#d98f76;font-family:var(--cinzel);font-size:17px}
+.ww-note{margin-top:14px;font-style:italic;font-size:15.5px;color:var(--ivory);border-top:1px solid var(--hair);padding-top:12px}
+
+.cd{display:flex;gap:12px;justify-content:center;margin-top:26px;flex-wrap:wrap}
+.cd .cell{min-width:84px;border:1px solid var(--line);background:rgba(0,0,0,.35);padding:13px 10px 10px;text-align:center}
+.cd .cell b{font-family:var(--cinzel);font-weight:700;font-size:32px;color:var(--gold2);display:block;line-height:1}
+.cd .cell span{font-family:var(--sans);font-size:8.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--faint);display:block;margin-top:7px}
+.cd-cap{width:100%;text-align:center;font-family:var(--sans);font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint);margin-top:2px}
+.cd.small .cell{min-width:64px;padding:9px 8px 7px}
+.cd.small .cell b{font-size:22px}
+
+/* — Safety / routing — */
+.route-wrap{margin-top:24px}
+#stack{list-style:none;display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:16px;min-height:48px;position:relative;padding:4px}
+.routed #stack{border:1px dashed var(--hair)}
+.routed #stack::after{content:"INTAKE STREAM — PARTITIONED";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:9px;letter-spacing:.34em;color:var(--faint)}
+.finding{list-style:none;border:1px solid var(--hair);background:rgba(0,0,0,.32);padding:9px 13px;font-size:14px;color:var(--ivory);display:flex;justify-content:space-between;gap:12px;align-items:center;will-change:transform}
+.finding .badge{opacity:0;pointer-events:none;transition:opacity .45s ease .15s}
+.route-wrap.routed .finding .badge{opacity:1}
+.route-controls{display:flex;justify-content:center;margin-bottom:18px}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.lane{border:1px solid var(--hair);background:var(--panel);padding:16px;min-height:228px}
+.lane h4{font-family:var(--sans);font-size:10.5px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;margin-bottom:5px}
+.lane.machine h4{color:var(--blue)}
+.lane.judgment h4{color:#d493ad}
+.lane .sub{font-size:13px;font-style:italic;color:var(--faint);margin-bottom:14px}
+.lane ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+
+/* — Market — */
+.market{display:grid;grid-template-columns:360px 1fr;gap:36px;align-items:center;margin-top:10px}
+.rings svg{width:100%;height:auto;display:block}
+.ring{fill:none;stroke:var(--gold);stroke-opacity:.4;stroke-width:2;cursor:pointer;
+  transition:stroke-dashoffset 1.3s ease,stroke-opacity .3s,stroke-width .3s}
+.ring:nth-of-type(2){transition:stroke-dashoffset 1.3s ease .15s,stroke-opacity .3s,stroke-width .3s}
+.ring:nth-of-type(3){transition:stroke-dashoffset 1.3s ease .3s,stroke-opacity .3s,stroke-width .3s}
+#ringSvg.drawn .ring{stroke-dashoffset:0 !important}
+.ring.hot{stroke-opacity:1;stroke-width:3.2}
+.ring-lbl{font-family:var(--sans);font-size:11px;letter-spacing:.3em;fill:var(--faint)}
+.ring-c{font-family:var(--cinzel);font-size:13px;letter-spacing:.2em;fill:var(--gold)}
+.mrows{display:flex;flex-direction:column;gap:12px}
+.mrow{border:1px solid var(--hair);border-left:3px solid transparent;background:var(--panel);padding:13px 16px;cursor:pointer;transition:.25s}
+.mrow.act{border-left-color:var(--gold);background:var(--panel2)}
+.mrow h4{display:flex;justify-content:space-between;gap:14px;font-family:var(--cinzel);font-weight:600;font-size:14.5px;color:var(--ivory)}
+.mrow h4 b{color:var(--gold2);white-space:nowrap;font-weight:700}
+.mrow p{margin-top:6px;font-size:13.5px;color:var(--dim)}
+.travel{margin-top:6px;font-size:14px;color:var(--dim);border-top:1px solid var(--hair);padding-top:12px}
+.travel b{color:var(--ivory);font-weight:500}
+
+/* — Business model — */
+.streams{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px}
+.stream{border:1px solid var(--hair);border-top:2px solid var(--gold);background:var(--panel);padding:18px}
+.stream .no{font-family:var(--sans);font-size:9px;font-weight:600;letter-spacing:.3em;color:var(--faint)}
+.stream h4{font-family:var(--cinzel);font-weight:600;font-size:16.5px;margin:9px 0 2px}
+.stream .price{font-family:var(--cinzel);font-weight:700;font-size:23px;color:var(--gold2);margin:6px 0 8px}
+.stream .price small{font-size:.5em;color:var(--dim);font-weight:400;letter-spacing:.06em}
+.stream p{font-size:13.5px;color:var(--dim)}
+.bm-foot{margin-top:14px;font-size:13.5px;color:var(--faint);font-style:italic}
+.bm-notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.bm-card{border:1px solid var(--hair);background:var(--panel);padding:15px 18px}
+.bm-card h5{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);margin-bottom:7px}
+.bm-card p{font-size:14px;color:var(--dim)}
+.bm-card em{color:var(--ivory)}
+
+/* — Moat — */
+.tablewrap{overflow-x:auto;margin-top:24px}
+.moat{width:100%;border-collapse:collapse;font-size:13.5px}
+.moat th,.moat td{border:1px solid var(--hair);padding:9px 13px;text-align:center;vertical-align:middle}
+.moat th{font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);background:rgba(0,0,0,.32)}
+.moat td:first-child{text-align:left;color:var(--dim)}
+.moat .av{background:rgba(201,162,75,.07)}
+.moat th.av{color:var(--gold2);border-bottom:2px solid var(--gold)}
+.moat .yes{color:var(--gold2)}
+.moat .no{color:var(--faint)}
+.moat .part{color:var(--dim)}
+.moat tbody tr:hover td{background:rgba(236,228,210,.035)}
+.moat tbody tr:hover td.av{background:rgba(201,162,75,.12)}
+.moat-bullets{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+.legend{margin-top:10px;font-family:var(--sans);font-size:10px;letter-spacing:.12em;color:var(--faint);text-transform:uppercase}
+
+/* — Traction — */
+.trk{display:grid;grid-template-columns:1.08fr 1fr;gap:34px;margin-top:24px}
+.status{list-style:none}
+.status li{display:flex;justify-content:space-between;gap:16px;align-items:center;padding:10px 0;border-bottom:1px solid var(--hair);font-size:14.5px}
+.status li>span:first-child{color:var(--ivory)}
+.roadmap{position:relative;padding-left:6px;border-left:1px solid var(--line);margin-left:5px}
+.rm{position:relative;padding:0 0 20px 22px}
+.rm:last-child{padding-bottom:4px}
+.rm::before{content:"";position:absolute;left:-5.5px;top:6px;width:9px;height:9px;background:var(--bg);border:1.5px solid var(--gold);transform:rotate(45deg)}
+.rm time{font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.24em;color:var(--gold);text-transform:uppercase}
+.rm p{color:var(--dim);font-size:14.5px;margin-top:4px}
+.rm p b{color:var(--ivory);font-weight:500}
+
+/* — Financials — */
+.fin{display:grid;grid-template-columns:1fr 330px;gap:34px;margin-top:18px;align-items:end}
+.seg{display:inline-flex;border:1px solid var(--hair);margin-bottom:20px}
+.seg button{font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;padding:8px 16px;background:transparent;border:0;color:var(--dim);cursor:pointer;transition:.25s}
+.seg button.on{background:rgba(201,162,75,.16);color:var(--gold2)}
+.chart-wrap{padding:30px 0 34px}
+.chart{height:280px;display:flex;align-items:flex-end;gap:clamp(12px,2.4vw,30px);border-bottom:1px solid var(--hair);padding:0 8px}
+.bar{flex:1;position:relative;height:0;min-height:2px;background:linear-gradient(180deg,var(--gold2),var(--gold-deep));transition:height .9s cubic-bezier(.3,.7,.3,1)}
+.bar.alt{background:linear-gradient(180deg,#8fc0e8,#2c5e8a)}
+.bar i{position:absolute;top:-26px;left:50%;transform:translateX(-50%);font-family:var(--cinzel);font-style:normal;font-weight:700;font-size:14.5px;color:var(--gold2);white-space:nowrap}
+.bar.alt i{color:#a8cdec}
+.bar b{position:absolute;bottom:-26px;left:50%;transform:translateX(-50%);font-family:var(--sans);font-weight:400;font-size:10px;letter-spacing:.14em;color:var(--faint)}
+.chart-cap{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);display:flex;gap:10px;align-items:center}
+.fin-notes{list-style:none;display:flex;flex-direction:column;gap:13px;font-size:14px;color:var(--dim);border-left:1px solid var(--hair);padding-left:20px}
+.fin-notes b{color:var(--gold2);font-family:var(--cinzel);font-size:13px;letter-spacing:.06em}
+
+/* — Team — */
+.team{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:26px}
+.tc{border:1px solid var(--hair);background:var(--panel);padding:18px}
+.tc .ava{width:52px;height:52px;border-radius:50%;border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-family:var(--cinzel);font-weight:700;color:var(--gold);font-size:19px;background:rgba(201,162,75,.07);margin-bottom:13px}
+.tc h4{font-family:var(--cinzel);font-weight:600;font-size:14.5px;line-height:1.3}
+.tc .role{font-family:var(--sans);font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin:5px 0 8px}
+.tc p{font-size:13px;color:var(--dim)}
+
+/* — Bet — */
+.bet{max-width:62rem;margin:0 auto;text-align:center}
+.bet-main{font-size:clamp(17.5px,1.95vw,24px);line-height:1.55;color:var(--ivory)}
+.bet-sub{margin-top:14px;font-size:clamp(15px,1.35vw,18px);font-style:italic;color:var(--dim)}
+.bet-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;text-align:left;margin-top:26px}
+
+/* — Ask — */
+.ask-top{display:flex;align-items:center;gap:24px;flex-wrap:wrap}
+.ask-amt{font-family:var(--cinzel);font-weight:900;font-size:clamp(46px,6vw,78px);line-height:1;
+  background:linear-gradient(180deg,#f4e0a6,var(--gold) 60%,#7e6123);-webkit-background-clip:text;background-clip:text;color:transparent}
+.ask-cap b{display:block;font-family:var(--cinzel);font-size:19px;letter-spacing:.14em;color:var(--ivory)}
+.ask-cap span{font-size:14.5px;color:var(--dim)}
+.funds{margin-top:24px}
+.fbar{display:flex;height:26px;border:1px solid var(--hair);background:rgba(0,0,0,.3);overflow:hidden}
+.fseg{height:100%;width:0;transition:width 1s cubic-bezier(.3,.7,.3,1)}
+.fseg.f1,.sw.f1{background:linear-gradient(180deg,var(--gold2),var(--gold-deep))}
+.fseg.f2,.sw.f2{background:#9a7b33}
+.fseg.f3,.sw.f3{background:#6e5a83}
+.fseg.f4,.sw.f4{background:#54614a}
+.fseg.f2{transition-delay:.15s}.fseg.f3{transition-delay:.3s}.fseg.f4{transition-delay:.45s}
+.flegend{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:14px;font-size:13px;color:var(--dim)}
+.flegend>div{display:flex;flex-direction:column;gap:3px}
+.flegend .sw{width:22px;height:8px;display:inline-block;margin-bottom:4px}
+.flegend b{color:var(--ivory);font-family:var(--cinzel);font-size:13.5px;font-weight:600}
+.ask-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:34px;margin-top:26px;align-items:start}
+.buys{list-style:none;display:flex;flex-direction:column}
+.buys li{padding:10px 0 10px 26px;border-bottom:1px solid var(--hair);font-size:15px;color:var(--dim);position:relative}
+.buys li::before{content:"◆";position:absolute;left:2px;top:11px;font-size:9px;color:var(--gold)}
+.buys b{color:var(--ivory);font-weight:500}
+.contact{margin-top:16px;font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+/* — Nav chrome — */
+.arr{position:fixed;top:50%;transform:translateY(-50%);z-index:45;width:44px;height:52px;border:1px solid var(--hair);background:rgba(12,11,9,.66);color:var(--dim);font-size:24px;line-height:1;cursor:pointer;transition:.25s;font-family:var(--gar)}
+.arr:hover{color:var(--gold2);border-color:var(--line)}
+#prev{left:14px}#next{right:14px}
+#dots{position:fixed;bottom:46px;left:50%;transform:translateX(-50%);display:flex;gap:13px;z-index:45}
+#dots button{width:8px;height:8px;padding:0;border:1px solid var(--gold);background:transparent;transform:rotate(45deg);cursor:pointer;opacity:.45;transition:.25s}
+#dots button:hover{opacity:1}
+#dots button.on{background:var(--gold);opacity:1}
+#ft{position:fixed;bottom:16px;left:26px;right:26px;display:flex;justify-content:space-between;gap:12px;z-index:40;pointer-events:none;font-family:var(--sans);font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--faint)}
+
+@media (max-width:920px){
+  .slide{padding:78px 6vw 96px}
+  .stats,.streams,.moat-bullets{grid-template-columns:1fr}
+  .lanes,.ww-read,.bm-notes,.trk,.bet-grid,.ask-grid{grid-template-columns:1fr}
+  .market{grid-template-columns:1fr}
+  .rings{max-width:300px;margin:0 auto}
+  .fin{grid-template-columns:1fr}
+  .fin-notes{border-left:0;padding-left:0;border-top:1px solid var(--hair);padding-top:16px}
+  .team{grid-template-columns:1fr 1fr}
+  .flegend{grid-template-columns:1fr 1fr}
+  .chain{flex-direction:column;gap:10px}
+  .cnode+.cnode{margin-left:0}
+  .cnode+.cnode::before{display:none}
+  .arr{display:none}
+  #hd .hd-right .chip{display:none}
+}
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{transition:none !important;animation:none !important}
+  #track{transition:none}
+}
+@media print{
+  body{overflow:visible}
+  body::before,body::after{display:none}
+  #hd,#ft,#dots,.arr,.progress{display:none !important}
+  #deck{overflow:visible;height:auto}
+  #track{display:block;transform:none !important}
+  .slide{height:auto;min-height:100vh;page-break-after:always;overflow:visible}
+  .inner{opacity:1 !important;transform:none !important}
+}
+</style>
+<noscript><style>
+  body{overflow:auto}#track{display:block}.inner{opacity:1;transform:none}
+  .slide{height:auto;min-height:100vh}#dots,.arr{display:none}
+</style></noscript>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <path id="sealArcTop" d="M 24,100 A 76,76 0 0 1 176,100"/>
+    <path id="sealArcBot" d="M 20,100 A 80,80 0 0 0 180,100"/>
+    <symbol id="seal" viewBox="0 0 200 200">
+      <circle cx="100" cy="100" r="97" fill="none" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="100" cy="100" r="92" fill="none" stroke="currentColor" stroke-width="0.6" opacity=".7"/>
+      <circle cx="100" cy="100" r="64" fill="none" stroke="currentColor" stroke-width="0.9"/>
+      <text font-family="Cinzel,serif" font-size="16" font-weight="600" letter-spacing="4" fill="currentColor">
+        <textPath href="#sealArcTop" startOffset="50%" text-anchor="middle">AVGVST · AI</textPath>
+      </text>
+      <text font-family="Cinzel,serif" font-size="9.5" letter-spacing="1.8" fill="currentColor" opacity=".85">
+        <textPath href="#sealArcBot" startOffset="50%" text-anchor="middle">EVIDENTIA · NON · ASSERTIO</textPath>
+      </text>
+      <text x="100" y="116" font-family="Cinzel,serif" font-size="54" font-weight="700" text-anchor="middle" fill="currentColor">A</text>
+      <g stroke="currentColor" fill="currentColor">
+        <path d="M98,153 Q74,148 55,124" fill="none" stroke-width="1.1"/>
+        <ellipse cx="88" cy="150" rx="7" ry="2.6" transform="rotate(20 88 150)"/>
+        <ellipse cx="76" cy="144" rx="7" ry="2.6" transform="rotate(35 76 144)"/>
+        <ellipse cx="66" cy="136" rx="7" ry="2.6" transform="rotate(50 66 136)"/>
+        <ellipse cx="58" cy="127" rx="7" ry="2.6" transform="rotate(65 58 127)"/>
+        <path d="M102,153 Q126,148 145,124" fill="none" stroke-width="1.1"/>
+        <ellipse cx="112" cy="150" rx="7" ry="2.6" transform="rotate(-20 112 150)"/>
+        <ellipse cx="124" cy="144" rx="7" ry="2.6" transform="rotate(-35 124 144)"/>
+        <ellipse cx="134" cy="136" rx="7" ry="2.6" transform="rotate(-50 134 136)"/>
+        <ellipse cx="142" cy="127" rx="7" ry="2.6" transform="rotate(-65 142 127)"/>
+      </g>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="progress"><i id="pbar"></i></div>
+
+<header id="hd">
+  <div class="brand"><svg aria-hidden="true"><use href="#seal"/></svg><span>AVGVST AI</span></div>
+  <div class="hd-right">
+    <span class="chip statute"><b data-cd="d">—</b>&nbsp;days · 2 AVG MMXXVI</span>
+    <span id="counter">I / XIII</span>
+  </div>
+</header>
+
+<main id="deck" aria-roledescription="carousel" aria-label="AVGVST AI investor pitch deck">
+<div id="track">
+
+<!-- I · TITLE -->
+<section class="slide" id="s1" data-numeral="I" data-title="AVGVST AI" aria-label="Slide 1 of 13 — Title">
+  <div class="inner title-inner">
+    <svg class="seal-lg" aria-hidden="true"><use href="#seal"/></svg>
+    <h1>AVGVST&nbsp;AI</h1>
+    <p class="motto">EVIDENTIA · NON · ASSERTIO</p>
+    <p class="tagline">Proof, not promises.</p>
+    <p class="subline">The evidence layer for EU AI Act compliance in the public sector — sealed records an authority can verify <em class="gold">without trusting the institution that produced them</em>.</p>
+    <div class="title-chips">
+      <span class="chip measured">Seed · €2.5M</span>
+      <span class="chip">Tallinn · MMXXVI</span>
+      <span class="chip statute"><b data-cd="d">—</b>&nbsp;days to the high-risk deadline</span>
+    </div>
+  </div>
+</section>
+
+<!-- II · PROBLEM -->
+<section class="slide" id="s2" data-numeral="II" data-title="The Problem" aria-label="Slide 2 of 13 — The Problem">
+  <div class="inner">
+    <p class="kicker">II · The Problem</p>
+    <h2>The obligation is in force. <em>The evidence layer does not exist.</em></h2>
+    <p class="lede">Every EU public institution running a high-risk AI system must produce compliance evidence an outside authority can verify: conformity assessments, fundamental-rights impact assessments, tamper-evident logs, a signed Declaration of Conformity. There is no standard way to produce it — and the gap is measured, not asserted.</p>
+    <div class="stats">
+      <div class="stat"><div class="num"><span data-count="69.5" data-dec="1" data-suf="%">0%</span></div><p class="lbl">of public AI-agent infrastructure makes <b>no attestation claim of any kind</b></p><span class="chip measured">Measured</span></div>
+      <div class="stat"><div class="num"><span data-count="0.5" data-dec="1" data-suf="%">0%</span></div><p class="lbl">documents <b>tamper-evident logging</b> — the only form of record that counts as evidence afterward</p><span class="chip measured">Measured</span></div>
+      <div class="stat"><div class="num">€<span data-count="35" data-suf="M">0</span><span class="num-sm"> / 7%</span></div><p class="lbl">maximum penalty under <b>Article 99</b> — €35M or 7% of worldwide turnover, whichever is higher</p><span class="chip statute">Statute</span></div>
+    </div>
+    <div class="ee">
+      <div class="ee-num"><b data-count="80" data-suf="+">0</b><span>live AI deployments</span></div>
+      <div class="ee-num"><b data-count="40" data-suf="+">0</b><span>public institutions</span></div>
+      <p>In Estonia alone: benefits systems, automatic administrative decisions, a national virtual assistant, hospital pilots — dozens of live systems that cannot today produce the evidence the law will demand, built by teams with no shared way to even describe what they have. <i>Connectivity is everywhere. Accountability is almost nowhere.</i></p>
+    </div>
+    <div class="ribbon"><span>The high-risk regime applies 2 August 2026 —</span><b><span data-cd="d">—</span>d&ensp;<span data-cd="h">—</span>h&ensp;<span data-cd="m">—</span>m&ensp;<span data-cd="s">—</span>s</b></div>
+    <p class="prov-note">This deck grades its own claims the way the engine grades findings:&nbsp;<span class="chip measured">Measured</span><span class="chip statute">Statute</span><span class="chip estimate">Estimate</span><span class="chip placeholder">Placeholder</span></p>
+  </div>
+</section>
+
+<!-- III · SOLUTION -->
+<section class="slide" id="s3" data-numeral="III" data-title="The Solution" aria-label="Slide 3 of 13 — The Solution">
+  <div class="inner">
+    <p class="kicker">III · The Solution</p>
+    <h2>One unbroken <em>chain of custody</em> — from a human answer to a machine-verifiable seal.</h2>
+    <p class="lede">AVGVST AI is the intake-and-evidence layer that closes the gap between “we have an AI system running” and “we have a compliance record an authority will accept.” Click a link in the chain.</p>
+    <div class="chain" role="group" aria-label="Chain of custody">
+      <button class="cnode"><span class="n">I · INTAKE</span><span class="t">A question a policy officer can answer</span></button>
+      <button class="cnode"><span class="n">II · ENGINE</span><span class="t">Every finding graded by how it was reached</span></button>
+      <button class="cnode"><span class="n">III · PARTITION</span><span class="t">Machines decide the decidable; humans sign the rest</span></button>
+      <button class="cnode"><span class="n">IV · SEAL</span><span class="t">Qualified trust service · RFC 3161 timestamp</span></button>
+      <button class="cnode"><span class="n">V · VERIFY</span><span class="t">Checkable without trusting the producer</span></button>
+    </div>
+    <div id="chainDetail" aria-live="polite"></div>
+    <p class="pull sm">“The chain is the product. The questionnaire, the dashboard, the cryptography — each alone is a commodity. <span class="gold">The unbroken line is not.</span>”</p>
+  </div>
+</section>
+
+<!-- IV · WHY NOW -->
+<section class="slide" id="s4" data-numeral="IV" data-title="Why Now" aria-label="Slide 4 of 13 — Why Now">
+  <div class="inner">
+    <p class="kicker">IV · Why Now</p>
+    <h2><em>Evidence cannot be back-dated.</em></h2>
+    <p class="lede">A conformity-assessment dossier under Article 43 cannot absorb evidence produced below the required standard — it must be re-executed from scratch. Every month a high-risk system runs uninstrumented is a month of record that is legally worthless and must be rebuilt later, under deadline pressure, at higher cost. Drag the slider.</p>
+    <div class="ww">
+      <div class="ww-head">If instrumentation begins in&ensp;<b id="wwDate">Aug 2027</b></div>
+      <input type="range" id="wwSlider" min="0" max="24" value="12" step="1" aria-label="Month in which evidence instrumentation begins">
+      <div class="ww-scale"><span>Aug 2026 · deadline</span><span>Aug 2027</span><span>Aug 2028 · first review</span></div>
+      <div class="ww-bar" aria-hidden="true"><div id="wwValid"></div><div id="wwLost"></div></div>
+      <div class="ww-read">
+        <div><b id="wwValidN" class="ok">12 months</b><br>of admissible record at an August 2028 review</div>
+        <div><b id="wwLostN" class="bad">12 months</b><br>forfeited — re-executed from scratch, at a premium <span class="chip estimate">Illustrative</span></div>
+      </div>
+      <p class="ww-note" id="wwNote"></p>
+    </div>
+    <div class="cd" aria-label="Countdown to 2 August 2026">
+      <div class="cell"><b data-cd="d">—</b><span>days</span></div>
+      <div class="cell"><b data-cd="h">—</b><span>hours</span></div>
+      <div class="cell"><b data-cd="m">—</b><span>minutes</span></div>
+      <div class="cell"><b data-cd="s">—</b><span>seconds</span></div>
+      <p class="cd-cap">until the high-risk regime applies — 2 August 2026</p>
+    </div>
+  </div>
+</section>
+
+<!-- V · SAFETY -->
+<section class="slide" id="s5" data-numeral="V" data-title="The Safety Claim" aria-label="Slide 5 of 13 — The Safety Claim">
+  <div class="inner">
+    <p class="kicker">V · The Safety Claim</p>
+    <h2>Built to <em>refuse</em> what it cannot decide.</h2>
+    <p class="lede">Anchor an AI’s judgment into a sealed legal record and you have not removed hallucination risk — you have notarised it. The engine is partitioned so that failure cannot occur. Its honesty about its own limits is not a disclaimer; it is the architecture.</p>
+    <div class="route-wrap" id="routeWrap">
+      <ul id="stack" aria-label="Findings produced by intake">
+        <li class="finding" data-lane="m"><span>Does the system fall under Annex III?</span><span class="badge chip built">Sealed · source-grounded</span></li>
+        <li class="finding" data-lane="j"><span>Is the deployment manipulative?</span><span class="badge chip statute">Held · awaiting named signature</span></li>
+        <li class="finding" data-lane="m"><span>Which Article 99 fine tier applies?</span><span class="badge chip built">Sealed · source-grounded</span></li>
+        <li class="finding" data-lane="j"><span>Is the transparency disclosure adequate?</span><span class="badge chip statute">Held · awaiting named signature</span></li>
+        <li class="finding" data-lane="m"><span>Does the required documentation exist?</span><span class="badge chip built">Sealed · source-grounded</span></li>
+        <li class="finding" data-lane="j"><span>Is the modification “substantial” — Art. 25?</span><span class="badge chip statute">Held · awaiting named signature</span></li>
+      </ul>
+      <div class="route-controls"><button class="btn" id="routeBtn">Route the findings</button></div>
+      <div class="lanes">
+        <div class="lane machine"><h4>Machine-decidable</h4><p class="sub">No judgment, no hallucination surface — sealed as machine output, source-grounded to the regulation.</p><ul id="laneM"></ul></div>
+        <div class="lane judgment"><h4>Judgment</h4><p class="sub">Never sealed as machine output — forced into a human expert queue until a named reviewer signs.</p><ul id="laneJ"></ul></div>
+      </div>
+    </div>
+    <p class="pull sm">“The seal does not certify the AI was correct. It certifies that <span class="gold">this institution, on this date, with this evidence, reached these findings</span> — and the boundary between machine and human is itself the sealed, inspectable artifact.”</p>
+  </div>
+</section>
+
+<!-- VI · MARKET -->
+<section class="slide" id="s6" data-numeral="VI" data-title="Market Opportunity" aria-label="Slide 6 of 13 — Market Opportunity">
+  <div class="inner">
+    <p class="kicker">VI · Market Opportunity</p>
+    <h2>Estonia is the wedge. <em>The Regulation is the distribution.</em></h2>
+    <div class="market">
+      <div class="rings">
+        <svg id="ringSvg" viewBox="0 0 360 360" aria-hidden="true">
+          <circle class="ring" data-k="tam" cx="180" cy="180" r="150"/>
+          <circle class="ring" data-k="sam" cx="180" cy="180" r="103"/>
+          <circle class="ring" data-k="som" cx="180" cy="180" r="56"/>
+          <text class="ring-lbl" x="180" y="46" text-anchor="middle">TAM</text>
+          <text class="ring-lbl" x="180" y="94" text-anchor="middle">SAM</text>
+          <text class="ring-lbl" x="180" y="141" text-anchor="middle">SOM</text>
+          <text class="ring-c" x="180" y="187" text-anchor="middle">EE ◆</text>
+        </svg>
+      </div>
+      <div class="mrows">
+        <div class="mrow" data-k="som"><h4><span>SOM — Estonia, the reference</span><b>€1.5M ARR</b></h4><p>80+ deployments across 40+ institutions. The most instrumentable compliance environment in the Union: 25 years of qualified trust services, X-Road already signing and timestamping at every boundary. <span class="chip estimate">Estimate</span></p></div>
+        <div class="mrow" data-k="sam"><h4><span>SAM — the dozen smaller member states</span><b>≈ €120M / yr</b></h4><p>Facing the same 2 August 2026 deadline with neither X-Road nor a mature AI programme. They cannot build this from first principles — a working Estonian reference makes the sale credible rather than theoretical. <span class="chip estimate">Estimate</span></p></div>
+        <div class="mrow" data-k="tam"><h4><span>TAM — EU-27 public-sector evidence layer</span><b>≈ €1.4B / yr</b></h4><p>By 2030, every member state must register, evidence and audit its high-risk systems under the same articles. <span class="chip estimate">Estimate</span></p></div>
+        <p class="travel">Why it travels: the AI Act is a <b>directly applicable Regulation</b> — Articles 9–15, the Annex III categories and the Article 99 tiers are identical in every member state by operation of law, not transposed. Only competent-authority wiring and sandbox sponsorship are local, and that thin layer is exactly what the schema parameterises. The deep engine — obligation mapping, confidence grading, evidence sealing — travels unchanged.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VII · BUSINESS MODEL -->
+<section class="slide" id="s7" data-numeral="VII" data-title="Business Model" aria-label="Slide 7 of 13 — Business Model">
+  <div class="inner">
+    <p class="kicker">VII · Business Model</p>
+    <h2>Recurring by the <em>nature of evidence</em>.</h2>
+    <p class="lede">Evidence accrues monthly or it does not exist — the revenue model mirrors the compliance model. <span class="chip estimate">Pricing illustrative</span></p>
+    <div class="streams">
+      <div class="stream"><span class="no">STREAM 01</span><h4>Platform subscription</h4><div class="price">€18k <small>/ institution / yr</small></div><p>Intake, obligation mapping, registry view, audit workspace — the shared overview of state AI systems the national strategy says is missing.</p></div>
+      <div class="stream"><span class="no">STREAM 02</span><h4>Evidence sealing</h4><div class="price">€6k <small>/ system / yr</small></div><p>Continuous sealing of logs and findings: qualified trust anchor, RFC 3161 timestamps, a verification API for authorities. Scales with the estate.</p></div>
+      <div class="stream"><span class="no">STREAM 03</span><h4>Jurisdiction licence</h4><div class="price">€250k–1M <small>/ state / yr</small></div><p>The reference implementation, parameterised: competent-authority wiring, language, sandbox flow. Sold to governments, not institutions.</p></div>
+    </div>
+    <p class="bm-foot">Plus a 15% take on the named-expert review network that signs judgment findings into the record.</p>
+    <div class="bm-notes">
+      <div class="bm-card"><h5>Acquisition</h5><p>Land through the regulatory sandbox; expand system by system. If the schema becomes the registration channel, acquisition cost approaches zero — systems arrive because <em>that is how you register</em>. A typical institution with five systems pays ≈ €48k/yr.</p></div>
+      <div class="bm-card"><h5>Retention</h5><p>Leaving means abandoning your own sealed record and re-executing it elsewhere — evidence cannot be back-dated, so the switching cost <em>is</em> the compliance record itself, and it compounds every month.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- VIII · MOAT -->
+<section class="slide" id="s8" data-numeral="VIII" data-title="Competitive Advantage" aria-label="Slide 8 of 13 — Competitive Advantage">
+  <div class="inner">
+    <p class="kicker">VIII · Competitive Advantage</p>
+    <h2 class="sm">A vendor can sell you a questionnaire. <em>A vendor cannot make its questionnaire the way you register a high-risk system with the state.</em></h2>
+    <div class="tablewrap">
+      <table class="moat">
+        <thead><tr><th>Capability</th><th>GRC platform</th><th>Consultancy dossier</th><th>In-house build</th><th class="av">AVGVST AI</th></tr></thead>
+        <tbody>
+          <tr><td>Output verifiable without trusting the producer</td><td class="no">✗ self-certified PDF</td><td class="no">✗ asserted</td><td class="no">✗</td><td class="av yes">✓ sealed package</td></tr>
+          <tr><td>Qualified trust anchor · RFC 3161</td><td class="no">✗</td><td class="no">✗</td><td class="part">◐ unanchored</td><td class="av yes">✓ Estonian QTSP</td></tr>
+          <tr><td>Findings graded by provenance</td><td class="no">✗</td><td class="part">◐ implicit</td><td class="no">✗</td><td class="av yes">✓ on every finding</td></tr>
+          <tr><td>Hallucination partition · named human signatures</td><td class="no">✗</td><td class="part">◐ all human, unsealed</td><td class="no">✗</td><td class="av yes">✓ architectural</td></tr>
+          <tr><td>Continuous record — cannot be back-dated</td><td class="no">✗ snapshot</td><td class="no">✗ point-in-time</td><td class="part">◐</td><td class="av yes">✓ accrues monthly</td></tr>
+          <tr><td>Path to state registration channel</td><td class="no">✗</td><td class="no">✗</td><td class="no">✗</td><td class="av yes">✓ the bet · slide XII</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="legend">✓ native&ensp;·&ensp;◐ partial&ensp;·&ensp;✗ absent</p>
+    <div class="moat-bullets">
+      <div class="bm-card"><h5>Infrastructure</h5><p>25 years of qualified Estonian trust services underneath — the EU’s regulatory architecture for trust exists precisely because self-certification is not evidence.</p></div>
+      <div class="bm-card"><h5>Standard</h5><p>The reference implementation other jurisdictions point to rather than rebuild — the schema, published openly, makes adopting cheaper than rebuilding.</p></div>
+      <div class="bm-card"><h5>Trust</h5><p>The partitioned engine is the only architecture safe enough to anchor a legal record — refusing to decide what it cannot decide is the moat no GRC vendor can retrofit.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- IX · TRACTION -->
+<section class="slide" id="s9" data-numeral="IX" data-title="Traction &amp; Milestones" aria-label="Slide 9 of 13 — Traction and Milestones">
+  <div class="inner">
+    <p class="kicker">IX · Traction &amp; Milestones</p>
+    <h2>Where the proof <em>stands today</em>.</h2>
+    <div class="trk">
+      <div>
+        <h5 class="colhead">Status</h5>
+        <ul class="status">
+          <li><span>End-to-end sealing pipeline against a qualified Estonian trust service, RFC 3161</span><span class="chip built">Built</span></li>
+          <li><span>Obligation map of Articles 9–15 with confidence grading on every finding</span><span class="chip built">Built</span></li>
+          <li><span>Intake instrument written in policy-officer language, not engineering language</span><span class="chip built">Built</span></li>
+          <li><span>The national AI strategy names the exact gap we close — no shared overview of state systems</span><span class="chip measured">Source-grounded</span></li>
+          <li><span>Design-partner pilots with three Estonian institutions</span><span class="chip placeholder">Placeholder</span></li>
+          <li><span>ISA regulatory-sandbox application</span><span class="chip progress">In progress</span></li>
+        </ul>
+        <p class="foot-note">Items marked placeholder are illustrative — replace with live facts before presenting. The deck refuses to seal what it cannot ground.</p>
+      </div>
+      <div>
+        <h5 class="colhead">Milestones</h5>
+        <div class="roadmap">
+          <div class="rm"><time>Q3 MMXXVI</time><p><b>Reference implementation live</b> ahead of the 2 August deadline; first institutions sealing monthly.</p></div>
+          <div class="rm"><time>H1 MMXXVII</time><p><b>100 high-risk systems under seal</b> across Estonia.</p></div>
+          <div class="rm"><time>H2 MMXXVII</time><p><b>First non-Estonian member-state pilot</b> on the parameterised schema.</p></div>
+          <div class="rm"><time>MMXXVIII</time><p><b>Schema adopted as a registration path</b> in two jurisdictions — the bet, named on slide XII.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- X · FINANCIALS -->
+<section class="slide" id="s10" data-numeral="X" data-title="Financial Projections" aria-label="Slide 10 of 13 — Financial Projections">
+  <div class="inner">
+    <p class="kicker">X · Financial Projections</p>
+    <h2>The record compounds. <em>So does the revenue.</em></h2>
+    <div class="fin">
+      <div class="chart-side">
+        <div class="seg" role="group" aria-label="Chart dataset"><button data-m="rev" class="on">Revenue</button><button data-m="sys">Systems under seal</button></div>
+        <div class="chart-wrap"><div id="chart" class="chart"></div></div>
+        <p class="chart-cap"><span id="chartCap">Annual recurring revenue — €M</span><span class="chip estimate">Estimate</span></p>
+      </div>
+      <ul class="fin-notes">
+        <li><b>MMXXVI–VII</b> — density in Estonia: land institutions before the deadline, expand system by system.</li>
+        <li><b>MMXXVIII</b> — first jurisdiction licences; sealing volume from export pilots.</li>
+        <li><b>MMXXIX</b> — breakeven; gross margin ≈ 80% on platform and sealing.</li>
+        <li><b>Named assumption</b> — the plan assumes the registration-channel bet pays in two jurisdictions by 2028. Downside case — pure SaaS evidence layer: ≈ €7M by 2030.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- XI · TEAM -->
+<section class="slide" id="s11" data-numeral="XI" data-title="The Team" aria-label="Slide 11 of 13 — The Team">
+  <div class="inner">
+    <p class="kicker">XI · The Team</p>
+    <h2>Built where <em>digital trust</em> was built.</h2>
+    <p class="lede">Tallinn — 25 years of qualified trust services, X-Road, and a state that runs on verifiable records. <span class="chip placeholder">Profiles are placeholders — the deck refuses to invent people</span></p>
+    <div class="team">
+      <div class="tc"><div class="ava">I</div><h4>[Founder · CEO]</h4><p class="role">Regulatory technologist</p><p>X-Road ecosystem; led public-sector digital services from pilot to national mandate.</p></div>
+      <div class="tc"><div class="ava">II</div><h4>[Founder · CTO]</h4><p class="role">Applied cryptographer</p><p>Qualified trust services under eIDAS; evidence-grade logging, sealing and timestamping.</p></div>
+      <div class="tc"><div class="ava">III</div><h4>[Head of Compliance]</h4><p class="role">EU AI Act counsel</p><p>Conformity assessment and fundamental-rights impact practice; runs the named-reviewer network.</p></div>
+      <div class="tc"><div class="ava">IV</div><h4>[Head of Public Delivery]</h4><p class="role">Ex-ministry</p><p>Carried national digital programmes through procurement, sandbox and rollout.</p></div>
+    </div>
+    <p class="foot-note">Advisors: [qualified-trust-service executive] · [former competent-authority official] · [public-sector CISO].</p>
+  </div>
+</section>
+
+<!-- XII · THE BET -->
+<section class="slide" id="s12" data-numeral="XII" data-title="The Risk We Name" aria-label="Slide 12 of 13 — The Risk We Name">
+  <div class="inner">
+    <p class="kicker center">XII · The Risk We Name</p>
+    <h2 class="center">The bet <em>we are naming</em>.</h2>
+    <div class="bet">
+      <p class="bet-main">One assumption carries weight that no argument fully discharges: whether the reference implementation becomes the <span class="gold">actual registration channel</span> — whether the ISA, or its equivalent elsewhere, adopts the schema as the path through which high-risk systems are registered, rather than building its own intake.</p>
+      <p class="bet-sub">Every other risk in this case was either survivable or converted into a strength. That one is a genuine bet.</p>
+      <div class="bet-grid">
+        <div class="bm-card"><h5>Why we name it</h5><p>We sell verifiable honesty about what can and cannot be established. A compliance-evidence company that concealed its own central risk would be contradicting the only thing it sells.</p></div>
+        <div class="bm-card"><h5>Why we take it anyway</h5><p>The evidence obligation exists with or without channel status — the floor is a durable SaaS evidence layer. Sandbox sponsorship is the adoption path, and an openly published schema makes saying yes cheaper than building.</p></div>
+      </div>
+      <p class="pull">“The discipline that makes the product safe — refusing to assert what it cannot ground — is the discipline of this pitch. <span class="gold">For this product, of all products, that is the proof of concept.</span>”</p>
+    </div>
+  </div>
+</section>
+
+<!-- XIII · THE ASK -->
+<section class="slide" id="s13" data-numeral="XIII" data-title="The Ask" aria-label="Slide 13 of 13 — The Ask">
+  <div class="inner">
+    <p class="kicker">XIII · The Ask</p>
+    <div class="ask-top">
+      <span class="ask-amt">€2.5M</span>
+      <div class="ask-cap"><b>SEED</b><span>24 months of runway — through the deadline, into the first export pilots <span class="chip estimate">Illustrative</span></span></div>
+    </div>
+    <div class="funds">
+      <div class="fbar" aria-hidden="true">
+        <div class="fseg f1" data-w="45"></div><div class="fseg f2" data-w="20"></div><div class="fseg f3" data-w="20"></div><div class="fseg f4" data-w="15"></div>
+      </div>
+      <div class="flegend">
+        <div><i class="sw f1"></i>Engineering &amp; sealing infrastructure<b>45% · €1.125M</b></div>
+        <div><i class="sw f2"></i>Named-expert network &amp; certification<b>20% · €500k</b></div>
+        <div><i class="sw f3"></i>Member-state go-to-market<b>20% · €500k</b></div>
+        <div><i class="sw f4"></i>Operations &amp; eIDAS audit cycle<b>15% · €375k</b></div>
+      </div>
+    </div>
+    <div class="ask-grid">
+      <div>
+        <h5 class="colhead">What the capital buys</h5>
+        <ul class="buys">
+          <li>Reference implementation live before <b>2 August 2026</b></li>
+          <li><b>100 systems under seal</b> within 12 months</li>
+          <li><b>Two member-state pilots</b> by mid-2027</li>
+          <li>The adoption evidence that <b>prices the Series A</b></li>
+        </ul>
+      </div>
+      <div class="ask-close">
+        <p class="pull sm left">“Time is the argument — <span class="gold">and it is running</span>.”</p>
+        <div class="cd small" aria-label="Countdown to 2 August 2026">
+          <div class="cell"><b data-cd="d">—</b><span>days</span></div>
+          <div class="cell"><b data-cd="h">—</b><span>hrs</span></div>
+          <div class="cell"><b data-cd="m">—</b><span>min</span></div>
+          <div class="cell"><b data-cd="s">—</b><span>sec</span></div>
+        </div>
+        <p class="contact">invest@avgvst.ai <span class="chip placeholder">Placeholder</span> · Tallinn, Estonia</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
+
+<button class="arr" id="prev" aria-label="Previous slide">‹</button>
+<button class="arr" id="next" aria-label="Next slide">›</button>
+<nav id="dots" aria-label="Slide navigation"></nav>
+<footer id="ft"><span>← → · swipe · click a diamond</span><span>Confidential · Seed MMXXVI</span></footer>
+
+<script>
+(function(){
+'use strict';
+var $=function(s){return document.querySelector(s)};
+var $$=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- deck navigation ---------- */
+var track=$('#track'),slides=$$('.slide'),N=slides.length;
+var dots=$('#dots'),pbar=$('#pbar'),counter=$('#counter');
+var ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII','XIII','XIV','XV'];
+slides.forEach(function(s,i){
+  var b=document.createElement('button');
+  b.title=ROMAN[i]+' · '+(s.dataset.title||'');
+  b.setAttribute('aria-label','Go to slide '+(i+1)+' — '+(s.dataset.title||''));
+  b.addEventListener('click',function(){go(i)});
+  dots.appendChild(b);
+});
+var dbs=Array.prototype.slice.call(dots.children);
+var cur=-1;
+function go(n){
+  n=Math.max(0,Math.min(N-1,n));
+  if(n===cur)return;
+  cur=n;
+  track.style.transform='translateX(-'+(100*n)+'%)';
+  slides.forEach(function(s,i){s.classList.toggle('active',i===n)});
+  dbs.forEach(function(d,i){d.classList.toggle('on',i===n)});
+  pbar.style.width=((n+1)/N*100)+'%';
+  counter.textContent=ROMAN[n]+' / '+ROMAN[N-1];
+  if(history.replaceState)history.replaceState(null,'','#'+(n+1));
+  activate(slides[n]);
+}
+$('#prev').addEventListener('click',function(){go(cur-1)});
+$('#next').addEventListener('click',function(){go(cur+1)});
+window.addEventListener('keydown',function(e){
+  var t=e.target;
+  if(t&&(t.tagName==='INPUT'||t.tagName==='TEXTAREA'||t.tagName==='SELECT'))return;
+  if(e.key==='ArrowRight'||e.key==='PageDown'||(e.key===' '&&!e.shiftKey)){e.preventDefault();go(cur+1)}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'||(e.key===' '&&e.shiftKey)){e.preventDefault();go(cur-1)}
+  else if(e.key==='Home'){e.preventDefault();go(0)}
+  else if(e.key==='End'){e.preventDefault();go(N-1)}
+});
+var tx=null,ty=null;
+window.addEventListener('touchstart',function(e){tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+window.addEventListener('touchend',function(e){
+  if(tx===null)return;
+  var dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;
+  if(e.target.closest('input,button,a'))return;
+  if(Math.abs(dx)>60&&Math.abs(dx)>1.6*Math.abs(dy))go(cur+(dx<0?1:-1));
+},{passive:true});
+
+/* ---------- counters ---------- */
+function countUp(el){
+  var t=parseFloat(el.dataset.count),dec=+(el.dataset.dec||0),pre=el.dataset.pre||'',suf=el.dataset.suf||'';
+  if(reduce){el.textContent=pre+t.toFixed(dec)+suf;return}
+  var dur=1500,st=performance.now();
+  requestAnimationFrame(function f(now){
+    var p=Math.min(1,(now-st)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=pre+(t*e).toFixed(dec)+suf;
+    if(p<1)requestAnimationFrame(f);
+  });
+}
+
+/* ---------- countdown to 2 Aug 2026, Europe/Tallinn ---------- */
+var DL=new Date('2026-08-02T00:00:00+03:00').getTime();
+function tick(){
+  var ms=Math.max(0,DL-Date.now());
+  var d=Math.floor(ms/864e5);ms-=d*864e5;
+  var h=Math.floor(ms/36e5);ms-=h*36e5;
+  var m=Math.floor(ms/6e4);
+  var s=Math.floor(ms%6e4/1e3);
+  var v={d:d,h:h,m:m,s:s};
+  $$('[data-cd]').forEach(function(el){
+    var k=el.dataset.cd;
+    el.textContent=k==='d'?String(v.d):String(v[k]).padStart(2,'0');
+  });
+}
+setInterval(tick,1000);tick();
+
+/* ---------- chain of custody (slide III) ---------- */
+var CHAIN=[
+ {h:'I · Intake — a question a policy officer can answer',
+  d:'Not “what is your log integrity mechanism” — but “can your IT team confirm the system’s activity records cannot be edited after the fact?” Intake meets institutions in the language they actually have, so every system can enter the record, not only the ones with mature engineering teams.'},
+ {h:'II · Engine — every finding graded by how it was reached',
+  d:'Each answer is mapped to the obligations of Articles 9–15 and graded by provenance: source-grounded to the regulation, derived, or dependent on human judgment. Confidence is not a disclaimer at the bottom of a report — it is a field on every finding.'},
+ {h:'III · Partition — machines decide the decidable; humans sign the rest',
+  d:'Machine-decidable findings — Annex III classification, fine tiers, document existence — carry no judgment and no hallucination surface. Judgment findings are forced into a human expert queue and cannot enter the record until a named reviewer signs them.'},
+ {h:'IV · Seal — a qualified seal and an RFC 3161 timestamp',
+  d:'The result is sealed into a cryptographically verifiable evidence package anchored to a qualified Estonian trust service. From this moment the record cannot be silently edited — not by us, not by the institution, not by anyone.'},
+ {h:'V · Verify — checkable without trusting the producer',
+  d:'An authority verifies the package against the trust anchor, not against the institution’s word. That is the difference between a compliance claim and compliance evidence — and it is the entire product.'}
+];
+var cnodes=$$('.cnode'),cdetail=$('#chainDetail');
+function showChain(i,sel){
+  cnodes.forEach(function(n,j){
+    n.classList.toggle('sel',sel!==false&&j===i);
+    n.classList.toggle('lit',j<=i);
+  });
+  cdetail.innerHTML='<h5>'+CHAIN[i].h+'</h5><p>'+CHAIN[i].d+'</p>';
+}
+cnodes.forEach(function(n,i){n.addEventListener('click',function(){showChain(i)})});
+function chainTour(){
+  if(reduce){showChain(4);return}
+  var i=0;showChain(0);
+  var iv=setInterval(function(){
+    i++;
+    if(i>=CHAIN.length){clearInterval(iv);return}
+    showChain(i);
+  },1500);
+}
+
+/* ---------- why-now slider (slide IV) ---------- */
+var ww=$('#wwSlider');
+var MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+function wwUpdate(){
+  var d=+ww.value,valid=24-d;
+  $('#wwDate').textContent=MN[(7+d)%12]+' '+(2026+Math.floor((7+d)/12));
+  $('#wwValid').style.width=(valid/24*100)+'%';
+  $('#wwLost').style.width=(d/24*100)+'%';
+  $('#wwValidN').textContent=valid+(valid===1?' month':' months');
+  $('#wwLostN').textContent=d+(d===1?' month':' months');
+  $('#wwNote').textContent=
+    d===0?'Start now, and by the August 2028 review every month of operation is admissible record.':
+    d<12?'Months forfeited are re-executed from scratch — under deadline pressure, at a premium. Waiting bought nothing.':
+    'The institution that waits until '+(2026+Math.floor((7+d)/12))+' does not save the time. It forfeits '+d+' months of record and pays to regenerate them. The rational actor buys early because the deadline is late.';
+}
+ww.addEventListener('input',wwUpdate);
+wwUpdate();
+
+/* ---------- finding routing (slide V) ---------- */
+var stack=$('#stack'),laneM=$('#laneM'),laneJ=$('#laneJ');
+var routeWrap=$('#routeWrap'),routeBtn=$('#routeBtn');
+var cards=$$('#stack .finding');
+var routed=false;
+function flip(card,dest,delay){
+  var r1=card.getBoundingClientRect();
+  dest.appendChild(card);
+  if(reduce)return;
+  var r2=card.getBoundingClientRect();
+  var dx=r1.left-r2.left,dy=r1.top-r2.top;
+  card.style.transition='none';
+  card.style.transform='translate('+dx+'px,'+dy+'px)';
+  requestAnimationFrame(function(){requestAnimationFrame(function(){
+    card.style.transition='transform .65s cubic-bezier(.45,0,.2,1) '+delay+'ms';
+    card.style.transform='';
+  })});
+  setTimeout(function(){card.style.transition=''},750+delay);
+}
+function doRoute(){
+  if(routed)return;routed=true;
+  cards.forEach(function(c,i){flip(c,c.dataset.lane==='m'?laneM:laneJ,i*110)});
+  setTimeout(function(){routeWrap.classList.add('routed')},850);
+  routeBtn.textContent='Reset';
+}
+function doReset(){
+  if(!routed)return;routed=false;
+  routeWrap.classList.remove('routed');
+  cards.forEach(function(c,i){flip(c,stack,i*60)});
+  routeBtn.textContent='Route the findings';
+}
+routeBtn.addEventListener('click',function(){routed?doReset():doRoute()});
+
+/* ---------- market rings (slide VI) ---------- */
+$$('#ringSvg .ring').forEach(function(c){
+  var C=(2*Math.PI*c.r.baseVal.value).toFixed(1);
+  c.style.strokeDasharray=C;
+  c.style.strokeDashoffset=C;
+});
+function mkSel(k){
+  $$('.mrow').forEach(function(r){r.classList.toggle('act',r.dataset.k===k)});
+  $$('#ringSvg .ring').forEach(function(c){c.classList.toggle('hot',c.dataset.k===k)});
+}
+$$('.mrow').forEach(function(r){
+  r.addEventListener('mouseenter',function(){mkSel(r.dataset.k)});
+  r.addEventListener('click',function(){mkSel(r.dataset.k)});
+});
+$$('#ringSvg .ring').forEach(function(c){
+  c.addEventListener('mouseenter',function(){mkSel(c.dataset.k)});
+});
+mkSel('som');
+
+/* ---------- financial chart (slide X) ---------- */
+var FIN={
+  rev:{vals:[0.15,0.9,3.2,8.5,18],cap:'Annual recurring revenue — €M',
+       fmt:function(v){return '€'+(v<1?v.toFixed(2):v.toFixed(1))+'M'}},
+  sys:{vals:[25,140,600,1800,4000],cap:'High-risk systems under seal',
+       fmt:function(v){return v>=1000?(v/1000).toFixed(1)+'k':String(v)}}
+};
+var YRS=[2026,2027,2028,2029,2030];
+var mode='rev';
+function renderChart(m){
+  mode=m;
+  $$('.seg button').forEach(function(b){b.classList.toggle('on',b.dataset.m===m)});
+  var d=FIN[m],max=Math.max.apply(null,d.vals);
+  var host=$('#chart');host.innerHTML='';
+  d.vals.forEach(function(v,i){
+    var bar=document.createElement('div');
+    bar.className='bar'+(m==='sys'?' alt':'');
+    bar.innerHTML='<i>'+d.fmt(v)+'</i><b>'+YRS[i]+'</b>';
+    host.appendChild(bar);
+    var hgt=Math.max(2,v/max*100)+'%';
+    if(reduce){bar.style.height=hgt;return}
+    requestAnimationFrame(function(){requestAnimationFrame(function(){bar.style.height=hgt})});
+  });
+  $('#chartCap').textContent=d.cap;
+}
+$$('.seg button').forEach(function(b){b.addEventListener('click',function(){renderChart(b.dataset.m)})});
+
+/* ---------- use of funds (slide XIII) ---------- */
+function growFunds(){$$('.fseg').forEach(function(s){s.style.width=s.dataset.w+'%'})}
+
+/* ---------- per-slide activation ---------- */
+function activate(slide){
+  slide.querySelectorAll('[data-count]').forEach(function(el){
+    if(!el._c){el._c=1;countUp(el)}
+  });
+  if(slide._a)return;
+  slide._a=1;
+  switch(slide.id){
+    case 's3':chainTour();break;
+    case 's5':setTimeout(function(){if(!routed)doRoute()},1400);break;
+    case 's6':$('#ringSvg').classList.add('drawn');break;
+    case 's10':renderChart(mode);break;
+    case 's13':setTimeout(growFunds,300);break;
+  }
+}
+
+/* ---------- init ---------- */
+var h=parseInt(location.hash.slice(1),10);
+go(isNaN(h)?0:h-1);
+})();
+</script>
+</body>
+</html>
