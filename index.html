@@ -71,6 +71,10 @@ header{background:var(--black);border-bottom:1px solid var(--bord);z-index:30;}
 .f-sm label{font-family:var(--mono);font-size:7.5px;letter-spacing:.08em;color:var(--w25);text-transform:uppercase;display:block;margin-bottom:4px;}
 .f-sm input{background:var(--surf2);border:1px solid var(--bord2);color:var(--white);font-family:var(--mono);font-size:11px;padding:5px 8px;width:100%;outline:none;}
 .f-sm input:focus{border-color:var(--blue);}
+.f-sm select{background:var(--surf2);border:1px solid var(--bord2);color:var(--white);font-family:var(--mono);font-size:10px;padding:5px 8px;width:100%;outline:none;}
+.f-sm select:focus{border-color:var(--blue);}
+.f-sm select option{background:#111;}
+.memo-out{white-space:pre-wrap;font-size:10px;color:var(--w80);line-height:1.7;background:var(--surf2);border:1px solid var(--bord2);padding:10px 12px;}
 .main{background:var(--black);overflow:hidden;display:flex;flex-direction:column;}
 .tab-bar{display:flex;border-bottom:1px solid var(--bord);background:var(--surf);flex-shrink:0;}
 .tab{padding:9px 16px;font-family:var(--cinzel);font-size:8px;font-weight:600;letter-spacing:.16em;color:var(--w40);cursor:pointer;border-bottom:2px solid transparent;transition:all .12s;text-transform:uppercase;}
@@ -345,6 +349,18 @@ header{background:var(--black);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="f-sm">
 <label>Annual turnover (EUR M)</label>
 <input type="number" id="turnover" value="800" min="0" oninput="onTurnoverChange()">
+</div>
+<div class="f-sm" style="margin-top:10px;">
+<label>Mistral API key <span style="color:var(--w40);text-transform:none;">(stays in your browser)</span></label>
+<input type="password" id="mistral-key" placeholder="Paste key from console.mistral.ai" oninput="saveMistralKey()">
+</div>
+<div class="f-sm" style="margin-top:8px;">
+<label>Mistral model</label>
+<select id="mistral-model">
+<option value="mistral-small-latest">mistral-small-latest · fast</option>
+<option value="mistral-large-latest">mistral-large-latest · best</option>
+<option value="open-mistral-nemo">open-mistral-nemo · cheapest</option>
+</select>
 </div>
 </div>
 </aside>
@@ -624,6 +640,7 @@ header{background:var(--black);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="ap-tab" onclick="switchApTab('verify',this)">Verify</div>
 <div class="ap-tab" onclick="switchApTab('review',this)">Expert<span class="rev-badge" id="rev-badge" style="display:none;">0</span></div>
 <div class="ap-tab" onclick="switchApTab('signoff',this)">Sign-off</div>
+<div class="ap-tab" onclick="switchApTab('ai',this)">AI Memo</div>
 </div>
 </div>
 <div class="ap-body">
@@ -642,6 +659,10 @@ header{background:var(--black);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="ap-sec" id="ap-signoff">
 <div class="empty-s" id="empty-signoff"><div class="empty-glyph">DoC</div><div class="empty-txt">COMPLETE REVIEW<br>TO UNLOCK SIGN-OFF</div></div>
 <div id="signoff-content" style="display:none;"></div>
+</div>
+<div class="ap-sec" id="ap-ai">
+<div class="empty-s" id="empty-ai"><div class="empty-glyph">AI</div><div class="empty-txt">RUN AN ASSESSMENT, THEN<br>GENERATE A MISTRAL MEMO</div></div>
+<div id="ai-content" style="display:none;"></div>
 </div>
 </div>
 </aside>
@@ -774,6 +795,7 @@ renderFindings(s,r);
 renderVerify(s,r);
 renderReview(s,r);
 renderSignoff(s,r);
+renderAI(s,r);
 }
 function renderFindings(s,r){
 var c=2*Math.PI*22;var d=c*(r.score/100);
@@ -907,12 +929,89 @@ function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',co
 function toggleCheck(n){ soChecks[n-1]=!soChecks[n-1]; var el=document.getElementById('sc-'+n); if(el){ el.classList.toggle('checked',soChecks[n-1]); el.textContent=soChecks[n-1]?'✓':''; } updateSoBtn(); }
 function updateSoBtn(){ var btn=document.getElementById('so-btn'); if(!btn)return; var allChecked=soChecks.every(function(c){return c;}); var flagsResolved=!curResult||curResult.flags.every(function(f){return reviewSt[f.id]&&reviewSt[f.id]!=='pending';}); var ready=allChecked&&flagsResolved; btn.classList.toggle('ready',ready); if(ready){ btn.textContent='Sign and seal assessment record'; btn.onclick=doSignoff; }else{ btn.textContent='Complete checklist and expert review to unlock sign-off'; } }
 function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#27AE60'; btn.style.borderColor='#27AE60'; btn.style.background='var(--grn-d)'; },1800); }
-function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false]; curSys=null;curResult=null; updA();updB(); }
+function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff','ai'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false]; curSys=null;curResult=null; aiMemo={sys:null,text:'',busy:false,err:''}; updA();updB(); }
 function fakeUpload(){ var dz=document.querySelector('[onclick="fakeUpload()"]'); if(dz){ dz.innerHTML='<div style="font-family:var(--mono);font-size:8px;color:var(--grn-t);">✓ Document processed</div><div style="font-size:9px;color:var(--w25);margin-top:3px;">Procurement_Specification_Burokratt_v3.pdf · 1.2 MB</div>'; } var de=document.getElementById('doc-extractions'); var dl=document.getElementById('doc-list'); if(de&&dl){ de.innerHTML='<div class="note" style="margin-bottom:8px;background:var(--amb-d);border-color:rgba(212,150,10,.3);color:var(--amb-t);">⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.</div>' +[['System name','Bürokratt Virtual Assistant'],['Deploying institution','Information System Authority (ISA)'],['Intended purpose','Enable citizens to interact with the Estonian state through a unified virtual assistant...'],['Deployment date','March 2023'],['Builder / vendor','Internal / Open Source (MEAC)']].map(function(pair){ return '<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;"><div style="flex:1;"><div style="font-family:var(--mono);font-size:7.5px;color:var(--blue);margin-bottom:1px;">'+pair[0]+'</div><div style="font-size:10px;color:var(--w80);">'+pair[1]+'</div></div><span style="font-family:var(--mono);font-size:7px;background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(212,150,10,.3);padding:1px 5px;">AI-ASSISTED</span><button onclick="confirmExt(this)" style="font-family:var(--mono);font-size:7.5px;padding:3px 8px;border:1px solid var(--grn-t);color:var(--grn-t);background:none;cursor:pointer;">Confirm</button></div>'; }).join(''); dl.style.display='block'; } }
 function confirmExt(btn){ var row=btn.parentElement; var badge=row.querySelector('span'); if(badge){badge.textContent='CONFIRMED';badge.style.background='var(--grn-d)';badge.style.color='#27AE60';badge.style.borderColor='rgba(39,174,96,.3)';} btn.textContent='✓';btn.style.color='#27AE60';btn.disabled=true; }
 function openDrawer(key){ var src=SRC[key]; if(!src)return; document.getElementById('dr-title').textContent='SOURCE VERIFICATION — '+key; document.getElementById('dr-body').innerHTML= '<div class="dr-lbl">Verbatim text — official journal</div>' +'<div class="dr-quote">'+src.quote+'</div>' +'<div class="dr-lbl">Citation</div>' +'<div class="dr-ref">'+src.ref+'</div>' +'<div class="dr-conf-track"><div class="dr-conf-fill" style="width:'+src.conf+'%"></div></div>' +'<div style="font-family:var(--mono);font-size:7.5px;color:var(--w25);margin-bottom:6px;">Source confidence: '+src.conf+'%</div>' +'<div class="dr-hash">'+src.hash+'</div>' +'<div class="dr-ok">✓ Verified against Regulation (EU) 2024/1689 as published OJ L 12.7.2024<br>ELI: http://data.europa.eu/eli/reg/2024/1689/oj</div>'; document.getElementById('mask').classList.add('open'); document.getElementById('drawer').classList.add('open'); }
 function closeDrawer(){ document.getElementById('mask').classList.remove('open'); document.getElementById('drawer').classList.remove('open'); }
-window.addEventListener('load',function(){ loadSystem('burokratt'); });
+var aiMemo={sys:null,text:'',busy:false,err:''};
+function escHTML(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function saveMistralKey(){ var el=document.getElementById('mistral-key'); if(!el)return; try{ localStorage.setItem('mistralKey',el.value); }catch(e){} }
+function loadMistralKey(){ try{ var k=localStorage.getItem('mistralKey'); if(k){ var el=document.getElementById('mistral-key'); if(el)el.value=k; } }catch(e){} }
+function buildMemoPrompt(s,r){
+var lines=[];
+lines.push('SYSTEM: '+s.name+' — deployed by '+(s.inst||'unknown institution'));
+lines.push('Declared purpose: '+(s.purpose||'not provided'));
+if(s.actual&&s.actual!=='As declared.')lines.push('Actual use in production (diverges from declared): '+s.actual);
+lines.push('Domain: '+(s.domain||'not set')+' · Decision type: '+(s.decision||'not set')+' · Citizens affected: '+(s.citizens||'not set'));
+lines.push('Model type: '+(s.modeltype||'unknown')+' · Personal data: '+(s.personal||'unknown'));
+lines.push('DPIA: '+(s.dpia||'?')+' · FRIA: '+(s.fria||'?')+' · EU database registration: '+(s.eudb||'?')+' · Conformity assessment: '+(s.ca||'?'));
+lines.push('Human oversight: '+(s.oversight||'?')+' · AI transparency to citizens: '+(s.transparency||'?'));
+lines.push('Log integrity: '+(s.logintegrity||'not answered')+' · Substantially modified since procurement: '+(s.modified||'?'));
+lines.push('');
+lines.push('RULE-ENGINE RESULT: '+r.verdict.t+' · compliance score '+r.score+'/100 · maximum statutory exposure EUR '+r.total+'M');
+lines.push('Findings:');
+r.risks.forEach(function(rk){ lines.push('- ['+rk.tier+' / '+rk.conf+'] '+rk.title+' ('+rk.arts.join(', ')+') — fine cap '+rk.fine); });
+r.conds.forEach(function(c){ lines.push('- [conditional — data missing] '+c.field+': '+c.reason); });
+if(r.risks.length===0&&r.conds.length===0)lines.push('- none');
+return lines.join('\n');
+}
+function generateAIMemo(){
+if(!curSys||!curResult){ aiMemo={sys:null,text:'',busy:false,err:'Run an assessment first (Track A or B, then "Generate compliance assessment").'}; if(curSys&&curResult)renderAI(curSys,curResult); return; }
+var keyEl=document.getElementById('mistral-key');
+var key=keyEl?keyEl.value.trim():'';
+if(!key){ aiMemo.err='No API key. Paste your Mistral API key in the sidebar (bottom left) — get one free at console.mistral.ai.'; aiMemo.busy=false; renderAI(curSys,curResult); return; }
+var modelEl=document.getElementById('mistral-model');
+var model=modelEl?modelEl.value:'mistral-small-latest';
+aiMemo.busy=true; aiMemo.err=''; renderAI(curSys,curResult);
+fetch('https://api.mistral.ai/v1/chat/completions',{
+method:'POST',
+headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+body:JSON.stringify({
+model:model,
+temperature:0.3,
+max_tokens:900,
+messages:[
+{role:'system',content:'You are an EU AI Act (Regulation 2024/1689) compliance analyst writing for a non-lawyer civil servant. Write a short internal memo in plain language with exactly these sections: BOTTOM LINE (2-3 sentences), BIGGEST RISKS (worst first, cite the articles given), WHAT TO DO NEXT (numbered, concrete, ordered by urgency). Use the findings provided; do not invent new violations. Plain text only, no markdown symbols. End with one line stating this is analytical support, not legal advice.'},
+{role:'user',content:buildMemoPrompt(curSys,curResult)}
+]
+})
+})
+.then(function(res){
+if(!res.ok){ return res.text().then(function(t){ var hint=res.status===401?' — your API key was rejected, check it':res.status===429?' — rate limit hit, wait a moment and retry':''; throw new Error('Mistral returned HTTP '+res.status+hint+(t?' ('+t.slice(0,160)+')':'')); }); }
+return res.json();
+})
+.then(function(j){
+var txt=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+aiMemo={sys:curSys.name,text:txt||'(Mistral returned an empty response)',busy:false,err:''};
+renderAI(curSys,curResult);
+})
+.catch(function(e){
+var msg=String(e&&e.message||e);
+if(/failed to fetch|networkerror|load failed/i.test(msg))msg='Could not reach api.mistral.ai — check your internet connection (or the request was blocked by the browser/network).';
+aiMemo.busy=false; aiMemo.err=msg;
+renderAI(curSys,curResult);
+});
+}
+function renderAI(s,r){
+var empty=document.getElementById('empty-ai');
+var el=document.getElementById('ai-content');
+if(!empty||!el)return;
+empty.style.display='none'; el.style.display='block';
+var keySet=!!((document.getElementById('mistral-key')||{}).value||'').trim();
+var model=(document.getElementById('mistral-model')||{value:'mistral-small-latest'}).value;
+var body;
+if(aiMemo.busy)body='<div class="note" style="color:var(--blue);border-color:rgba(0,114,206,.35);">Asking Mistral… this usually takes a few seconds.</div>';
+else if(aiMemo.err)body='<div class="note" style="color:var(--red-t);border-color:rgba(231,76,60,.4);">'+escHTML(aiMemo.err)+'</div>';
+else if(aiMemo.sys===s.name&&aiMemo.text)body='<div class="sec-title">Mistral analysis — '+escHTML(s.name)+'</div><div class="memo-out">'+escHTML(aiMemo.text)+'</div>';
+else body='<div class="note">No memo yet for this system. Click the button above: the form data and the rule-engine findings are sent to Mistral, which writes a plain-language memo about what matters most and what to do next.</div>';
+el.innerHTML=
+'<button class="run-ver-btn" onclick="generateAIMemo()"'+(aiMemo.busy?' disabled':'')+'>'+(aiMemo.busy?'Generating…':'Generate AI memo with Mistral')+'</button>'
++'<div style="font-family:var(--mono);font-size:7.5px;color:var(--w25);margin-bottom:8px;">Model: '+escHTML(model)+' · API key: '+(keySet?'set':'missing — paste it in the sidebar, bottom left')+'</div>'
++body
++'<div class="note"><strong>Privacy note:</strong> clicking the button sends this system\'s form data straight from your browser to Mistral\'s API using your key. The key is saved only in this browser (localStorage) and is never part of the website itself.</div>';
+}
+window.addEventListener('load',function(){ loadMistralKey(); loadSystem('burokratt'); });
 </script>
 </body>
 </html>
