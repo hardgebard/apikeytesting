@@ -306,7 +306,7 @@ header{background:var(--surf);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="hd-pill"><span class="hd-dot dot-warn"></span>6 PENDING</div>
 <div class="hd-pill"><span class="hd-dot dot-ok"></span>X-ROAD READY</div>
 <div class="hd-badge">EE-NACR-001</div>
-<div class="lang-sw"><b>EST</b> | ENG</div>
+<div class="lang-sw" id="lang-sw"><span onclick="setLang('et')" style="cursor:pointer;">EST</span> | <b>ENG</b></div>
 </div>
 </div>
 </div>
@@ -444,9 +444,9 @@ header{background:var(--surf);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="f"><label>Approximate citizens affected per year</label>
 <select id="f-citizens">
 <option value="">Select scale</option>
-<option>Fewer than 1,000</option><option>1,000 – 10,000</option>
-<option>10,000 – 100,000</option><option>100,000 – 500,000</option>
-<option>Over 500,000 (national scale)</option>
+<option value="Fewer than 1,000">Fewer than 1,000</option><option value="1,000 – 10,000">1,000 – 10,000</option>
+<option value="10,000 – 100,000">10,000 – 100,000</option><option value="100,000 – 500,000">100,000 – 500,000</option>
+<option value="Over 500,000 (national scale)">Over 500,000 (national scale)</option>
 </select>
 </div>
 </div>
@@ -533,19 +533,19 @@ header{background:var(--surf);border-bottom:1px solid var(--bord);z-index:30;}
 <div class="f"><label>Model type <span class="ttag">[Technical]</span></label>
 <select id="f-modeltype" onchange="updB()">
 <option value="">Select</option>
-<option>Large language model (LLM)</option><option>Classification model</option>
-<option>Regression / scoring model</option><option>Computer vision model</option>
-<option>Speech recognition / NLP</option><option>Recommender system</option>
-<option>Rule-based system (may be out of scope)</option><option>Hybrid: ML + rules</option>
-<option>Foundation model / GPAI</option>
+<option value="Large language model (LLM)">Large language model (LLM)</option><option value="Classification model">Classification model</option>
+<option value="Regression / scoring model">Regression / scoring model</option><option value="Computer vision model">Computer vision model</option>
+<option value="Speech recognition / NLP">Speech recognition / NLP</option><option value="Recommender system">Recommender system</option>
+<option value="Rule-based system (may be out of scope)">Rule-based system (may be out of scope)</option><option value="Hybrid: ML + rules">Hybrid: ML + rules</option>
+<option value="Foundation model / GPAI">Foundation model / GPAI</option>
 <option value="unknown">Unknown — documentation unavailable</option>
 </select>
 </div>
 <div class="f"><label>Personal data processed <span class="ttag">[Technical]</span></label>
 <select id="f-personal" onchange="updB()">
 <option value="">Select</option>
-<option>No personal data</option><option>Pseudonymised data only</option>
-<option>Identified personal data</option>
+<option value="No personal data">No personal data</option><option value="Pseudonymised data only">Pseudonymised data only</option>
+<option value="Identified personal data">Identified personal data</option>
 <option value="Special category data (Art. 9 GDPR)">Special category (health, religion, ethnicity...)</option>
 <option value="Biometric data">Biometric data (face, fingerprint, voice...)</option>
 <option value="unknown-personal">Unknown — not documented</option>
@@ -801,6 +801,7 @@ renderVerify(s,r);
 renderReview(s,r);
 renderSignoff(s,r);
 renderAI(s,r);
+applyLang();
 }
 function renderFindings(s,r){
 var c=2*Math.PI*22;var d=c*(r.score/100);
@@ -876,7 +877,7 @@ return '<div class="er-card" id="erc-'+f.id+'"><div class="er-head"><div><div cl
 +'<button class="er-btn confirm" onclick="setRevSt(\''+f.id+'\',\'confirmed\')">Confirm finding</button>'
 +'<button class="er-btn amend" onclick="setRevSt(\''+f.id+'\',\'amended\')">Amend finding</button>'
 +'<button class="er-btn escalate" onclick="setRevSt(\''+f.id+'\',\'escalated\')">Escalate externally</button>'
-+'<select class="er-assign" title="Assign to reviewer"><option>Unassigned</option><option>Legal team (MJ)</option><option>MEAC compliance unit</option><option>External counsel</option><option>Data Protection Inspectorate</option></select>'
++'<select class="er-assign" title="Assign to reviewer"><option value="Unassigned">Unassigned</option><option value="Legal team (MJ)">Legal team (MJ)</option><option value="MEAC compliance unit">MEAC compliance unit</option><option value="External counsel">External counsel</option><option value="Data Protection Inspectorate">Data Protection Inspectorate</option></select>'
 +'</div>'
 +'<div class="er-ann" id="ean-'+f.id+'"></div>'
 +'</div></div>';
@@ -928,14 +929,14 @@ function collectForm(){ function g(id){var el=document.getElementById(id);return
 function loadSystem(key){ var s=SYSTEMS[key]; if(!s)return; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var item=document.querySelector('.sys-item[data-key="'+key+'"]'); if(item)item.classList.add('active'); document.getElementById('form-title').textContent=s.name; function sv(id,v){var el=document.getElementById(id);if(el)el.value=v||'';} sv('f-name',s.name);sv('f-inst',s.inst);sv('f-date',s.date);sv('f-vendor',s.vendor); sv('f-domain',s.domain);sv('f-citizens',s.citizens);sv('f-decision',s.decision); sv('f-dpia',s.dpia);sv('f-fria',s.fria);sv('f-eudb',s.eudb);sv('f-ca',s.ca); sv('f-doc',s.doc);sv('f-oversight',s.oversight); sv('f-purpose',s.purpose);sv('f-actual',s.actual); sv('f-modeltype',s.modeltype);sv('f-personal',s.personal); sv('f-xroad',s.xroad);sv('f-foundation',s.foundation); sv('f-provider',s.provider);sv('f-modified',s.modified); sv('f-signing',s.signing);sv('f-pqc',s.pqc); sv('f-threatmodel',s.threatmodel);sv('f-upstream',s.upstream); if(s.lm){ Object.keys(s.lm).forEach(function(k){ var el=document.getElementById('lm-'+k); if(el)el.value=s.lm[k]; }); } setSame(s.sameUse||'yes'); setTrans(s.transparency||'na'); logInteg=s.logintegrity||''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.toggle('sel',id===logInteg); }); var uf=document.getElementById('unk-log'); if(uf)uf.classList.toggle('show',logInteg==='unknown'); updAnnex();updA();updB(); reviewSt={};soChecks=[false,false,false,false]; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); }
 var STEPS=[ 'Validating schema fields...', 'Loading RAG: EU AI Act 2024/1689 · OJ L 12.7.2024...', 'Cross-referencing Annex III categories...', 'Evaluating Art. 5 prohibition scope...', 'Checking Art. 12 logging coverage matrix...', 'Assessing evidence architecture (AEP primitives)...', 'Grading confidence: Confirmed / Probable / Conditional / Flagged...', 'Running internal consistency checks...', 'Routing flagged items to expert review queue...', 'Generating verification log...', 'Assessment complete' ];
 function runAssessment(){ var pw=document.getElementById('prog-wrap'); var pf=document.getElementById('prog-fill'); var pl=document.getElementById('prog-lbl'); var pg=document.getElementById('prog-log'); if(pw)pw.classList.add('vis'); var step=0; var iv=setInterval(function(){ if(step<STEPS.length){ if(pl)pl.textContent=STEPS[step]; if(pg)pg.textContent=STEPS[step]; if(pf)pf.style.width=((step+1)/STEPS.length*100)+'%'; step++; }else{ clearInterval(iv); setTimeout(function(){ if(pw)pw.classList.remove('vis'); if(pf)pf.style.width='0'; var s=collectForm(); document.getElementById('form-title').textContent=s.name; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); switchApTab('findings',document.querySelector('.ap-tab')); },350); } },240); }
-function rerunVerify(){ var btn=document.querySelector('.run-ver-btn'); if(btn){ btn.textContent='Verifying...'; setTimeout(function(){ btn.textContent='Re-run source verification'; if(curSys&&curResult)renderVerify(curSys,curResult); },800); } }
+function rerunVerify(){ var btn=document.querySelector('.run-ver-btn'); if(btn){ btn.textContent='Verifying...'; setTimeout(function(){ btn.textContent='Re-run source verification'; if(curSys&&curResult)renderVerify(curSys,curResult); applyLang(); },800); } }
 function onTurnoverChange(){ if(curSys&&curResult){ var r=assess(curSys); curResult=r; renderAll(curSys,r); } }
-function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[status]; var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[status]; var el=document.getElementById('ers-'+id); if(el){el.textContent=stL;el.className='er-status '+stC;} var ann=document.getElementById('ea-'+id); var annShow=document.getElementById('ean-'+id); if(ann&&annShow){ var txt=ann.value.trim(); annShow.textContent=txt?'Expert note: '+txt:'Status updated to '+stL+' — no annotation entered.'; annShow.classList.add('vis'); } updateSoBtn(); }
+function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[status]; var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[status]; var el=document.getElementById('ers-'+id); if(el){el.textContent=stL;el.className='er-status '+stC;} var ann=document.getElementById('ea-'+id); var annShow=document.getElementById('ean-'+id); if(ann&&annShow){ var txt=ann.value.trim(); annShow.textContent=txt?'Expert note: '+txt:'Status updated to '+stL+' — no annotation entered.'; annShow.classList.add('vis'); } updateSoBtn(); applyLang(); }
 function toggleCheck(n){ soChecks[n-1]=!soChecks[n-1]; var el=document.getElementById('sc-'+n); if(el){ el.classList.toggle('checked',soChecks[n-1]); el.textContent=soChecks[n-1]?'✓':''; } updateSoBtn(); }
-function updateSoBtn(){ var btn=document.getElementById('so-btn'); if(!btn)return; var allChecked=soChecks.every(function(c){return c;}); var flagsResolved=!curResult||curResult.flags.every(function(f){return reviewSt[f.id]&&reviewSt[f.id]!=='pending';}); var ready=allChecked&&flagsResolved; btn.classList.toggle('ready',ready); if(ready){ btn.textContent='Sign and seal assessment record'; btn.onclick=doSignoff; }else{ btn.textContent='Complete checklist and expert review to unlock sign-off'; } }
-function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#308653'; btn.style.borderColor='#308653'; btn.style.background='var(--grn-d)'; },1800); }
-function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff','ai'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false]; curSys=null;curResult=null; aiMemo={sys:null,text:'',busy:false,err:''}; updA();updB(); }
-function fakeUpload(){ var dz=document.querySelector('[onclick="fakeUpload()"]'); if(dz){ dz.innerHTML='<div style="font-family:var(--mono);font-size:10px;color:var(--grn-t);">✓ Document processed</div><div style="font-size:11px;color:var(--w25);margin-top:3px;">Procurement_Specification_Burokratt_v3.pdf · 1.2 MB</div>'; } var de=document.getElementById('doc-extractions'); var dl=document.getElementById('doc-list'); if(de&&dl){ de.innerHTML='<div class="note" style="margin-bottom:8px;background:var(--amb-d);border-color:rgba(154,108,0,.3);color:var(--amb-t);">⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.</div>' +[['System name','Bürokratt Virtual Assistant'],['Deploying institution','Information System Authority (ISA)'],['Intended purpose','Enable citizens to interact with the Estonian state through a unified virtual assistant...'],['Deployment date','March 2023'],['Builder / vendor','Internal / Open Source (MEAC)']].map(function(pair){ return '<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;"><div style="flex:1;"><div style="font-family:var(--mono);font-size:9.5px;color:var(--blue);margin-bottom:1px;">'+pair[0]+'</div><div style="font-size:12px;color:var(--w80);">'+pair[1]+'</div></div><span style="font-family:var(--mono);font-size:9px;background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(154,108,0,.3);padding:1px 5px;">AI-ASSISTED</span><button onclick="confirmExt(this)" style="font-family:var(--mono);font-size:9.5px;padding:3px 8px;border:1px solid var(--grn-t);color:var(--grn-t);background:none;cursor:pointer;">Confirm</button></div>'; }).join(''); dl.style.display='block'; } }
+function updateSoBtn(){ var btn=document.getElementById('so-btn'); if(!btn)return; var allChecked=soChecks.every(function(c){return c;}); var flagsResolved=!curResult||curResult.flags.every(function(f){return reviewSt[f.id]&&reviewSt[f.id]!=='pending';}); var ready=allChecked&&flagsResolved; btn.classList.toggle('ready',ready); if(ready){ btn.textContent='Sign and seal assessment record'; btn.onclick=doSignoff; }else{ btn.textContent='Complete checklist and expert review to unlock sign-off'; } applyLang(); }
+function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#308653'; btn.style.borderColor='#308653'; btn.style.background='var(--grn-d)'; applyLang(); },1800); }
+function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff','ai'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false]; curSys=null;curResult=null; aiMemo={sys:null,text:'',busy:false,err:''}; updA();updB(); applyLang(); }
+function fakeUpload(){ var dz=document.querySelector('[onclick="fakeUpload()"]'); if(dz){ dz.innerHTML='<div style="font-family:var(--mono);font-size:10px;color:var(--grn-t);">✓ Document processed</div><div style="font-size:11px;color:var(--w25);margin-top:3px;">Procurement_Specification_Burokratt_v3.pdf · 1.2 MB</div>'; } var de=document.getElementById('doc-extractions'); var dl=document.getElementById('doc-list'); if(de&&dl){ de.innerHTML='<div class="note" style="margin-bottom:8px;background:var(--amb-d);border-color:rgba(154,108,0,.3);color:var(--amb-t);">⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.</div>' +[['System name','Bürokratt Virtual Assistant'],['Deploying institution','Information System Authority (ISA)'],['Intended purpose','Enable citizens to interact with the Estonian state through a unified virtual assistant...'],['Deployment date','March 2023'],['Builder / vendor','Internal / Open Source (MEAC)']].map(function(pair){ return '<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;"><div style="flex:1;"><div style="font-family:var(--mono);font-size:9.5px;color:var(--blue);margin-bottom:1px;">'+pair[0]+'</div><div style="font-size:12px;color:var(--w80);">'+pair[1]+'</div></div><span style="font-family:var(--mono);font-size:9px;background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(154,108,0,.3);padding:1px 5px;">AI-ASSISTED</span><button onclick="confirmExt(this)" style="font-family:var(--mono);font-size:9.5px;padding:3px 8px;border:1px solid var(--grn-t);color:var(--grn-t);background:none;cursor:pointer;">Confirm</button></div>'; }).join(''); dl.style.display='block'; } applyLang(); }
 function confirmExt(btn){ var row=btn.parentElement; var badge=row.querySelector('span'); if(badge){badge.textContent='CONFIRMED';badge.style.background='var(--grn-d)';badge.style.color='#308653';badge.style.borderColor='rgba(48,134,83,.3)';} btn.textContent='✓';btn.style.color='#308653';btn.disabled=true; }
 function openDrawer(key){ var src=SRC[key]; if(!src)return; document.getElementById('dr-title').textContent='SOURCE VERIFICATION — '+key; document.getElementById('dr-body').innerHTML= '<div class="dr-lbl">Verbatim text — official journal</div>' +'<div class="dr-quote">'+src.quote+'</div>' +'<div class="dr-lbl">Citation</div>' +'<div class="dr-ref">'+src.ref+'</div>' +'<div class="dr-conf-track"><div class="dr-conf-fill" style="width:'+src.conf+'%"></div></div>' +'<div style="font-family:var(--mono);font-size:9.5px;color:var(--w25);margin-bottom:6px;">Source confidence: '+src.conf+'%</div>' +'<div class="dr-hash">'+src.hash+'</div>' +'<div class="dr-ok">✓ Verified against Regulation (EU) 2024/1689 as published OJ L 12.7.2024<br>ELI: http://data.europa.eu/eli/reg/2024/1689/oj</div>'; document.getElementById('mask').classList.add('open'); document.getElementById('drawer').classList.add('open'); }
 function closeDrawer(){ document.getElementById('mask').classList.remove('open'); document.getElementById('drawer').classList.remove('open'); }
@@ -1015,8 +1016,334 @@ el.innerHTML=
 +'<div style="font-family:var(--mono);font-size:9.5px;color:var(--w25);margin-bottom:8px;">Model: '+escHTML(model)+' · API key: '+(keySet?'set':'missing — paste it in the sidebar, bottom left')+'</div>'
 +body
 +'<div class="note"><strong>Privacy note:</strong> clicking the button sends this system\'s form data straight from your browser to Mistral\'s API using your key. The key is saved only in this browser (localStorage) and is never part of the website itself.</div>';
+applyLang();
 }
-window.addEventListener('load',function(){ loadMistralKey(); loadSystem('burokratt'); });
+var LANG='en';
+var PAIRS=[
+["RAG LIVE","RAG AKTIIVNE"],
+["6 PENDING","6 OOTEL"],
+["X-ROAD READY","X-TEE VALMIS"],
+["› E-services › AI compliance register","› E-teenused › Tehisintellekti vastavusregister"],
+["Registered systems","Registreeritud süsteemid"],
+["+ Register new system","+ Registreeri uus süsteem"],
+["Active assessments","Aktiivsed hindamised"],
+["Annual turnover (EUR M)","Aastakäive (mln EUR)"],
+["Mistral API key","Mistral API võti"],
+["(stays in your browser)","(jääb sinu brauserisse)"],
+["Paste key from console.mistral.ai","Kleebi võti lehelt console.mistral.ai"],
+["Mistral model","Mistrali mudel"],
+["mistral-small-latest · fast","mistral-small-latest · kiire"],
+["mistral-large-latest · best","mistral-large-latest · parim"],
+["open-mistral-nemo · cheapest","open-mistral-nemo · soodsaim"],
+["A   Policy intake","A   Poliitika"],
+["B   Technical evidence","B   Tehnilised tõendid"],
+["C   Documents","C   Dokumendid"],
+["Track A — Policy & governance","Moodul A — Poliitika ja juhtimine"],
+["Track B — Technical evidence","Moodul B — Tehnilised tõendid"],
+["Track C — Document ingestion","Moodul C — Dokumentide sisestus"],
+["New system registration","Uue süsteemi registreerimine"],
+["Technical system details","Tehnilised andmed"],
+["Upload existing documents","Laadi üles olemasolevad dokumendid"],
+["Complete this track if you are a","Täida see moodul, kui oled"],
+["DPO, legal officer, or policy manager","andmekaitsespetsialist (DPO), jurist või poliitikakujundaja"],
+[". You need the procurement specification and any existing DPIAs. You do not need technical access to the system. Track B is for your IT team.",". Vajad hanke tehnilist kirjeldust ja olemasolevaid andmekaitsealaseid mõjuhinnanguid (DPIA). Tehnilist ligipääsu süsteemile vaja ei ole. Moodul B on mõeldud sinu IT-meeskonnale."],
+["Complete this track if you are an","Täida see moodul juhul, kui oled"],
+["IT architect, systems engineer, or DevOps lead","IT-arhitekt, süsteemiinsener või DevOps-juht"],
+[". You need deployment configuration and logging infrastructure access. Track A can be completed separately by your DPO or legal officer.",". Vajad ligipääsu juurutuskonfiguratsioonile ja logimistaristule. Mooduli A saab eraldi täita sinu andmekaitsespetsialist või jurist."],
+["Upload procurement specifications, DPIAs, vendor contracts, or architecture documents. The agent pre-fills fields it can extract. Every extracted value is","Laadi üles hankedokumendid, mõjuhinnangud, tarnijalepingud või arhitektuuridokumendid. Agent eeltäidab väljad, mida suudab tuvastada. Iga tuvastatud väärtus on"],
+["AI-assisted","AI-abil saadud"],
+["and must be confirmed before being treated as verified in the assessment.","ja tuleb enne hindamises kasutamist kinnitada."],
+["Policy officer","Poliitikaametnik"],
+["Legal · DPO · Governance","Õigus · AKO · Juhtimine"],
+["Technical officer","Tehniline ametnik"],
+["Track B →","Moodul B →"],
+["Policy track completion","Poliitikamooduli täituvus"],
+["Technical track completion","Tehnilise mooduli täituvus"],
+["System identity","Süsteemi identiteet"],
+["What this system does","Mida see süsteem teeb"],
+["Who is affected","Keda see mõjutab"],
+["What decisions does it make or support?","Milliseid otsuseid see teeb või toetab?"],
+["What compliance documentation exists?","Milline vastavusdokumentatsioon on olemas?"],
+["Do citizens know they are interacting with AI?","Kas kodanikud teavad, et suhtlevad tehisintellektiga?"],
+["Model character","Mudeli olemus"],
+["Logging — which events are recorded?","Logimine — milliseid sündmusi salvestatakse?"],
+["Can the logs be trusted as evidence?","Kas logisid saab usaldada tõendina?"],
+["Provider obligations & attestation","Pakkuja kohustused ja atesteerimine"],
+["System name","Süsteemi nimi"],
+["Deploying institution","Juurutav asutus"],
+["Deployment date","Juurutamise kuupäev"],
+["Builder / vendor","Arendaja / tarnija"],
+["e.g. Bürokratt Virtual Assistant","nt Bürokratt"],
+["e.g. Information System Authority","nt Riigi Infosüsteemi Amet"],
+["Internal or vendor name","Asutusesisene või tarnija nimi"],
+["Copy the intended purpose exactly as written in the procurement specification.","Kopeeri sihtotstarve täpselt nii, nagu see on kirjas hanke tehnilises kirjelduses."],
+["This is the legal declared purpose. If the system is used differently in practice, that divergence may transfer provider obligations to your institution under Art. 25.","See on õiguslikult deklareeritud otstarve. Kui süsteemi kasutatakse praktikas teisiti, võib see lahknevus art 25 alusel kanda pakkuja kohustused üle sinu asutusele."],
+["Declared intended purpose — verbatim from procurement","Deklareeritud sihtotstarve — sõna-sõnalt hankest"],
+["Copy from the procurement specification...","Kopeeri hanke tehnilisest kirjeldusest..."],
+["Is the system currently used in the same way as procured?","Kas süsteemi kasutatakse praegu samamoodi, nagu hangiti?"],
+["Yes — used as procured","Jah — kasutusel nagu hangitud"],
+["No — use has changed","Ei — kasutus on muutunud"],
+["Not sure","Pole kindel"],
+["Actual production use (describe changes)","Tegelik kasutus (kirjelda muutusi)"],
+["How is the system actually being used now?","Kuidas süsteemi praegu tegelikult kasutatakse?"],
+["What does this system primarily do?","Mida see süsteem peamiselt teeb?"],
+["Your answer determines whether this is a high-risk AI system under Annex III — and whether full conformity assessment, FRIA, and registration obligations apply.","Sinu vastus määrab, kas tegemist on III lisa järgi kõrge riskiga AI-süsteemiga — ja kas kohalduvad täielik vastavushindamine, põhiõiguste mõjuhinnang ja registreerimiskohustus."],
+["Primary domain","Põhivaldkond"],
+["Select what the system primarily does","Vali, mida süsteem peamiselt teeb"],
+["Helps citizens access government services or benefits","Aitab kodanikel kasutada avalikke teenuseid või toetusi"],
+["Makes or supports employment decisions","Teeb või toetab töösuhete otsuseid"],
+["Used in education or training assessment","Kasutusel hariduses või koolituse hindamisel"],
+["Used by or for law enforcement","Kasutusel õiguskaitses või selle heaks"],
+["Identifies or categorises people from biometric data","Tuvastab või liigitab inimesi biomeetriliste andmete põhjal"],
+["Controls critical infrastructure","Juhib elutähtsat taristut"],
+["Used in migration, asylum, or border control","Kasutusel rände-, varjupaiga- või piirikontrollis"],
+["Used in legal proceedings","Kasutusel kohtumenetluses"],
+["Internal operations — no citizen decisions","Sisemised toimingud — kodanikuotsuseid ei tehta"],
+["Something else","Midagi muud"],
+["Approximate citizens affected per year","Mõjutatud kodanikke aastas (hinnang)"],
+["Select scale","Vali ulatus"],
+["Fewer than 1,000","Alla 1000"],
+["Over 500,000 (national scale)","Üle 500 000 (üleriigiline)"],
+["If the system makes binding decisions — granting or refusing services — affected people have a right to human review. This does not apply to information-only tools.","Kui süsteem teeb siduvaid otsuseid — teenuste andmine või keelamine — on mõjutatud isikutel õigus inimülevaatusele. See ei kehti ainult teavet pakkuvate tööriistade kohta."],
+["Decision type","Otsuse tüüp"],
+["Select","Vali"],
+["Binding automated decision (person receives or is refused something based on this output alone)","Siduv automaatotsus (inimene saab või ei saa midagi ainuüksi selle väljundi alusel)"],
+["Decision support (human makes final decision, informed by the system)","Otsusetugi (lõpliku otsuse teeb inimene süsteemi toel)"],
+["Routing or prioritisation only","Ainult suunamine või prioriseerimine"],
+["Information provision only","Ainult teabe edastamine"],
+["Internal process only — citizens not directly affected","Ainult siseprotsess — kodanikke otseselt ei mõjuta"],
+["Data Protection Impact Assessment","Andmekaitsealane mõjuhinnang (DPIA)"],
+["Yes — current","Jah — ajakohane"],
+["Yes — outdated","Jah — aegunud"],
+["No","Ei"],
+["Not required","Pole nõutav"],
+["Fundamental Rights Impact Assessment (Art. 27)","Põhiõiguste mõjuhinnang (art 27)"],
+["Completed","Lõpetatud"],
+["In progress","Pooleli"],
+["Planned","Kavandatud"],
+["Not started","Alustamata"],
+["EU database registration (Art. 49)","ELi andmebaasi registreering (art 49)"],
+["Registered","Registreeritud"],
+["Pending","Ootel"],
+["Not registered","Registreerimata"],
+["Conformity assessment (Art. 43)","Vastavushindamine (art 43)"],
+["Exemption claimed","Taotletud erand"],
+["Art. 47 Declaration of Conformity","Vastavusdeklaratsioon (art 47)"],
+["Signed DoC exists","Allkirjastatud deklaratsioon olemas"],
+["Draft only","Ainult mustand"],
+["Does not exist","Dokumenti pole"],
+["Named oversight person assigned (Art. 26)","Määratud järelevalve eest vastutav isik (art 26)"],
+["Yes — specific person named","Jah — konkreetne isik määratud"],
+["Team assigned, no named individual","Meeskond määratud, nimelist isikut pole"],
+["Informal only","Ainult mitteametlik"],
+["No oversight assigned","Järelevalvet pole määratud"],
+["Art. 50 requires that people know they are interacting with AI at first contact. Applies to chatbots, automated decisions, AI-generated content. Not required for purely internal tools.","Art 50 nõuab, et inimesed teaksid esimesel kokkupuutel, et suhtlevad tehisintellektiga. Kehtib vestlusrobotitele, automaatotsustele ja AI loodud sisule. Puhtalt sisemiste tööriistade puhul pole nõutav."],
+["Yes — clearly disclosed at first contact","Jah — selgelt avaldatud esimesel kokkupuutel"],
+["Partial — mentioned somewhere","Osaliselt — mainitud kuskil"],
+["No disclosure","Avaldamata"],
+["Not citizen-facing","Pole kodanikule suunatud"],
+["Generate compliance assessment","Koosta vastavushinnang"],
+["What kind of AI system is this? If it uses only fixed rules with no statistical models, select \"Rule-based\" — such systems may fall outside the AI Act's scope entirely.","Mis tüüpi tehisintellektisüsteem see on? Kui see kasutab ainult fikseeritud reegleid ilma statistiliste mudeliteta, vali \"Reeglipõhine\" — sellised süsteemid võivad jääda AI-määruse kohaldamisalast täielikult välja."],
+["Model type","Mudeli tüüp"],
+["Large language model (LLM)","Suur keelemudel (LLM)"],
+["Classification model","Klassifitseerimismudel"],
+["Regression / scoring model","Regressiooni-/skoorimismudel"],
+["Computer vision model","Masinnägemise mudel"],
+["Speech recognition / NLP","Kõnetuvastus / NLP"],
+["Recommender system","Soovitussüsteem"],
+["Rule-based system (may be out of scope)","Reeglipõhine süsteem (võib jääda määruse alt välja)"],
+["Hybrid: ML + rules","Hübriid: ML + reeglid"],
+["Foundation model / GPAI","Alusmudel / üldotstarbeline AI"],
+["Unknown — documentation unavailable","Teadmata — dokumentatsioon puudub"],
+["Personal data processed","Töödeldavad isikuandmed"],
+["No personal data","Isikuandmeid ei töödelda"],
+["Pseudonymised data only","Ainult pseudonüümitud andmed"],
+["Identified personal data","Tuvastatud isikuandmed"],
+["Special category (health, religion, ethnicity...)","Eriliigilised (tervis, usk, etniline päritolu...)"],
+["Biometric data (face, fingerprint, voice...)","Biomeetrilised andmed (nägu, sõrmejälg, hääl...)"],
+["Unknown — not documented","Teadmata — dokumenteerimata"],
+["X-Road service identifier","X-tee teenuse identifikaator"],
+["Foundation / base model","Alus-/baasmudel"],
+["e.g. Custom Estonian LLM, None","nt kohandatud eesti LLM, puudub"],
+["Art. 12 requires automatic recording of events sufficient for ex-post inspection. For each event type, select whether it is fully logged, partially logged, or not logged.","Art 12 nõuab sündmuste automaatset salvestamist tagantjärele kontrolliks piisaval määral. Vali iga sündmusetüübi kohta, kas seda logitakse täielikult, osaliselt või üldse mitte."],
+["Research (Sokolov 2026) found only 0.5% of public agent infrastructure has tamper-evident logging. Most logging covers debugging, not accountability. These are legally different.","Uuring (Sokolov 2026) leidis, et vaid 0,5% avalikust agenditaristust omab võltsimiskindlat logimist. Enamik logimist katab silumist, mitte vastutust. Õiguslikult on need erinevad asjad."],
+["Model requests / prompts","Mudelipäringud / viibad"],
+["Tool calls & arguments","Tööriistakutsed ja argumendid"],
+["Tool outputs / responses","Tööriistade väljundid / vastused"],
+["Human approval / override events","Inimese kinnitused / tühistamised"],
+["Decision outcomes","Otsuste tulemused"],
+["External side effects","Välised kõrvalmõjud"],
+["X-Road register queries","X-tee registripäringud"],
+["Error & exception events","Vead ja erandid"],
+["Not logged","Ei logita"],
+["Partial","Osaline"],
+["Full","Täielik"],
+["Unknown","Teadmata"],
+["Can the activity logs be modified or deleted after the fact by IT staff or a system administrator?","Kas IT-töötajad või süsteemiadministraator saavad tegevuslogisid tagantjärele muuta või kustutada?"],
+["A log that can be altered is not an accountability record. For a regulator to rely on your logs as evidence, they must be protected against modification. Only 0.5% of the public agent ecosystem has documented this.","Muudetav logi ei ole vastutusdokument. Et järelevalveasutus saaks sinu logidele kui tõendile tugineda, peavad need olema muutmise eest kaitstud. Vaid 0,5% avalikust agendiökosüsteemist on selle dokumenteerinud."],
+["Yes — anyone with access can edit","Jah — igaüks ligipääsuga saab muuta"],
+["Access-controlled but editable","Ligipääsupiiranguga, kuid muudetav"],
+["Append-only","Ainult lisatav (append-only)"],
+["Cryptographically signed","Krüptograafiliselt allkirjastatud"],
+["RFC 3161 hash chain","RFC 3161 räsiahel"],
+["I don't know","Ei tea"],
+["Who bears Art. 16 provider obligations?","Kes kannab art 16 pakkuja kohustusi?"],
+["Our institution — built in-house","Meie asutus — arendatud asutusesiseselt"],
+["External vendor — contractually allocated","Väline tarnija — lepinguga määratud"],
+["Shared — contract specifies split","Jagatud — leping sätestab jaotuse"],
+["Unclear — not resolved in contract","Ebaselge — lepingus lahendamata"],
+["Our institution assumed them (Art. 25)","Meie asutus võttis need üle (art 25)"],
+["Substantially modified since procurement?","Kas hankest alates oluliselt muudetud?"],
+["No — used as originally procured","Ei — kasutusel algselt hangitud kujul"],
+["Minor changes within scope","Väikesed muudatused kasutusala piires"],
+["Substantial modification","Oluline muudatus"],
+["Intended purpose has changed","Sihtotstarve on muutunud"],
+["Compliance record signing","Vastavuskirjete allkirjastamine"],
+["None — unsigned PDF documents","Puudub — allkirjastamata PDF-dokumendid"],
+["Basic digital signature (non-qualified)","Tavaline digiallkiri (kvalifitseerimata)"],
+["Qualified electronic seal (eIDAS 2.0)","Kvalifitseeritud e-tempel (eIDAS 2.0)"],
+["QTSP-issued (ETSI EN 319)","QTSP väljastatud (ETSI EN 319)"],
+["Post-quantum migration","Postkvant-migratsioon"],
+["Not considered","Pole kaalutud"],
+["Planned (roadmap exists)","Kavandatud (tegevuskava olemas)"],
+["Partial migration","Osaline migratsioon"],
+["Full PQC-agile (FIPS 203/204/205)","Täielik PQC (FIPS 203/204/205)"],
+["Threat model documented?","Kas ohumudel on dokumenteeritud?"],
+["Full threat model","Täielik ohumudel"],
+["None","Puudub"],
+["Upstream component evidence","Ülesvoolu komponentide tõendid"],
+["AEP-level evidence from upstream","AEP-taseme tõendid ülesvoolult"],
+["Basic logs only","Ainult baaslogid"],
+["No upstream evidence","Ülesvoolu tõendid puuduvad"],
+["No upstream AI components","Ülesvoolu AI-komponente pole"],
+["DROP DOCUMENTS HERE OR CLICK TO BROWSE","LOHISTA DOKUMENDID SIIA VÕI KLÕPSA SIRVIMISEKS"],
+["Procurement spec · DPIA · Vendor contract · Architecture document","Hankedokument · Mõjuhinnang · Tarnijaleping · Arhitektuuridokument"],
+["Extracted fields — confirm before use","Tuvastatud väljad — kinnita enne kasutamist"],
+["AI extraction disclaimer:","AI tuvastuse vastutusvälistus:"],
+["Fields extracted from documents are preliminary suggestions only. Unconfirmed extractions produce Conditional findings — not Confirmed findings — until a human reviewer approves them.","Dokumentidest tuvastatud väljad on ainult esialgsed ettepanekud. Kinnitamata tuvastused annavad tingimuslikke, mitte kinnitatud leide, kuni inimülevaataja need heaks kiidab."],
+["Compliance assessment","Vastavushindamine"],
+["Findings","Leiud"],
+["Verify","Kontroll"],
+["Expert","Ekspert"],
+["Sign-off","Kinnitus"],
+["AI Memo","AI-memo"],
+["COMPLETE TRACK A OR B","TÄIDA MOODUL A VÕI B"],
+["AND RUN ASSESSMENT","JA KÄIVITA HINDAMINE"],
+["RUN ASSESSMENT FIRST","KÄIVITA ESMALT HINDAMINE"],
+["FLAGGED ITEMS APPEAR","MÄRGISTATUD PUNKTID ILMUVAD"],
+["HERE AFTER ASSESSMENT","SIIA PÄRAST HINDAMIST"],
+["COMPLETE REVIEW","LÕPETA ÜLEVAATUS"],
+["TO UNLOCK SIGN-OFF","KINNITUSE AVAMISEKS"],
+["RUN AN ASSESSMENT, THEN","KÄIVITA HINDAMINE, SEEJÄREL"],
+["GENERATE A MISTRAL MEMO","KOOSTA MISTRALI MEMO"],
+["Risk findings","Riskileiud"],
+["Financial exposure","Finantsrisk"],
+["Maximum statutory exposure","Maksimaalne seadusjärgne trahvirisk"],
+["No confirmed risks at current completeness.","Praeguse täituvuse juures kinnitatud riske pole."],
+["◉ CONDITIONAL FINDINGS — information outstanding from Track B","◉ TINGIMUSLIKUD LEIUD — moodulist B puudub teave"],
+["Confirmed","Kinnitatud"],
+["Probable","Tõenäoline"],
+["Conditional","Tingimuslik"],
+["Flagged → Expert","Märgistatud → Ekspert"],
+["CONFIRMED — deterministic, source-grounded","KINNITATUD — deterministlik, allikapõhine"],
+["PROBABLE — verified field, legal judgment required","TÕENÄOLINE — väli kinnitatud, vajab õiguslikku hinnangut"],
+["CONDITIONAL — depends on outstanding Track B field","TINGIMUSLIK — sõltub puuduvast mooduli B väljast"],
+["FLAGGED — sent to expert review queue","MÄRGISTATUD — saadetud eksperdi ülevaatusse"],
+["CRITICAL RISK","KRIITILINE RISK"],
+["HIGH RISK","KÕRGE RISK"],
+["SIGNIFICANT RISK","OLULINE RISK"],
+["MODERATE RISK","MÕÕDUKAS RISK"],
+["COMPLIANT","NÕUETELE VASTAV"],
+["Important:","NB!"],
+["Only Confirmed and Probable findings appear above. Conditional findings depend on information not yet provided in Track B. Flagged findings require expert legal review before inclusion in any formal assessment. This output is not a legal opinion and does not constitute advice.","Ülal kuvatakse ainult kinnitatud ja tõenäolised leiud. Tingimuslikud leiud sõltuvad moodulis B veel esitamata teabest. Märgistatud leiud vajavad enne ametlikku hindamisse kaasamist eksperdi õiguslikku ülevaatust. See väljund ei ole õiguslik arvamus ega nõuanne."],
+["Re-run source verification","Käivita allikakontroll uuesti"],
+["Source document","Alusdokument"],
+["Verification checks","Kontrollid"],
+["Confirmed findings","Kinnitatud leiud"],
+["Items in expert queue","Eksperdijärjekorras"],
+["Assessment completeness","Hindamise täielikkus"],
+["All findings grounded in AI Act source text","Kõik leiud põhinevad AI-määruse algtekstil"],
+["Tier 1 fine quantum verified — €35M / 7% (Art. 99(3))","1. astme trahvimäär kontrollitud — 35 mln € / 7% (art 99(3))"],
+["Tier 2 fine quantum verified — €15M / 3% (Art. 99(4))","2. astme trahvimäär kontrollitud — 15 mln € / 3% (art 99(4))"],
+["Tier 3 fine quantum verified — €7.5M / 1% (Art. 99(5))","3. astme trahvimäär kontrollitud — 7,5 mln € / 1% (art 99(5))"],
+["Annex III classification is deterministic","III lisa liigitus on deterministlik"],
+["Internal consistency check passed","Sisemise kooskõla kontroll läbitud"],
+["No findings required expert escalation","Ükski leid ei vajanud eksperdile suunamist"],
+["All assessed fields are complete","Kõik hinnatud väljad on täidetud"],
+["Verification scope:","Kontrolli ulatus:"],
+["Items requiring expert legal judgment","Eksperdi õiguslikku hinnangut vajavad punktid"],
+["Why these are here:","Miks need siin on:"],
+["The agent identified these as potential compliance issues but cannot characterise them accurately without legal judgment. They are excluded from the main findings report until reviewed. Confirm, amend with your legal assessment, or escalate for external opinion. Sign-off is locked until all items are actioned.","Agent tuvastas need kui võimalikud vastavusprobleemid, kuid ei suuda neid ilma õigusliku hinnanguta täpselt liigitada. Kuni ülevaatuseni on need põhiaruandest välja jäetud. Kinnita, muuda oma õigusliku hinnanguga või eskaleeri välise arvamuse saamiseks. Allkirjastamine on lukus, kuni kõik punktid on käsitletud."],
+["No items required escalation for this assessment. All findings were either deterministic (Confirmed) or graded as Probable with source citations and included in the main report. If the assessment is based on incomplete Track B data, additional items may be escalated once your IT team completes the technical track.","Selle hindamise puhul ei vajanud ükski punkt eskaleerimist. Kõik leiud olid kas deterministlikud (kinnitatud) või hinnatud tõenäoliseks koos allikaviidetega ning kaasatud põhiaruandesse. Kui hindamine põhineb puudulikel mooduli B andmetel, võidakse pärast tehnilise mooduli täitmist eskaleerida lisapunkte."],
+["Agent finding","Agendi leid"],
+["Expert annotation","Eksperdi märkus"],
+["Enter legal assessment, risk qualification, or amended finding text...","Sisesta õiguslik hinnang, riski kvalifikatsioon või muudetud leiu tekst..."],
+["Confirm finding","Kinnita leid"],
+["Amend finding","Muuda leidu"],
+["Escalate externally","Eskaleeri väliselt"],
+["Unassigned","Määramata"],
+["Legal team (MJ)","Õigusosakond (JuM)"],
+["MEAC compliance unit","MKM-i vastavusüksus"],
+["External counsel","Väline õigusnõustaja"],
+["Data Protection Inspectorate","Andmekaitse Inspektsioon"],
+["PENDING","OOTEL"],
+["CONFIRMED","KINNITATUD"],
+["AMENDED","MUUDETUD"],
+["ESCALATED","ESKALEERITUD"],
+["Regulatory deadlines","Regulatiivsed tähtajad"],
+["Art. 5 prohibitions in force","Art 5 keelud jõustunud"],
+["Penalty framework active","Trahviraamistik kehtib"],
+["High-risk obligations — Annex III","Kõrge riski kohustused — III lisa"],
+["EU database registration deadline","ELi andmebaasi registreerimise tähtaeg"],
+["First Art. 72 monitoring reports","Esimesed art 72 seirearuanded"],
+["Estimated first enforcement wave","Hinnanguline esimene järelevalvelaine"],
+["PQC migration horizon (NIST guidance)","PQC migratsiooni horisont (NISTi juhis)"],
+["Assessment sign-off checklist","Hindamise kinnituse kontroll-leht"],
+["Track A (Policy intake) is complete and has been reviewed","Moodul A (poliitika) on täidetud ja üle vaadatud"],
+["Track B (Technical evidence) is complete, or gaps have been accepted as known risks","Moodul B (tehnilised tõendid) on täidetud või lüngad on aktsepteeritud teadaolevate riskidena"],
+["All flagged items in the expert review queue have been actioned","Kõik eksperdijärjekorra märgistatud punktid on käsitletud"],
+["I understand this assessment is an analytical estimate and not a legal opinion","Mõistan, et see hindamine on analüütiline hinnang, mitte õiguslik arvamus"],
+["Complete checklist and expert review to unlock sign-off","Allkirjastamiseks täida kontroll-leht ja eksperdihinnang"],
+["Sign and seal assessment record","Allkirjasta ja pitseeri hindamisprotokoll"],
+["Sealing with SK ID Solutions AS · RFC 3161 TSA...","Pitseerin: SK ID Solutions AS · RFC 3161 TSA..."],
+["✓ Assessment record sealed — eAIDAS evidence package ready","✓ Hindamisprotokoll pitseeritud — eAIDAS tõendipakett valmis"],
+["What sign-off produces:","Mida allkirjastamine annab:"],
+["Generate AI memo with Mistral","Koosta AI-memo Mistraliga"],
+["Generating…","Koostan…"],
+["Asking Mistral… this usually takes a few seconds.","Küsin Mistralilt… see võtab tavaliselt mõne sekundi."],
+["No memo yet for this system. Click the button above: the form data and the rule-engine findings are sent to Mistral, which writes a plain-language memo about what matters most and what to do next.","Selle süsteemi kohta pole veel memot. Klõpsa ülal olevat nuppu: vormi andmed ja reeglimootori leiud saadetakse Mistralile, kes kirjutab lihtsas keeles memo — mis on kõige olulisem ja mida järgmiseks teha."],
+["Privacy note:","Privaatsusmärkus:"],
+["clicking the button sends this system's form data straight from your browser to Mistral's API using your key. The key is saved only in this browser (localStorage) and is never part of the website itself.","nupule klõpsates saadetakse selle süsteemi vormi andmed otse sinu brauserist Mistrali API-le sinu võtmega. Võti salvestatakse ainult selles brauseris (localStorage) ega ole kunagi veebilehe osa."],
+["✓ Document processed","✓ Dokument töödeldud"],
+["⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.","⚠ Järgmised väljad tuvastas AI ja need on kinnitamata. Vaata iga väli üle ja kinnita enne, kui see läheb hindamisse kontrollitud väärtusena."],
+["AI-ASSISTED","AI-ABIL"],
+["Confirm","Kinnita"],
+["Intended purpose","Sihtotstarve"],
+["SOURCE","ALLIKAS"],
+["CLOSE ✕","SULGE ✕"],
+["Verbatim text — official journal","Tsitaat — Euroopa Liidu Teataja"],
+["Citation","Viide"]
+];
+var EN2ET={},ET2EN={};
+PAIRS.forEach(function(p){EN2ET[p[0]]=p[1];ET2EN[p[1]]=p[0];});
+function setLang(l){ LANG=l; document.documentElement.lang=(l==='et'?'et':'en'); try{localStorage.setItem('avgvstLang',l);}catch(e){} applyLang(); }
+function applyLang(){
+var map=LANG==='et'?EN2ET:ET2EN;
+var walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,null,false);
+var n;
+while((n=walker.nextNode())){
+var p=n.parentNode;
+if(p&&(p.tagName==='SCRIPT'||p.tagName==='STYLE'))continue;
+var raw=n.nodeValue,t=raw.trim();
+if(t&&Object.prototype.hasOwnProperty.call(map,t))n.nodeValue=raw.replace(t,map[t]);
+}
+document.querySelectorAll('input[placeholder],textarea[placeholder]').forEach(function(el){var t=el.placeholder.trim();if(Object.prototype.hasOwnProperty.call(map,t))el.placeholder=map[t];});
+document.querySelectorAll('option[value]').forEach(function(o){var t=o.textContent.trim();if(Object.prototype.hasOwnProperty.call(map,t))o.textContent=map[t];});
+var sw=document.getElementById('lang-sw');
+if(sw){sw.innerHTML=(LANG==='et'?'<b>EST</b>':'<span onclick="setLang(\'et\')" style="cursor:pointer;">EST</span>')+' | '+(LANG==='en'?'<b>ENG</b>':'<span onclick="setLang(\'en\')" style="cursor:pointer;">ENG</span>');}
+}
+
+window.addEventListener('load',function(){ loadMistralKey(); try{LANG=localStorage.getItem('avgvstLang')||'en';}catch(e){} document.documentElement.lang=(LANG==='et'?'et':'en'); loadSystem('burokratt'); applyLang(); });
 </script>
 </body>
 </html>
