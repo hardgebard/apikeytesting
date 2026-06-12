@@ -10,7 +10,15 @@ entirely in the browser, and nothing is uploaded or persisted.
 - **Track A — Policy intake**: DPO/legal questionnaire (system identity, intended
   purpose, Annex III domain, decision type, documentation status, Art. 50 transparency).
 - **Track B — Technical evidence**: model character, Art. 12 logging coverage matrix,
-  log integrity / tamper-evidence, provider obligations and attestation.
+  log integrity / tamper-evidence, provider obligations and attestation, and an
+  **evidence architecture (AEP)** section: event timing source (RFC 3161), independent
+  verification path, portable evidence export, approval-event chaining, key history /
+  CBOM, and signed retention policy — following the eIDAS trust-services mapping in
+  Sokolov (2026), *Operationalizing the EU AI Act through eIDAS Trust Services
+  Primitives*. Findings keep that paper's claim boundaries: artifacts *support evidence
+  for* an article, never *satisfy* it; oversight is made *inspectable*, not *effective*.
+  The findings panel shows a six-layer evidence status strip (provenance, logging,
+  verifiability, oversight, trust architecture, crypto agility).
 - **Track C — Documents**: simulated AI-assisted field extraction with human confirmation.
 - **Assessment panel**: findings graded Confirmed / Probable / Conditional / Flagged,
   fine-tier exposure (Art. 99(3)–(5), scaled against the turnover input using the
