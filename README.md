@@ -23,6 +23,12 @@ entirely in the browser, and nothing is uploaded or persisted.
 Five example systems (Bürokratt, Automatic Administrative Acts, AIRE, Top-10 Digital
 Services, RIHAKE) are pre-loaded in the sidebar.
 
+The visual theme follows Estonia's government design language: **Roboto** type and
+the colour tokens (sapphire blue `#005aa3`, black-coral greys, jasper red, sea
+green) come from the state's open-source
+[CVI / Veera design system](https://github.com/e-gov/cvi). Only the AVGVST
+wordmark keeps its Cinzel spaced-caps lettering.
+
 > **Disclaimer:** This is a UI demo. The findings, fine figures, citations, and hashes
 > are illustrative only and do not constitute legal advice.
 
