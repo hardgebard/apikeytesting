@@ -293,6 +293,12 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 .section-block,.role-banner,.track-bar,.tab-panel>.run-wrap{max-width:1020px;}
 .score-wrap{background:var(--surf);}
 .ap-head{background:var(--surf);}
+.log-link{margin-top:9px;font-size:11.5px;font-weight:500;color:var(--blue);cursor:pointer;}
+.log-link:hover{text-decoration:underline;}
+.rl-entry{background:var(--surf2);border:1px solid var(--bord);border-radius:3px;padding:9px 11px;margin-bottom:6px;}
+.rl-head{display:flex;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:10px;font-weight:500;color:var(--blue);margin-bottom:4px;}
+.rl-msg{white-space:pre-wrap;font-size:11.5px;color:var(--w80);line-height:1.55;}
+.rl-hash{font-family:var(--mono);font-size:10px;color:var(--w25);margin-top:5px;word-break:break-all;}
 </style>
 </head>
 <body>
@@ -677,6 +683,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,textarea:focus-vis
 <div class="ap-tab" onclick="switchApTab('signoff',this)">Sign-off</div>
 <div class="ap-tab" onclick="switchApTab('ai',this)">AI Memo</div>
 </div>
+<div class="log-link" onclick="openReasonLog()">Reasoning log — compliance officer view · <span id="rl-count">0</span> sealed entries</div>
 </div>
 <div class="ap-body">
 <div class="ap-sec active" id="ap-findings">
@@ -1016,19 +1023,132 @@ function updAnnex(){ var d=document.getElementById('f-domain').value; var f=docu
 function updA(){ var fields=['f-name','f-date','f-inst','f-domain','f-decision','f-dpia','f-fria','f-eudb','f-oversight','f-purpose']; var filled=fields.filter(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}).length; var pct=Math.round(filled/fields.length*100); var lbl=document.getElementById('pct-policy'); if(lbl)lbl.textContent=pct+'% complete'; var tl=document.getElementById('tla'); if(tl)tl.textContent=filled+' / '+fields.length; var segs=document.querySelectorAll('#track-a .track-seg'); segs.forEach(function(s,i){s.className='track-seg'+(i<filled?' done':'');}); }
 function updB(){ var techFields=['f-modeltype','f-personal','f-provider','f-modified','f-signing','f-pqc','f-timing','f-verifier','f-portability','f-ovchain','f-keyhist','f-retention']; var lmFields=['lm-requests','lm-tools','lm-outputs','lm-approvals','lm-decisions','lm-sideeff','lm-xroadlog','lm-errors']; var filled=techFields.filter(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}).length; var lmDone=lmFields.every(function(id){var el=document.getElementById(id);return el&&el.value&&el.value!=='';}); if(lmDone)filled++; if(logInteg!=='')filled++; var total=14; var tl=document.getElementById('tlb'); if(tl)tl.textContent=filled+' / '+total; var segs=document.querySelectorAll('#track-b .track-seg'); segs.forEach(function(s,i){s.className='track-seg'+(i<filled?' done':'');}); var unkM=document.getElementById('f-modeltype'); var uf=document.getElementById('unk-model'); if(unkM&&uf)uf.classList.toggle('show',unkM.value==='unknown'); }
 function collectForm(){ function g(id){var el=document.getElementById(id);return el?el.value:'';} function lv(id){var el=document.getElementById(id);return el?el.value:'';} return{ name:g('f-name')||'Unnamed System', inst:g('f-inst'), date:g('f-date'), vendor:g('f-vendor'), domain:g('f-domain'), citizens:g('f-citizens'), decision:g('f-decision'), dpia:g('f-dpia'), fria:g('f-fria'), eudb:g('f-eudb'), ca:g('f-ca'), doc:g('f-doc'), oversight:g('f-oversight'), purpose:g('f-purpose'), actual:g('f-actual')||'As declared.', sameUse:sameUse, transparency:transp, modeltype:g('f-modeltype'), personal:g('f-personal'), xroad:g('f-xroad'), foundation:g('f-foundation'), provider:g('f-provider'), modified:g('f-modified'), signing:g('f-signing'), pqc:g('f-pqc'), threatmodel:g('f-threatmodel'), upstream:g('f-upstream'), timing:g('f-timing'), verifier:g('f-verifier'), portability:g('f-portability'), ovchain:g('f-ovchain'), keyhist:g('f-keyhist'), retention:g('f-retention'), logintegrity:logInteg, lm:{ requests:lv('lm-requests'), tools:lv('lm-tools'), outputs:lv('lm-outputs'), approvals:lv('lm-approvals'), decisions:lv('lm-decisions'), sideeff:lv('lm-sideeff'), xroadlog:lv('lm-xroadlog'), errors:lv('lm-errors') } }; }
-function loadSystem(key){ var s=SYSTEMS[key]; if(!s)return; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var item=document.querySelector('.sys-item[data-key="'+key+'"]'); if(item)item.classList.add('active'); document.getElementById('form-title').textContent=s.name; function sv(id,v){var el=document.getElementById(id);if(el)el.value=v||'';} sv('f-name',s.name);sv('f-inst',s.inst);sv('f-date',s.date);sv('f-vendor',s.vendor); sv('f-domain',s.domain);sv('f-citizens',s.citizens);sv('f-decision',s.decision); sv('f-dpia',s.dpia);sv('f-fria',s.fria);sv('f-eudb',s.eudb);sv('f-ca',s.ca); sv('f-doc',s.doc);sv('f-oversight',s.oversight); sv('f-purpose',s.purpose);sv('f-actual',s.actual); sv('f-modeltype',s.modeltype);sv('f-personal',s.personal); sv('f-xroad',s.xroad);sv('f-foundation',s.foundation); sv('f-provider',s.provider);sv('f-modified',s.modified); sv('f-signing',s.signing);sv('f-pqc',s.pqc); sv('f-threatmodel',s.threatmodel);sv('f-upstream',s.upstream); sv('f-timing',s.timing);sv('f-verifier',s.verifier);sv('f-portability',s.portability);sv('f-ovchain',s.ovchain);sv('f-keyhist',s.keyhist);sv('f-retention',s.retention); if(s.lm){ Object.keys(s.lm).forEach(function(k){ var el=document.getElementById('lm-'+k); if(el)el.value=s.lm[k]; }); } setSame(s.sameUse||'yes'); setTrans(s.transparency||'na'); logInteg=s.logintegrity||''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.toggle('sel',id===logInteg); }); var uf=document.getElementById('unk-log'); if(uf)uf.classList.toggle('show',logInteg==='unknown'); updAnnex();updA();updB(); reviewSt={};soChecks=[false,false,false,false,false]; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); }
+function loadSystem(key){ var s=SYSTEMS[key]; if(!s)return; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var item=document.querySelector('.sys-item[data-key="'+key+'"]'); if(item)item.classList.add('active'); document.getElementById('form-title').textContent=s.name; function sv(id,v){var el=document.getElementById(id);if(el)el.value=v||'';} sv('f-name',s.name);sv('f-inst',s.inst);sv('f-date',s.date);sv('f-vendor',s.vendor); sv('f-domain',s.domain);sv('f-citizens',s.citizens);sv('f-decision',s.decision); sv('f-dpia',s.dpia);sv('f-fria',s.fria);sv('f-eudb',s.eudb);sv('f-ca',s.ca); sv('f-doc',s.doc);sv('f-oversight',s.oversight); sv('f-purpose',s.purpose);sv('f-actual',s.actual); sv('f-modeltype',s.modeltype);sv('f-personal',s.personal); sv('f-xroad',s.xroad);sv('f-foundation',s.foundation); sv('f-provider',s.provider);sv('f-modified',s.modified); sv('f-signing',s.signing);sv('f-pqc',s.pqc); sv('f-threatmodel',s.threatmodel);sv('f-upstream',s.upstream); sv('f-timing',s.timing);sv('f-verifier',s.verifier);sv('f-portability',s.portability);sv('f-ovchain',s.ovchain);sv('f-keyhist',s.keyhist);sv('f-retention',s.retention); if(s.lm){ Object.keys(s.lm).forEach(function(k){ var el=document.getElementById('lm-'+k); if(el)el.value=s.lm[k]; }); } setSame(s.sameUse||'yes'); setTrans(s.transparency||'na'); logInteg=s.logintegrity||''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.toggle('sel',id===logInteg); }); var uf=document.getElementById('unk-log'); if(uf)uf.classList.toggle('show',logInteg==='unknown'); updAnnex();updA();updB(); reviewSt={};soChecks=[false,false,false,false,false]; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); rlog('assessment',buildReasoning(s,r)); }
 var STEPS=[ 'Validating schema fields...', 'Loading RAG: EU AI Act 2024/1689 · OJ L 12.7.2024...', 'Cross-referencing Annex III categories...', 'Evaluating Art. 5 prohibition scope...', 'Checking Art. 12 logging coverage matrix...', 'Assessing evidence architecture (AEP primitives)...', 'Grading confidence: Confirmed / Probable / Conditional / Flagged...', 'Running internal consistency checks...', 'Routing flagged items to expert review queue...', 'Generating verification log...', 'Assessment complete' ];
-function runAssessment(){ var pw=document.getElementById('prog-wrap'); var pf=document.getElementById('prog-fill'); var pl=document.getElementById('prog-lbl'); var pg=document.getElementById('prog-log'); if(pw)pw.classList.add('vis'); var step=0; var iv=setInterval(function(){ if(step<STEPS.length){ if(pl)pl.textContent=STEPS[step]; if(pg)pg.textContent=STEPS[step]; if(pf)pf.style.width=((step+1)/STEPS.length*100)+'%'; step++; }else{ clearInterval(iv); setTimeout(function(){ if(pw)pw.classList.remove('vis'); if(pf)pf.style.width='0'; var s=collectForm(); document.getElementById('form-title').textContent=s.name; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); switchApTab('findings',document.querySelector('.ap-tab')); },350); } },240); }
+function runAssessment(){ var pw=document.getElementById('prog-wrap'); var pf=document.getElementById('prog-fill'); var pl=document.getElementById('prog-lbl'); var pg=document.getElementById('prog-log'); if(pw)pw.classList.add('vis'); var step=0; var iv=setInterval(function(){ if(step<STEPS.length){ if(pl)pl.textContent=STEPS[step]; if(pg)pg.textContent=STEPS[step]; if(pf)pf.style.width=((step+1)/STEPS.length*100)+'%'; step++; }else{ clearInterval(iv); setTimeout(function(){ if(pw)pw.classList.remove('vis'); if(pf)pf.style.width='0'; var s=collectForm(); document.getElementById('form-title').textContent=s.name; var r=assess(s); curSys=s;curResult=r; renderAll(s,r); rlog('assessment',buildReasoning(s,r)); switchApTab('findings',document.querySelector('.ap-tab')); },350); } },240); }
 function rerunVerify(){ var btn=document.querySelector('.run-ver-btn'); if(btn){ btn.textContent='Verifying...'; setTimeout(function(){ btn.textContent='Re-run source verification'; if(curSys&&curResult)renderVerify(curSys,curResult); applyLang(); },800); } }
-function onTurnoverChange(){ if(curSys&&curResult){ var r=assess(curSys); curResult=r; renderAll(curSys,r); } }
-function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[status]; var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[status]; var el=document.getElementById('ers-'+id); if(el){el.textContent=stL;el.className='er-status '+stC;} var ann=document.getElementById('ea-'+id); var annShow=document.getElementById('ean-'+id); if(ann&&annShow){ var txt=ann.value.trim(); annShow.textContent=txt?'Expert note: '+txt:'Status updated to '+stL+' — no annotation entered.'; annShow.classList.add('vis'); } updateSoBtn(); applyLang(); }
+function onTurnoverChange(){ if(curSys&&curResult){ var r=assess(curSys); curResult=r; renderAll(curSys,r); rlog('parameter','Turnover basis changed to €'+getTurnover()+'M for '+curSys.name+'; exposure recomputed: max €'+(Math.round(r.total*10)/10)+'M, verdict '+r.verdict.t+'.'); } }
+function setRevSt(id,status){ reviewSt[id]=status; var stL={pending:'PENDING',confirmed:'CONFIRMED',amended:'AMENDED',escalated:'ESCALATED'}[status]; var stC={pending:'ers-pending',confirmed:'ers-confirmed',amended:'ers-amended',escalated:'ers-escalated'}[status]; var el=document.getElementById('ers-'+id); if(el){el.textContent=stL;el.className='er-status '+stC;} var ann=document.getElementById('ea-'+id); var annShow=document.getElementById('ean-'+id); if(ann&&annShow){ var txt=ann.value.trim(); annShow.textContent=txt?'Expert note: '+txt:'Status updated to '+stL+' — no annotation entered.'; annShow.classList.add('vis'); } rlog('expert-review','Flag '+id+' set to '+status.toUpperCase()+' by reviewer.'); updateSoBtn(); applyLang(); }
 function toggleCheck(n){ soChecks[n-1]=!soChecks[n-1]; var el=document.getElementById('sc-'+n); if(el){ el.classList.toggle('checked',soChecks[n-1]); el.textContent=soChecks[n-1]?'✓':''; } updateSoBtn(); }
 function updateSoBtn(){ var btn=document.getElementById('so-btn'); if(!btn)return; var allChecked=soChecks.every(function(c){return c;}); var flagsResolved=!curResult||curResult.flags.every(function(f){return reviewSt[f.id]&&reviewSt[f.id]!=='pending';}); var ready=allChecked&&flagsResolved; btn.classList.toggle('ready',ready); if(ready){ btn.textContent='Sign and seal assessment record'; btn.onclick=doSignoff; }else{ btn.textContent='Complete checklist and expert review to unlock sign-off'; } applyLang(); }
-function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#308653'; btn.style.borderColor='#308653'; btn.style.background='var(--grn-d)'; applyLang(); },1800); }
+function doSignoff(){ var btn=document.getElementById('so-btn'); if(!btn||!btn.classList.contains('ready'))return; btn.textContent='Sealing with SK ID Solutions AS · RFC 3161 TSA...'; btn.style.pointerEvents='none'; setTimeout(function(){ btn.textContent='✓ Assessment record sealed — eAIDAS evidence package ready'; btn.style.color='#308653'; btn.style.borderColor='#308653'; btn.style.background='var(--grn-d)'; rlog('sign-off','Assessment record sealed — eAIDAS evidence package prepared (demo).'); applyLang(); },1800); }
 function resetForm(){ document.getElementById('form-title').textContent='New system registration'; document.querySelectorAll('.sys-item').forEach(function(i){i.classList.remove('active');}); var ids=['f-name','f-inst','f-date','f-vendor','f-domain','f-citizens','f-decision', 'f-dpia','f-fria','f-eudb','f-ca','f-doc','f-oversight','f-purpose','f-actual', 'f-modeltype','f-personal','f-xroad','f-foundation','f-provider','f-modified', 'f-signing','f-pqc','f-threatmodel','f-upstream','f-timing','f-verifier','f-portability','f-ovchain','f-keyhist','f-retention']; ids.forEach(function(id){var el=document.getElementById(id);if(el)el.value='';}); document.querySelectorAll('.lm-sel').forEach(function(el){el.value='';}); document.querySelectorAll('.pq-btn').forEach(function(b){b.classList.remove('sel');}); document.getElementById('actual-det').classList.remove('open'); document.getElementById('annexiii-flag').className='annex-flag'; document.getElementById('unk-model').classList.remove('show'); document.getElementById('unk-log').classList.remove('show'); setSame('yes'); setTrans('partial'); logInteg=''; ['none','access','appendonly','signed','rfc3161','unknown'].forEach(function(id){ var btn=document.getElementById('li-'+id); if(btn)btn.classList.remove('sel'); }); ['findings','verify','review','signoff','ai'].forEach(function(id){ document.getElementById('empty-'+id).style.display='flex'; document.getElementById(id+'-content').style.display='none'; }); document.getElementById('ap-sysname').textContent='—'; document.getElementById('rev-badge').style.display='none'; reviewSt={};soChecks=[false,false,false,false,false]; curSys=null;curResult=null; aiMemo={sys:null,text:'',busy:false,err:''}; updA();updB(); applyLang(); }
 function fakeUpload(){ var dz=document.querySelector('[onclick="fakeUpload()"]'); if(dz){ dz.innerHTML='<div style="font-family:var(--mono);font-size:10px;color:var(--grn-t);">✓ Document processed</div><div style="font-size:11px;color:var(--w25);margin-top:3px;">Procurement_Specification_Burokratt_v3.pdf · 1.2 MB</div>'; } var de=document.getElementById('doc-extractions'); var dl=document.getElementById('doc-list'); if(de&&dl){ de.innerHTML='<div class="note" style="margin-bottom:8px;background:var(--amb-d);border-color:rgba(154,108,0,.3);color:var(--amb-t);">⚠ The following fields were extracted by AI and are unconfirmed. Review and confirm each one before it enters the assessment as a verified value.</div>' +[['System name','Bürokratt Virtual Assistant'],['Deploying institution','Information System Authority (ISA)'],['Intended purpose','Enable citizens to interact with the Estonian state through a unified virtual assistant...'],['Deployment date','March 2023'],['Builder / vendor','Internal / Open Source (MEAC)']].map(function(pair){ return '<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--surf2);border:1px solid var(--bord);margin-bottom:4px;"><div style="flex:1;"><div style="font-family:var(--mono);font-size:9.5px;color:var(--blue);margin-bottom:1px;">'+pair[0]+'</div><div style="font-size:12px;color:var(--w80);">'+pair[1]+'</div></div><span style="font-family:var(--mono);font-size:9px;background:var(--amb-d);color:var(--amb-t);border:1px solid rgba(154,108,0,.3);padding:1px 5px;">AI-ASSISTED</span><button onclick="confirmExt(this)" style="font-family:var(--mono);font-size:9.5px;padding:3px 8px;border:1px solid var(--grn-t);color:var(--grn-t);background:none;cursor:pointer;">Confirm</button></div>'; }).join(''); dl.style.display='block'; } applyLang(); }
 function confirmExt(btn){ var row=btn.parentElement; var badge=row.querySelector('span'); if(badge){badge.textContent='CONFIRMED';badge.style.background='var(--grn-d)';badge.style.color='#308653';badge.style.borderColor='rgba(48,134,83,.3)';} btn.textContent='✓';btn.style.color='#308653';btn.disabled=true; }
 function openDrawer(key){ var src=SRC[key]; if(!src)return; document.getElementById('dr-title').textContent='SOURCE VERIFICATION — '+key; document.getElementById('dr-body').innerHTML= '<div class="dr-lbl">Verbatim text — official journal</div>' +'<div class="dr-quote">'+src.quote+'</div>' +'<div class="dr-lbl">Citation</div>' +'<div class="dr-ref">'+src.ref+'</div>' +'<div class="dr-conf-track"><div class="dr-conf-fill" style="width:'+src.conf+'%"></div></div>' +'<div style="font-family:var(--mono);font-size:9.5px;color:var(--w25);margin-bottom:6px;">Source confidence: '+src.conf+'%</div>' +'<div class="dr-hash">'+src.hash+'</div>' +'<div class="dr-ok">✓ Verified against Regulation (EU) 2024/1689 as published OJ L 12.7.2024<br>ELI: http://data.europa.eu/eli/reg/2024/1689/oj</div>'; document.getElementById('mask').classList.add('open'); document.getElementById('drawer').classList.add('open'); }
+function sha256hex(input){
+var ascii=unescape(encodeURIComponent(String(input)));
+function rightRotate(value,amount){return (value>>>amount)|(value<<(32-amount));}
+var maxWord=Math.pow(2,32);var i,j;var result='';
+var words=[];var asciiBitLength=ascii.length*8;
+var hash=sha256hex.h=sha256hex.h||[];
+var k=sha256hex.k=sha256hex.k||[];
+var primeCounter=k.length;
+var isComposite={};
+for(var candidate=2;primeCounter<64;candidate++){
+if(!isComposite[candidate]){
+for(i=0;i<313;i+=candidate){isComposite[i]=candidate;}
+hash[primeCounter]=(Math.pow(candidate,.5)*maxWord)|0;
+k[primeCounter++]=(Math.pow(candidate,1/3)*maxWord)|0;
+}
+}
+ascii+='\x80';
+while(ascii.length%64-56)ascii+='\x00';
+for(i=0;i<ascii.length;i++){
+j=ascii.charCodeAt(i);
+if(j>>8)return '';
+words[i>>2]|=j<<((3-i)%4)*8;
+}
+words[words.length]=((asciiBitLength/maxWord)|0);
+words[words.length]=(asciiBitLength);
+for(j=0;j<words.length;){
+var w=words.slice(j,j+=16);
+var oldHash=hash;
+hash=hash.slice(0,8);
+for(i=0;i<64;i++){
+var w15=w[i-15],w2=w[i-2];
+var a=hash[0],e=hash[4];
+var temp1=hash[7]
++(rightRotate(e,6)^rightRotate(e,11)^rightRotate(e,25))
++((e&hash[5])^((~e)&hash[6]))
++k[i]
++(w[i]=(i<16)?w[i]:(
+w[i-16]
++(rightRotate(w15,7)^rightRotate(w15,18)^(w15>>>3))
++w[i-7]
++(rightRotate(w2,17)^rightRotate(w2,19)^(w2>>>10))
+)|0
+);
+var temp2=(rightRotate(a,2)^rightRotate(a,13)^rightRotate(a,22))
++((a&hash[1])^(a&hash[2])^(hash[1]&hash[2]));
+hash=[(temp1+temp2)|0].concat(hash);
+hash[4]=(hash[4]+temp1)|0;
+}
+for(i=0;i<8;i++){hash[i]=(hash[i]+oldHash[i])|0;}
+}
+for(i=0;i<8;i++){
+for(j=3;j+1;j--){
+var b=(hash[i]>>(j*8))&255;
+result+=((b<16)?0:'')+b.toString(16);
+}
+}
+return result;
+}
+var reasonLog=[],rlPrev='GENESIS';
+function rlog(type,msg){
+var t=new Date().toISOString();
+var payload=reasonLog.length+'|'+t+'|'+type+'|'+msg+'|'+rlPrev;
+var h=sha256hex(payload);
+reasonLog.push({seq:reasonLog.length+1,time:t,type:type,msg:msg,prev:rlPrev,hash:h});
+rlPrev=h;
+var c=document.getElementById('rl-count');
+if(c)c.textContent=reasonLog.length;
+}
+function buildReasoning(s,r){
+var L=[];
+L.push('Inquiry: '+s.name+' · turnover basis €'+getTurnover()+'M');
+L.push('Classification: domain='+(s.domain||'unset')+' → '+(r.HR?'Annex III high-risk; full Art. 16/26/27/43/49 obligations engaged':'not classified high-risk by intake')+'. (Art. 6: classification is a regulatory determination — this entry records the decision, it does not make it.)');
+r.risks.forEach(function(rk){L.push('['+rk.tier+' · '+rk.conf.toUpperCase()+'] '+rk.title+' — because: '+rk.confText);});
+r.conds.forEach(function(c){L.push('[CONDITIONAL] '+c.field+' — '+c.reason);});
+r.flags.forEach(function(f){L.push('[ROUTED TO EXPERT] '+f.title+' — legal characterisation is outside the agent\'s competence.');});
+if(r.risks.length===0&&r.conds.length===0)L.push('No findings: every answered field maps to a compliant state.');
+L.push('Verdict: '+r.verdict.t+' · score '+r.score+'/100 · max statutory exposure €'+(Math.round(r.total*10)/10)+'M.');
+L.push('Boundary: findings support evidence for articles; they do not satisfy them. Unanswered fields produced conditional findings, not assumptions.');
+return L.join('\n');
+}
+function verifyReasonChain(){
+var prev='GENESIS';
+for(var i=0;i<reasonLog.length;i++){
+var e=reasonLog[i];
+var h=sha256hex(i+'|'+e.time+'|'+e.type+'|'+e.msg+'|'+prev);
+if(h!==e.hash||e.prev!==prev)return{ok:false,at:e.seq};
+prev=h;
+}
+return{ok:true,n:reasonLog.length};
+}
+function downloadReasonLog(){
+var blob=new Blob([JSON.stringify({format:'AVGVST-reasoning-log/1.0',generated:new Date().toISOString(),chain_head:rlPrev,entries:reasonLog},null,2)],{type:'application/json'});
+var a=document.createElement('a');
+a.href=URL.createObjectURL(blob);
+a.download='avgvst-reasoning-log.json';
+a.click();
+}
+function openReasonLog(v){
+var vs='';
+if(v){vs=v.ok?'<div class="dr-ok">✓ verify_chain(GENESIS → head): INTACT — '+v.n+' entries verified</div>':'<div class="dr-ok" style="background:var(--red-d);border-color:#f0c4c4;color:#b22a2a;">✗ verify_chain: BROKEN at entry #'+v.at+'</div>';}
+document.getElementById('dr-title').textContent='REASONING LOG — COMPLIANCE OFFICER VIEW';
+document.getElementById('dr-body').innerHTML=
+'<div class="note" style="margin:0 0 10px;">Append-only reasoning record: one sealed entry per inquiry, hash-chained in sequence, with the rule basis for every finding. Demo seal: the SHA-256 chain is computed in this browser; a production deployment would anchor each entry to an RFC 3161 timestamp authority and a qualified electronic seal. Disclosed to compliance officers and market surveillance authorities on request (Art. 12 · Art. 86).</div>'
++'<div class="ver-summary"><div class="vs-row"><span class="vs-lbl">Entries</span><span class="vs-val">'+reasonLog.length+'</span></div>'
++'<div class="vs-row"><span class="vs-lbl">Chain head</span><span class="vs-val">'+(rlPrev==='GENESIS'?'GENESIS (empty)':rlPrev.slice(0,16)+'…')+'</span></div></div>'
++'<div style="display:flex;gap:6px;margin-bottom:10px;"><button class="er-btn amend" onclick="openReasonLog(verifyReasonChain())">Verify chain</button><button class="er-btn" onclick="downloadReasonLog()">Export JSON</button></div>'
++vs
++reasonLog.slice().reverse().map(function(e){return '<div class="rl-entry"><div class="rl-head"><span>#'+e.seq+' · '+e.type+'</span><span>'+e.time.replace('T',' ').slice(0,19)+' UTC</span></div><div class="rl-msg">'+escHTML(e.msg)+'</div><div class="rl-hash">SHA-256 '+e.hash.slice(0,16)+'… ← prev '+(e.prev==='GENESIS'?'GENESIS':e.prev.slice(0,16)+'…')+'</div></div>';}).join('')
++(reasonLog.length===0?'<div class="note">No entries yet — load a system or run an assessment.</div>':'');
+document.getElementById('mask').classList.add('open');
+document.getElementById('drawer').classList.add('open');
+applyLang();
+}
 function closeDrawer(){ document.getElementById('mask').classList.remove('open'); document.getElementById('drawer').classList.remove('open'); }
 var aiMemo={sys:null,text:'',busy:false,err:''};
 function escHTML(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -1060,6 +1180,7 @@ if(!key){ aiMemo.err='No API key. Paste your Mistral API key in the sidebar (bot
 var modelEl=document.getElementById('mistral-model');
 var model=modelEl?modelEl.value:'mistral-small-latest';
 aiMemo.busy=true; aiMemo.err=''; renderAI(curSys,curResult);
+rlog('ai-memo','Mistral memo requested for '+curSys.name+' (model '+model+'); prompt SHA-256 '+sha256hex(buildMemoPrompt(curSys,curResult)).slice(0,16)+'…');
 fetch('https://api.mistral.ai/v1/chat/completions',{
 method:'POST',
 headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
@@ -1080,12 +1201,14 @@ return res.json();
 .then(function(j){
 var txt=(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
 aiMemo={sys:curSys.name,text:txt||'(Mistral returned an empty response)',busy:false,err:''};
+rlog('ai-memo','Mistral response received ('+(txt?txt.length:0)+' chars); content SHA-256 '+sha256hex(txt||'').slice(0,16)+'… Generated text is advisory; it does not alter the rule-engine findings.');
 renderAI(curSys,curResult);
 })
 .catch(function(e){
 var msg=String(e&&e.message||e);
 if(/failed to fetch|networkerror|load failed/i.test(msg))msg='Could not reach api.mistral.ai — check your internet connection (or the request was blocked by the browser/network).';
 aiMemo.busy=false; aiMemo.err=msg;
+rlog('ai-memo','Mistral request failed: '+msg);
 renderAI(curSys,curResult);
 });
 }
@@ -1446,6 +1569,14 @@ var PAIRS=[
 ["Claim boundary:","Väite piir:"],
 ["findings state that an artifact supports evidence for an article — never that it satisfies it. A signature fixes the artifact, not the wisdom of the artifact.","leiud ütlevad, et artefakt toetab tõendina mõnda artiklit — mitte kunagi, et see artiklit täidab. Allkiri fikseerib artefakti, mitte artefakti tarkuse."],
 ["For each finding I have asked: what artifact exists, who signed it, when was it fixed, how is it verified, and how long will it remain verifiable","Iga leiu puhul olen küsinud: milline artefakt on olemas, kes selle allkirjastas, millal see fikseeriti, kuidas seda kontrollitakse ja kui kaua see kontrollitav püsib"],
+["Reasoning log — compliance officer view ·","Põhjenduslogi — vastavusametniku vaade ·"],
+["sealed entries","pitseeritud kannet"],
+["Verify chain","Kontrolli ahelat"],
+["Export JSON","Ekspordi JSON"],
+["Entries","Kandeid"],
+["Chain head","Ahela tipp"],
+["Append-only reasoning record: one sealed entry per inquiry, hash-chained in sequence, with the rule basis for every finding. Demo seal: the SHA-256 chain is computed in this browser; a production deployment would anchor each entry to an RFC 3161 timestamp authority and a qualified electronic seal. Disclosed to compliance officers and market surveillance authorities on request (Art. 12 · Art. 86).","Ainult lisatav põhjenduskirje: iga päringu kohta üks pitseeritud kanne, järjestikku räsiaheldatud, koos iga leiu reeglipõhjendusega. Demopitser: SHA-256 ahel arvutatakse selles brauseris; toodangus ankurdataks iga kanne RFC 3161 ajatempliteenusesse ja kvalifitseeritud e-templiga. Avaldatakse vastavusametnikele ja turujärelevalveasutustele taotluse korral (art 12 · art 86)."],
+["No entries yet — load a system or run an assessment.","Kandeid pole veel — lae süsteem või käivita hindamine."],
 ["Citation","Viide"]
 ];
 var EN2ET={},ET2EN={};

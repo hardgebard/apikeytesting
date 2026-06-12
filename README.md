@@ -24,6 +24,13 @@ entirely in the browser, and nothing is uploaded or persisted.
   fine-tier exposure (Art. 99(3)–(5), scaled against the turnover input using the
   "whichever is higher" rule), a source-verification log with article drawers, an
   expert review queue, and a gated sign-off checklist.
+- **Reasoning log (compliance officer view)**: every inquiry — assessment run,
+  turnover change, Mistral memo, expert-review action, sign-off — appends a sealed
+  entry explaining how the agent reached its conclusion (classification rationale and
+  the rule basis for each finding). Entries are timestamped and SHA-256 hash-chained
+  in the browser (demo seal; production would anchor to RFC 3161 + a qualified seal),
+  with one-click chain verification and JSON export. Open it via "Reasoning log —
+  compliance officer view" in the assessment panel.
 - **AI Memo (optional, powered by Mistral)**: sends the current form data and
   rule-engine findings to Mistral's API and renders a plain-language memo
   (bottom line, biggest risks, what to do next). Requires your own API key.
